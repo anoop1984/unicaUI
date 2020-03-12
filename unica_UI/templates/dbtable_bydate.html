@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+
+{% load static %}
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <title>DataTables</title>
+  <!-- Tell the browser to be responsive to screen width -->
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+
+  <link rel="stylesheet" href="{% static 'plugins/fontawesome-free/css/all.min.css' %}">
+  <!-- Ionicons -->
+  <link rel="stylesheet" href="https://code.ionicframework.com/ionicons/2.0.1/css/ionicons.min.css">
+  <!-- Tempusdominus Bbootstrap 4 -->
+  <link rel="stylesheet" href="{% static 'plugins/tempusdominus-bootstrap-4/css/tempusdominus-bootstrap-4.min.css' %}">
+  <!-- iCheck -->
+  <link rel="stylesheet" href="{% static 'plugins/icheck-bootstrap/icheck-bootstrap.min.css' %}">
+  <!-- JQVMap -->
+  <link rel="stylesheet" href="{% static 'plugins/jqvmap/jqvmap.min.css' %}">
+  <!-- Theme style -->
+  <link rel="stylesheet" href="{% static 'css/adminlte.min.css' %}">
+  <!-- overlayScrollbars -->
+  <link rel="stylesheet" href="{% static 'plugins/overlayScrollbars/css/OverlayScrollbars.min.css' %}">
+  <!-- Daterange picker -->
+  <link rel="stylesheet" href="{% static 'plugins/daterangepicker/daterangepicker.css' %}">
+  <!-- summernote -->
+  <link rel="stylesheet" href="{% static 'plugins/summernote/summernote-bs4.css' %}">
+  <!-- Google Font: Source Sans Pro -->
+  <link href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700" rel="stylesheet">
+
+
+
+</head>
+<body class="hold-transition sidebar-mini">
+<div class="wrapper">
+  <!-- Navbar -->
+  {% include 'partials/_navbar.html' %}
+  
+  <!-- /.navbar -->
+  <!-- Side Bar -->
+  {% include 'partials/_sidebar.html' %}
+
+  <!-- Main Sidebar Container -->
+  
+
+  <!-- Content Wrapper. Contains page content -->
+  <div class="content-wrapper">
+    <!-- Content Header (Page header) -->
+
+    <!-- Main content -->
+    <section class="content">
+      <div class="row">
+          
+          <!-- /.card -->
+
+          <div class="card ">
+            <div class="card-header">
+              <h3 class="card-title2">Health-Check Report:  {{ date }}  &nbsp;&nbsp;&nbsp;&nbsp; {{ info }}&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+              <!--a href="/media/logs/{{ logfile }}" class="fas fa-square text-primary" >Detailed-Logs</a></h3-->
+              <a href="/media/logs/{{ logfile }}" target="popup" 
+  onclick="window.open('/media/logs/{{ logfile }}','popup','width=800,height=600'); return false;" class="fas fa-square text-primary" >Detailed-Logs</a></h3>
+            </div>
+            <!-- /.card-header -->
+            <div class="card-body col-md-12">
+              <!--table id="example1" class="table table-bordered table-striped"-->
+            {% if monitor_records %}
+              <!--table id="example1" class="table table-bordered table-hover" style="width:100%"-->
+              <table id="example1" class="table table-bordered table-hover" >
+                <thead>
+                <tr>
+                  <th>TestId</th>
+                  <th>Description</th>
+                  <th>Severity</th>
+                  <th>IpAddress</th>
+                  <th>Hostname</th>
+                  <th>Command</th>
+                  <th>Verdict</th>
+                  <th>Remarks</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr>
+              {% for it in monitor_records %}
+                 <td>{{ it.test_id }}</td>
+                 <td>{{ it.desc }}</td>
+                 <td>{{ it.severity }}</td>
+                 <td>{{ it.ipaddr }}</td>
+                 <td>{{ it.hostname }}</td>
+                 <td>{{ it.command }}</td>
+                 {% if "Passed" in it.verdict %} 
+                 <td class="badge badge-success">{{ it.verdict}}</td>
+                 {% else %}
+                 <td class="badge badge-danger">{{ it.verdict}}</td>
+                 {% endif %}
+                 <td>{{ it.remarks }}</td>
+                </tr>
+             {% endfor %}
+                </tbody>
+                <tfoot>
+                <tr>
+                  <th>TestId</th>
+                  <th>Description</th>
+                  <th>Severity</th>
+                  <th>IpAddress</th>
+                  <th>Hostname</th>
+                  <th>Command</th>
+                  <th>Verdict</th>
+                  <th>Remarks</th>
+                </tr>
+                </tfoot>
+              </table>
+            {% endif %}
+            </div>
+            <!-- /.card-body -->
+          </div>
+          <!-- /.card -->
+        <!-- /.col -->
+      </div>
+      <!-- /.row -->
+    </section>
+    <!-- /.content -->
+  </div>
+  <!-- /.content-wrapper -->
+<!-- footer -->
+{% include 'partials/_footer.html' %}
+</div>
+<!-- ./wrapper -->
+
+<!-- jQuery -->
+<script src="{% static 'plugins/jquery/jquery.min.js' %}"></script>
+<!-- Bootstrap 4 -->
+<script src="{% static 'plugins/bootstrap/js/bootstrap.bundle.min.js' %}"></script>
+<!-- DataTables -->
+<script src="{% static 'plugins/datatables/jquery.dataTables.js' %}"></script>
+<script src="{% static 'plugins/datatables-bs4/js/dataTables.bootstrap4.js' %}"></script>
+<!-- AdminLTE App -->
+<script src="{% static 'js/adminlte.min.js' %}"></script>
+
+
+
+<!--
+<script src="https://code.jquery.com/jquery-3.3.1.js"></script>
+<script src="https://cdn.datatables.net/1.10.20/js/jquery.dataTables.min.js"></script>
+<script src="https://cdn.datatables.net/fixedheader/3.1.6/js/dataTables.fixedHeader.min.js"></script>
+-->
+
+
+<!-- page script -->
+<script>
+  $(function () {
+    $("#example1").DataTable({
+       fixedHeader: {
+            header: true,
+            footer: true
+       }
+    });
+  });
+
+
+
+</script>
+</body>
+</html>

@@ -1,0 +1,24 @@
+<html>
+
+<body>
+   <p id="test"> hello world <p>
+<script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+<script>
+$(document).ready(function(){
+        $.ajax({
+            url : "/ajaxa",
+            type : "GET",
+            dataType: "json",
+            success: function(json) {
+                document.getElementById('test').textContent = json['1'];
+                console.log(json)
+            },
+            failure: function(json) { 
+                alert('Got an error dude');
+            }
+        });
+});
+</script>
+</body>
+ </html>
+

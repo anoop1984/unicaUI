@@ -1,0 +1,43 @@
+<html>
+
+<body>
+        <select id="logdate"> 
+
+        {% if dates %}
+        {% for date in dates %}
+        <option value="{{ date.date }}">{{ date.date }}</option>
+        {% endfor %}
+        {% endif %}
+        </select> 
+   <p id="test"> hello world <p>
+
+<script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+<script>
+
+
+
+$(function () {
+
+//Anoop/
+ var result = []
+ $.ajax({
+            url : "/ajax",
+            type : "GET",
+            dataType: "json",
+            async: true,
+            success: function(json) {
+              result.push(json);
+            },
+            failure: function(json) {
+                alert('Got an error dude');
+            }
+        });
+
+console.log(result)
+});
+   
+ 
+</script>
+</body>
+ </html>
+

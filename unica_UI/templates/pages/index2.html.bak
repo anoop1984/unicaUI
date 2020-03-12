@@ -1,0 +1,1159 @@
+
+{% extends 'base.html' %}
+
+{% load static %}
+{% block content %}
+
+
+  <!-- Content Wrapper. Contains page content -->
+  <div class="content-wrapper">
+    <!-- Content Header (Page header) -->
+    <div class="content-header">
+      <div class="container-fluid">
+        <div class="row mb-2">
+          <div class="col-sm-6">
+            <h1 class="m-0 text-dark">UNICA Healthcheck</h1>
+          </div><!-- /.col -->
+          <div class="col-sm-6">
+            <ol class="breadcrumb float-sm-right">
+              <li class="breadcrumb-item"><a href="#">Home</a></li>
+              <li class="breadcrumb-item active">UNICA Healthcheck</li>
+                <select id="datelog" class="form-control">
+         	{% if dates %}
+        	{% for date in dates %}
+        	<option value="{{ date.date }}">{{ date.date }}</option>
+        	{% endfor %}
+        	{% endif %}
+               </select>
+              
+            </ol>
+          </div><!-- /.col -->
+        </div><!-- /.row -->
+      </div><!-- /.container-fluid -->
+    </div>
+    <!-- /.content-header -->
+
+    <!-- Main content -->
+    <section class="content">
+
+     <div class="row">
+      <div class="container-fluid">
+        <!-- Info boxes -->
+       <!-- info box deleted--> 
+        <!-- /.row -->
+
+        <div class="row">
+          <div class="col-md-6">
+            <div class="card h-100">
+              <div class="card-header">
+                <h5 class="card-title">Health Report</h5>
+                <!--div class="card-tools">
+                  <button type="button" class="btn btn-tool" data-card-widget="collapse">
+                    <i class="fas fa-minus"></i>
+                  </button>
+                  <div class="btn-group">
+                    <button type="button" class="btn btn-tool dropdown-toggle" data-toggle="dropdown">
+                      <i class="fas fa-wrench"></i>
+                    </button>
+                    <div class="dropdown-menu dropdown-menu-right" role="menu">
+                      <a href="#" class="dropdown-item">Action</a>
+                      <a href="#" class="dropdown-item">Another action</a>
+                      <a href="#" class="dropdown-item">Something else here</a>
+                      <a class="dropdown-divider"></a>
+                      <a href="#" class="dropdown-item">Separated link</a>
+                    </div>
+                  </div>
+                  <button type="button" class="btn btn-tool" data-card-widget="remove">
+                    <i class="fas fa-times"></i>
+                  </button>
+                </div-->
+              </div>
+              <!-- /.card-header -->
+              <div class="card-body">
+                <div class="row">
+                  <div class="col-md-8">
+                    <p class="text-center">
+                      <strong id="date">--</strong>
+                    </p>
+
+                    <div class="chart">
+                      <!-- Sales Chart Canvas -->
+                      <canvas id="reportChart" height="250" style="height: 250px;"></canvas>
+                    </div>
+                    <!-- /.chart-responsive -->
+                  </div>
+                  <!-- /.col -->
+                  <div class="col-md-4">
+                    <p class="text-center">
+                      <strong>Stats</strong>
+                    </p>
+
+                    <div class="progress-group">
+                      Openstack 
+                      <span class="float-right" id="os_value" >0/0</span>
+                      <div class="progress progress-sm">
+                        <div class="progress-bar bg-primary" id="os_val_per" style="width: 0%"></div>
+                      </div>
+                    </div>
+                    <!-- /.progress-group -->
+
+                    <div class="progress-group">
+                     SDN 
+                      <span class="float-right" id="sdn_value">0/0</span>
+                      <div class="progress progress-sm">
+                        <div class="progress-bar bg-danger" id="sdn_val_per" style="width: 0%"></div>
+                      </div>
+                    </div>
+                    <!-- /.progress-group -->
+                    <div class="progress-group">
+                      <span class="progress-text">Controller</span>
+                      <span class="float-right" id="con_value">0/0</span>
+                      <div class="progress progress-sm">
+                        <div class="progress-bar bg-success" id="con_val_per" style="width: 0%"></div>
+                      </div>
+                    </div>
+
+                    <!-- /.progress-group -->
+                    <div class="progress-group">
+                      Services 
+                      <span class="float-right" id="srv_value">0/0</span>
+                      <div class="progress progress-sm">
+                        <div class="progress-bar bg-warning" id="srv_val_per" style="width: 0%"></div>
+                      </div>
+                    </div>
+                    <!-- /.progress-group -->
+                  </div>
+                  <!-- /.col -->
+                </div>
+                <!-- /.row -->
+              </div>
+              <!-- ./card-body -->
+              
+              <!-- /.card-footer -->
+            </div>
+            <!-- /.card -->
+          </div>
+
+
+          <!---Adding Histor Char Grap--> 
+
+          <div class="col-md-6">
+            <div class="card h-100">
+              <div class="card-header">
+                <div class="d-flex justify-content-between">
+                  <h3 class="card-title">Comparison</h3>
+                 <select id="datelog1" class="form-control" style="width:150px; height:32px;">
+                {% if dates %}
+                {% for date in dates %}
+                <option value="{{ date.date }}">{{ date.date }}</option>
+                {% endfor %}
+                {% endif %}
+               </select>
+                </div> 
+              </div>
+              <div class="card-body">
+                <div class="d-flex">
+                  <p class="d-flex flex-column">
+                    <span></span>
+                  </p>
+                  <p class="ml-auto d-flex flex-column text-right">
+                    
+                    <span class="text-muted">Data</span>
+                  </p>
+                </div>
+                <!-- /.d-flex -->
+
+                <div class="chart">
+                  <canvas id="history-chart" height="250" style="height: 250px;"></canvas>
+                </div>
+                <div class="d-flex flex-row justify-content-end">
+                  <span class="mr-2" id="blue_date">
+                    <i class="fas fa-square text-primary"></i> This year
+                  </span>
+
+                  <span id="gray_date">
+                    <i class="fas fa-square text-gray"></i> Last year
+                  </span>
+                </div>
+
+                
+              </div>
+            </div>
+            <!-- /.card -->
+
+            
+          </div>   
+          <!---End Histor Char Grap--> 
+          <!-- /.col -->
+        </div>
+        <!-- /.row -->
+
+
+<!---unica-->
+
+        <div class="row">
+          <div class="col-lg-3 col-6">
+            <!-- small box -->
+            <div class="small-box bg-info">
+              <div class="inner">
+                <h3 id="total">0</h3>
+              
+                <p>Total TestCases
+                <i class="ion ion-home"></i></p>
+              </div>
+              <div class="icon">
+                <i class="ion ion-home"></i>
+              </div>
+              <a id="date_report1" href="#" class="small-box-footer">More info <i class="fas fa-arrow-circle-right"></i></a>
+            </div>
+          </div>
+          <!-- ./col -->
+          <div class="col-lg-3 col-6">
+            <!-- small box -->
+            <div class="small-box bg-success">
+              <div class="inner">
+                <!--h3>53<sup style="font-size: 20px">%</sup></h3-->
+                <h3 id="passed">0</h3>
+                  
+                <p>Passed</p>
+              </div>  
+              <div class="icon">
+                <i class="ion ion-thumbsup"></i>
+              </div>  
+              <a id="date_report2" href="#" class="small-box-footer">More info <i class="fas fa-arrow-circle-right"></i></a>
+            </div>
+          </div>
+          <!-- ./col -->
+          <div class="col-lg-3 col-6">
+            <!-- small box -->
+            <div class="small-box bg-danger">
+              <div class="inner">
+                <h3 id="failed">0</h3>
+
+                <p>FAILED</p>
+              </div>
+              <div class="icon">
+                <i class="ion ion-thumbsdown"></i>
+              </div>
+              <a id="date_report3" href="#" class="small-box-footer">More info <i class="fas fa-arrow-circle-right"></i></a>
+            </div>
+          </div>
+          <!-- ./col -->
+          <div class="col-lg-3 col-6">
+            <!-- small box -->
+            <div class="small-box bg-warning">
+              <div class="inner">
+                <h3 id="failedm">0</h3>
+
+                <p>FAILED Major</p>
+              </div>
+              <div class="icon">
+                <i class="ion ion-alert"></i>
+              </div>
+              <a id="date_report4" href="#" class="small-box-footer">More info <i class="fas fa-arrow-circle-right"></i></a>
+            </div>
+          </div>
+          <!-- ./col -->
+        </div>
+        <!-- /.row -->
+<!---unica-->
+
+        <!-- Main row -->
+          <!-- Left col -->
+            <!-- MAP & BOX PANE -->
+            
+            <!-- /.card -->
+            <div class="row">
+<!--Start-->
+             <div class="col-md-4">
+                <!-- DIRECT CHAT -->
+                
+            <div class="card h-100">
+              <div class="card-header border-0">
+                <h3 class="card-title">OpenStack Components</h3>
+              </div>
+
+              <!-- /.card-header -->
+              <div class="card-body table-responsive p-0">
+                <table  class="table table-striped table-valign-middle">
+		 <thead>
+                  <tr>
+                    <th>Task</th>
+                    <th>Status</th>
+                  </tr>
+                  </thead>
+                  <tbody>
+                    <tr>
+                      <td>Nova List</td>
+                      <td> <i id="nova_list"></i></td>
+                    </tr>
+                    <tr>
+                      <td>Nova Hypervisor</td>
+	              <td> <i id="nova_hypv"></i></td>
+                    </tr>
+                    <tr>
+                      <td>Cinder Service</td>
+                      <td><i id="cinder_srv"></i></td>
+                    </tr>
+                    <tr>
+                      <td>Neutron Agent</td>
+		      <td><i id="neutron_agent"></i></td>
+                    </tr>
+                    <tr>
+                      <td>Nova Service</td>
+                      <td><i id="nova_srv"></i></td>
+                    </tr>
+		    <tr>
+                      <td>Glance Image</td>
+		      <td><i id="glance"></i></td>
+                    </tr>
+                    <tr>
+                      <td>Ceilometer Meter</td>
+			<td><i id="ceilometer"></i></td>
+		    </tr>
+ 		    <tr>
+                      <td>Openstack Project</td>
+			<td><i id="project"></i></td>
+                    </tr>
+                    <tr>
+			<td>Openstack Service</td>
+			<td><i id="os_srv"></i></td>
+ 		    </tr>
+ 		    <tr>
+                       <td>Neutron Net</td>
+			<td><i id="neutron_net"></i></td>
+		    </tr>
+                  </tbody>
+                </table>
+              </div>
+              <!-- /.card-body -->
+              
+            </div>
+            <!-- /.card -->
+
+                <!--/.direct-chat -->
+              </div>
+
+<!--End-->
+              <!-- /.col -->
+
+<!--start-->
+              <div class="col-md-4">
+                <!-- DIRECT CHAT -->
+                
+            <div class="card h-100">
+              <div class="card-header border-0">
+                <h3 class="card-title">Service Components</h3>
+              </div>
+
+              <!-- /.card-header -->
+              <div class="card-body table-responsive p-0">
+                <table class="table table-striped table-valign-middle">  
+                  <thead>
+                  <tr>
+                    <th>Task</th>
+                    <th>Status</th>
+                  </tr>
+                  </thead>
+                  <tbody>
+                    <tr>
+                      <td>Watchmen</td>
+                      <td> <i id="srv_watchmen"></i></td>
+                    </tr>
+		    <tr>
+                      <td>Rabbitmq Cluster</td>
+		      <td> <i id="srv_rabbitmq_cls"></i></td>
+                    </tr>
+                    <tr>
+                      <td>Rabbitmq List</td>
+		      <td><i id="srv_rabbitmq_lst"></i></td>
+		    </tr> 
+		    <tr>
+                      <td>Galera Mysql</td>
+		      <td><i id="srv_galera_mysql"></i></td>
+                    </tr>
+                    <tr>
+                      <td>MongoDB Service</td>
+		      <td> <i id="srv_mongodb"></i></td>
+		    </tr>
+		    <tr>
+                      <td>MonogDB Replica</td>
+		      <td><i id="srv_mongodb_rep"></i></td>
+                    </tr>
+                    <tr>
+                      <td>Rabbitmq File</td>
+		      <td><i id="srv_rabbitmg_file"></i></td>
+		    </tr>
+		    <tr>
+                      <td>Rest Service</td>
+		      <td><i id="srv_rest_srv"></i></td>
+                    </tr>
+                    <tr>
+		      <td>OpenFlow</td>
+		      <td><i id="srv_openflow"></i></td>
+		    </tr>
+                    <tr>		
+                       <td>OVSDB</td>
+		       <td><i id="srv_ovsdb"></i></td>
+		    </tr>
+                    <tr>
+		        <td>ODLBGP</td>
+			<td><i id="srv_odlbgp"></i></td>
+		    </tr>
+                  </tbody> 
+                </table>
+              </div>
+              <!-- /.card-body -->
+              
+            </div>
+            <!-- /.card -->
+
+                <!--/.direct-chat -->
+              </div>
+<!--end-->
+
+<!---->
+           <div class="col-md-4">
+                <!-- DIRECT CHAT -->
+                
+            <div class="card h-100">
+              <div class="card-header border-0">
+                <h3 class="card-title">SDNC Componesnt</h3>
+              </div>
+
+              <!-- /.card-header -->
+              <div class="card-body table-responsive p-0">
+                <table class="table table-striped table-valign-middle">
+                 <thead>
+                  <tr>
+                    <th>Task</th>
+                    <th>Status</th>
+                    <th></th>
+                  </tr>
+                  </thead> 
+                  <tbody>
+                    <tr>
+                        <td>All DPNS</td>
+			<td> <i id="dpns"></i></td>
+			<td></td>
+		    </tr>
+                    <tr>
+                        <td>TEP Config</td> 
+			<td><i id="tep"></i></td>
+			<td></td>
+		    </tr>
+		    <tr>
+                        <td>TEP Tunnel</td>
+			<td> <i id="tep_tunnel"></i></td>
+			<td></td>
+		    </tr>
+		    <tr>
+                        <td>No. of Tunnels: </td>
+			<td><i id="tunnel_status"></i> </td>
+			<td> <b id="tunnel_count">-</b></td>
+		    </tr>
+		    <tr>
+                        <td>Operationl Count:</td>
+			<td><i id="op_status"> </i></td>
+			<td> <b id="op_count">-</b> </td>
+		    </tr>
+		    <tr>
+                        <td>Shard Leader </td>
+                        <td><i id="inv_conf_status"></i></td>
+			<td>Inventory Config: <b id="inv_conf">-</b> </td>
+   		    </tr>
+		    <tr>
+			<td></td>
+                        <td><i id="def_conf_status"></i></td>
+			<td>Default Config: <b id="def_conf">-</b></td> 
+		    </tr>
+		    <tr>
+			<td></td>
+                        <td><i id="top_conf_status"></i></td>
+			<td>Topology Config: <b id="top_conf">-</b> </td>
+		    </tr>
+		    <tr>
+			<td></td>
+                        <td><i id="invo_conf_status"></i></td>
+			<td>Inventory Operation: <b id="invo_conf">-</b></td>
+  		    </tr>
+		    <tr>
+			<td></td>
+                        <td><i id="defo_conf_status"></i> </td>
+			<td>Default Operation: <b id="defo_conf">-</b></td> 
+		    </tr>
+		    <tr>
+			<td></td>
+                        <td><i id="topo_conf_status"></i></td>
+			<td>Topology Operation: <b id="topo_conf">-</b></td>
+                    </tr>
+		    <tr>
+                        <td>DPN Count</td>
+                        <td> <i id="cic1_status"></i> </td>
+			<td>CIC-1 : <b id="cic1_count"></b></td>
+		    </tr>
+		    <tr>
+			<td></td>
+                        <td><i id="cic2_status"></i> </td>
+			<td>CIC-2 : <b id="cic2_count"></b></td>
+		    </tr>
+		    <tr>
+			<td></td>
+                        <td><i id="cic3_status"></i> </td>
+			<td>CIC-3 : <b id="cic3_count"></b></td>
+		    </tr>
+
+                  </tbody>
+                </table>
+              </div>
+              <!-- /.card-body -->
+              
+            </div>
+            <!-- /.card -->
+
+                <!--/.direct-chat -->
+<!---->
+              <!-- /.col -->
+            <!-- /.row -->
+
+
+            <!-- TABLE: LATEST ORDERS -->
+            
+            <!-- /.card -->
+          </div>
+          <!-- /.col -->
+
+          
+          <!-- /.col -->
+        </div>
+          
+
+        <!-- /.row -->
+      </div><!--/. container-fluid -->
+    </section>
+    <!-- /.content -->
+  </div>
+  <!-- /.content-wrapper -->
+
+  <!-- Control Sidebar -->
+  <aside class="control-sidebar control-sidebar-dark">
+    <!-- Control sidebar content goes here -->
+  </aside>
+  <!-- /.control-sidebar -->
+
+  <!-- Main Footer -->
+  
+</div>
+</div>
+<script src="{% static 'plugins/jquery/jquery.min.js' %}"></script>
+<!--script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script-->
+<script src="{% static 'plugins/datatables/jquery.dataTables.js' %}"></script>
+<script src="https://cdn.datatables.net/1.10.13/js/jquery.dataTables.min.js"></script>
+
+<script>
+ var result = []
+$('#datelog').change(function(){
+//Anoop/
+// var result = []
+
+ $.ajax({
+            url : "/ajax-post",
+            type : "POST",
+            dataType: "json",
+            data: { date: $(this).val(),
+                 'csrfmiddlewaretoken': '{{ csrf_token }}',
+               },
+            async: false,
+            success: function(json) {
+              //result.push(json);
+              result[0]=json;
+            },
+            failure: function(json) {
+                alert('Got an error dude: Contact Support Team.!!');
+            },
+          statusCode: {
+           500: function() {
+           alert("Server Error, Contact Support Team.!!");
+           }
+    },
+        });
+
+ console.log(result)
+ document.getElementById('total').textContent = result[0].total_TC
+ document.getElementById('passed').textContent = result[0].passed_TC
+ document.getElementById('failed').textContent = result[0].failed_TC
+ document.getElementById('failedm').textContent = result[0].failed_major_TC
+
+
+//
+  // Donut Chart
+  var pieChartCanvas = $('#reportChart').get(0).getContext('2d')
+  console.log(result)
+  var passed = result[0].passed_TC
+  var failed_major = result[0].failed_major_TC
+  var failed_minor = result[0].failed_minor_TC
+  var failed_catest = result[0].failed_cat_TC
+  var failed_warning = result[0].failed_war_TC
+
+  var pieData        = {
+    labels: [
+        'PASSED',
+        'FAILED(Major)',
+        'FAILED(Minor)',
+        'FAILED(Catestrophic)',
+        'FAILED(Warning)',
+    ],
+    datasets: [
+      {
+        data: [passed,failed_major,failed_minor,failed_catest,failed_warning ],
+        backgroundColor : ['#00a65a','#8B0000','#FF7F50','#DEB887','#FFEBCD'],
+      }
+    ]
+  }
+  var pieOptions = {
+    legend: {
+      display: true,
+      position: 'left',
+    },
+    maintainAspectRatio : false,
+    responsive : true,
+  }
+  //Create pie or douhnut chart
+  // You can switch between pie and douhnut using the method below.
+  var pieChart = new Chart(pieChartCanvas, {
+    type: 'doughnut',
+    data: pieData,
+    options: pieOptions
+  });
+
+document.getElementById('date').textContent = result[0].date
+
+pass = result[0].sdn_passed_TC
+fail = result[0].sdn_failed_TC
+total = pass + fail
+pass_per = (pass/ total * 100) + '%'
+data1 = pass.toString()
+data2 = total.toString()
+data = '<b>'+data1+'</b>/'+data2 +' [<b>Passed</b>/Total]'
+$('#sdn_value').html(data)
+$('#sdn_val_per').width(pass_per)
+
+
+pass = result[0].cee_passed_TC
+fail = result[0].cee_failed_TC
+total = pass + fail
+pass_per = (pass/ total * 100) + '%'
+data1 = pass.toString()
+data2 = total.toString()
+data = '<b>'+data1+'</b>/'+data2 +' [<b>Passed</b>/Total]'
+$('#os_value').html(data)
+$('#os_val_per').width(pass_per)
+
+
+pass = result[0].allnode_passed_TC
+fail = result[0].allnode_failed_TC
+total = pass + fail
+pass_per = (pass/ total * 100) + '%'
+data1 = pass.toString()
+data2 = total.toString()
+data = '<b>'+data1+'</b>/'+data2 +' [<b>Passed</b>/Total]'
+$('#srv_value').html(data)
+$('#srv_val_per').width(pass_per)
+
+
+pass = result[0].fuel_passed_TC
+fail = result[0].fuel_failed_TC
+total = pass + fail
+pass_per = (pass/ total * 100) + '%'
+console.log(pass_per)
+data1 = pass.toString()
+data2 = total.toString()
+data = '<b>'+data1+'</b>/'+data2 +' [<b>Passed</b>/Total]'
+$('#con_val_per').width(pass_per)
+$('#con_value').html(data)
+
+
+//Total-Testcases href update on selected date
+sel_date = $('#datelog').val()
+$('#date_report1').attr("href","/dbtable_date?date="+sel_date+"&type=1")
+$('#date_report2').attr("href","/dbtable_date?date="+sel_date+"&type=2")
+$('#date_report3').attr("href","/dbtable_date?date="+sel_date+"&type=3")
+$('#date_report4').attr("href","/dbtable_date?date="+sel_date+"&type=4")
+
+
+
+if ( result[0].os_nova_list == 0 ) { $('#nova_list').html(' <i class="ion ion-thumbsup" style="font-size:30px;color:green"></i>') } else {$('#nova_list').html('<i class="ion ion-thumbsdown" style="font-size:30px;color:red">') }
+if ( result[0].os_nova_hypv == 0 ) { $('#nova_hypv').html(' <i class="ion ion-thumbsup" style="font-size:30px;color:green"></i>') } else {$('#nova_hypv').html('<i class="ion ion-thumbsdown" style="font-size:30px;color:red">') }
+if ( result[0].os_cinder_srv == 0 ) { $('#cinder_srv').html(' <i class="ion ion-thumbsup" style="font-size:30px;color:green"></i>') } else {$('#cinder_srv').html('<i class="ion ion-thumbsdown" style="font-size:30px;color:red">') }
+if ( result[0].os_neutron_agent == 0 ) { $('#neutron_agent').html(' <i class="ion ion-thumbsup" style="font-size:30px;color:green"></i>') } else {$('#neutron_agent').html('<i class="ion ion-thumbsdown" style="font-size:30px;color:red">') }
+if ( result[0].os_nova_srv == 0 ) { $('#nova_srv').html(' <i class="ion ion-thumbsup" style="font-size:30px;color:green"></i>') } else {$('#nova_srv').html('<i class="ion ion-thumbsdown" style="font-size:30px;color:red">') }
+if ( result[0].os_glance_image == 0 ) { $('#glance').html(' <i class="ion ion-thumbsup" style="font-size:30px;color:green"></i>') } else {$('#glance').html('<i class="ion ion-thumbsdown" style="font-size:30px;color:red">') }
+if ( result[0].os_ceilometer_meter == 0 ) { $('#ceilometer').html(' <i class="ion ion-thumbsup" style="font-size:30px;color:green"></i>') } else {$('#ceilometer').html('<i class="ion ion-thumbsdown" style="font-size:30px;color:red">') }
+if ( result[0].os_project_list == 0 ) { $('#project').html(' <i class="ion ion-thumbsup" style="font-size:30px;color:green"></i>') } else {$('#project').html('<i class="ion ion-thumbsdown" style="font-size:30px;color:red">') }
+if ( result[0].os_srv_list == 0 ) { $('#os_srv').html(' <i class="ion ion-thumbsup" style="font-size:30px;color:green"></i>') } else {$('#os_srv').html('<i class="ion ion-thumbsdown" style="font-size:30px;color:red">') }
+if ( result[0].os_neutron_net == 0 ) { $('#neutron_net').html(' <i class="ion ion-thumbsup" style="font-size:30px;color:green"></i>') } else {$('#neutron_net').html('<i class="ion ion-thumbsdown" style="font-size:30px;color:red">') }
+
+
+if ( result[0].srv_watchmen== 0 ) { $('#srv_watchmen').html(' <i class="ion ion-thumbsup" style="font-size:30px;color:green"></i>') } else {$('#srv_watchmen').html('<i class="ion ion-thumbsdown" style="font-size:30px;color:red">') }
+if ( result[0].srv_rabbitmq_cls== 0 ) { $('#srv_rabbitmq_cls').html(' <i class="ion ion-thumbsup" style="font-size:30px;color:green"></i>') } else {$('#srv_rabbitmq_cls').html('<i class="ion ion-thumbsdown" style="font-size:30px;color:red">') }
+if ( result[0].srv_rabbitmq_lst== 0 ) { $('#srv_rabbitmq_lst').html(' <i class="ion ion-thumbsup" style="font-size:30px;color:green"></i>') } else {$('#srv_rabbitmq_lst').html('<i class="ion ion-thumbsdown" style="font-size:30px;color:red">') }
+if ( result[0].srv_galera_mysql== 0 ) { $('#srv_galera_mysql').html(' <i class="ion ion-thumbsup" style="font-size:30px;color:green"></i>') } else {$('#srv_galera_mysql').html('<i class="ion ion-thumbsdown" style="font-size:30px;color:red">') }
+if ( result[0].srv_mongodb== 0 ) { $('#srv_mongodb').html(' <i class="ion ion-thumbsup" style="font-size:30px;color:green"></i>') } else {$('#srv_mongodb').html('<i class="ion ion-thumbsdown" style="font-size:30px;color:red">') }
+if ( result[0].srv_mongodb_rep== 0 ) { $('#srv_mongodb_rep').html(' <i class="ion ion-thumbsup" style="font-size:30px;color:green"></i>') } else {$('#srv_mongodb_rep').html('<i class="ion ion-thumbsdown" style="font-size:30px;color:red">') }
+if ( result[0].srv_rabbitmg_file== 0 ) { $('#srv_rabbitmg_file').html(' <i class="ion ion-thumbsup" style="font-size:30px;color:green"></i>') } else {$('#srv_rabbitmg_file').html('<i class="ion ion-thumbsdown" style="font-size:30px;color:red">') }
+if ( result[0].srv_rest_srv== 0 ) { $('#srv_rest_srv').html(' <i class="ion ion-thumbsup" style="font-size:30px;color:green"></i>') } else {$('#srv_rest_srv').html('<i class="ion ion-thumbsdown" style="font-size:30px;color:red">') }
+if ( result[0].srv_openflow == 0 ) { $('#srv_openflow').html(' <i class="ion ion-thumbsup" style="font-size:30px;color:green"></i>') } else {$('#srv_openflow').html('<i class="ion ion-thumbsdown" style="font-size:30px;color:red">') }
+if ( result[0].srv_ovsdb== 0 ) { $('#srv_ovsdb').html(' <i class="ion ion-thumbsup" style="font-size:30px;color:green"></i>') } else {$('#srv_ovsdb').html('<i class="ion ion-thumbsdown" style="font-size:30px;color:red">') }
+if ( result[0].srv_odlbgp== 0 ) { $('#srv_odlbgp').html(' <i class="ion ion-thumbsup" style="font-size:30px;color:green"></i>') } else {$('#srv_odlbgp').html('<i class="ion ion-thumbsdown" style="font-size:30px;color:red">') }
+
+
+
+if ( result[0].sdn_dpns== 0 ) { $('#dpns').html(' <i class="ion ion-thumbsup" style="font-size:30px;color:green"></i>') } else {$('#dpns').html('<i class="ion ion-thumbsdown" style="font-size:30px;color:red">') }
+if ( result[0].sdn_tep== 0 ) { $('#tep').html(' <i class="ion ion-thumbsup" style="font-size:30px;color:green"></i>') } else {$('#tep').html('<i class="ion ion-thumbsdown" style="font-size:30px;color:red">') }
+if ( result[0].sdn_tunnel== 0 ) { $('#tep_tunnel').html(' <i class="ion ion-thumbsup" style="font-size:30px;color:green"></i>') } else {$('#tep_tunnel').html('<i class="ion ion-thumbsdown" style="font-size:30px;color:red">') }
+if ( result[0].sdn_tunnel_st== 0 ) { $('#tunnel_status').html(' <i class="ion ion-thumbsup" style="font-size:30px;color:green"></i>') } else {$('#tunnel_status').html('<i class="ion ion-thumbsdown" style="font-size:30px;color:red">') }
+if ( result[0].sdn_app_status== 0 ) { $('#op_status').html(' <i class="ion ion-thumbsup" style="font-size:30px;color:green"></i>') } else {$('#op_status').html('<i class="ion ion-thumbsdown" style="font-size:30px;color:red">') }
+
+if ( result[0].sdn_shard_inv_status== 0 ) { $('#inv_conf_status').html(' <i class="ion ion-thumbsup" style="font-size:30px;color:green"></i>') } else {$('#inv_conf_status').html('<i class="ion ion-thumbsdown" style="font-size:30px;color:red">') }
+if ( result[0].sdn_shard_def_status== 0 ) { $('#def_conf_status').html(' <i class="ion ion-thumbsup" style="font-size:30px;color:green"></i>') } else {$('#def_conf_status').html('<i class="ion ion-thumbsdown" style="font-size:30px;color:red">') }	
+if ( result[0].sdn_shard_top_status== 0 ) { $('#top_conf_status').html(' <i class="ion ion-thumbsup" style="font-size:30px;color:green"></i>') } else {$('#top_conf_status').html('<i class="ion ion-thumbsdown" style="font-size:30px;color:red">') }
+if ( result[0].sdn_shard_invo_status== 0 ) { $('#invo_conf_status').html(' <i class="ion ion-thumbsup" style="font-size:30px;color:green"></i>') } else {$('#invo_conf_status').html('<i class="ion ion-thumbsdown" style="font-size:30px;color:red">') }
+if ( result[0].sdn_shard_defo_status== 0 ) { $('#defo_conf_status').html(' <i class="ion ion-thumbsup" style="font-size:30px;color:green"></i>') } else {$('#defo_conf_status').html('<i class="ion ion-thumbsdown" style="font-size:30px;color:red">') }
+if ( result[0].sdn_shard_topo_status== 0 ) { $('#topo_conf_status').html(' <i class="ion ion-thumbsup" style="font-size:30px;color:green"></i>') } else {$('#topo_conf_status').html('<i class="ion ion-thumbsdown" style="font-size:30px;color:red">') }
+if ( result[0].sdn_dpn_status== 0 ) { $('#cic1_status').html(' <i class="ion ion-thumbsup" style="font-size:30px;color:green"></i>');$('#cic2_status').html(' <i class="ion ion-thumbsup" style="font-size:30px;color:green"></i>');$('#cic3_status').html(' <i class="ion ion-thumbsup" style="font-size:30px;color:green"></i>');
+} else {$('#cic1_status').html('<i class="ion ion-thumbsdown" style="font-size:30px;color:red">');$('#cic2_status').html('<i class="ion ion-thumbsdown" style="font-size:30px;color:red">'); $('#cic3_status').html('<i class="ion ion-thumbsdown" style="font-size:30px;color:red">') }
+
+
+
+$('#op_count').text(result[0].sdn_app_count)
+$('#tunnel_count').text(result[0].sdn_tunnel_st_count)
+
+});
+
+
+ var salesChart
+ $('#datelog1').change(function(){
+ console.log(result[0])
+
+ var compare_result = []
+ $.ajax({
+            url : "/ajax-post",
+            type : "POST",
+            dataType: "json",
+            data: { date: $(this).val(),
+                 'csrfmiddlewaretoken': '{{ csrf_token }}',
+               },
+            async: false,
+            success: function(json) {
+              //result.push(json);
+              compare_result[0]=json;
+            },
+            failure: function(json) {
+                alert('Got an error dude: Contact Support Team.!!');
+            }
+        });
+
+
+ console.log(compare_result[0])
+ var date=$('#datelog').val()
+ var new_date = m='<i class="fas fa-square text-primary"></i>' + date
+ $('#blue_date').html(new_date)
+
+ var date=$('#datelog1').val()
+ var new_date = m='<i class="fas fa-square text-gray"></i>' + date
+ $('#gray_date').html(new_date)
+
+
+  var pass1 = result[0].passed_TC
+  var fail1 = result[0].failed_TC
+  var fail1_major = result[0].failed_major_TC
+  var fail1_minor = result[0].failed_minor_TC
+  var fail1_cat = result[0].failed_cat_TC
+  var fail1_war = result[0].failed_war_TC
+
+  var pass2 = compare_result[0].passed_TC
+  var fail2 = compare_result[0].failed_TC
+  var fail2_major = compare_result[0].failed_major_TC
+  var fail2_minor = compare_result[0].failed_minor_TC
+  var fail2_cat = compare_result[0].failed_cat_TC
+  var fail2_war = compare_result[0].failed_war_TC
+
+  var ticksStyle = {
+    fontColor: '#495057',
+    fontStyle: 'bold'
+  }
+
+  var mode      = 'index'
+  var intersect = true
+
+  var $salesChart = $('#history-chart')
+  if ( salesChart != null ) {
+  salesChart.destroy();
+  }
+    salesChart  = new Chart($salesChart, {
+    type   : 'bar',
+    data   : {
+      labels  : ['PASS', 'FAIL', 'MAJOR(Fail)', 'MINOR(Fail)', 'WARn(Fail)', 'CATs(Fail)'],
+      datasets: [
+        { 
+          backgroundColor: '#007bff',
+          borderColor    : '#007bff',
+          data           : [pass1,fail1,fail1_major,fail1_minor,fail1_war,fail1_cat]
+        },
+        { 
+          backgroundColor: '#ced4da',
+          borderColor    : '#ced4da',
+          data           : [pass2,fail2,fail2_major,fail2_minor,fail2_war,fail2_cat]
+        }
+      ]
+    },
+    options: {
+      maintainAspectRatio: false,
+      tooltips           : {
+        mode     : mode,
+        intersect: intersect
+      },
+//      hover              : {
+//        mode     : mode,
+//        intersect: intersect
+//      },
+      legend             : {
+        display: false
+      },
+      scales             : {
+        yAxes: [{
+          // display: false,
+          gridLines: {
+            display      : true,
+            lineWidth    : '4px',
+            color        : 'rgba(0, 0, 0, .2)',
+            zeroLineColor: 'transparent'
+          },
+          ticks    : $.extend({
+            beginAtZero: true,
+
+            // Include a dollar sign in the ticks
+            callback: function (value, index, values) {
+              return  value
+            }
+          }, ticksStyle)
+        }],
+        xAxes: [{
+          display  : true,
+          gridLines: {
+            display: false
+          },
+//          ticks    : ticksStyle
+        }]
+      }
+    }
+  });
+
+
+});
+
+
+
+
+$(function(){
+       var result = []
+
+//Anoop/
+// var result = []
+
+ $.ajax({
+            url : "/ajax-post",
+            type : "POST",
+            dataType: "json",
+            data: { date: $('#datelog').val(),
+                 'csrfmiddlewaretoken': '{{ csrf_token }}',
+               },
+            async: false,
+            success: function(json) {
+              //result.push(json);
+              result[0]=json;
+            },
+            failure: function(json) {
+                alert('Got an error dude: Contact Support Team.!!');
+            },
+          statusCode: {
+           500: function() {
+           alert("Server Error, Contact Support Team.!!");
+           }
+    },
+        });
+
+ console.log(result)
+ document.getElementById('total').textContent = result[0].total_TC
+ document.getElementById('passed').textContent = result[0].passed_TC
+ document.getElementById('failed').textContent = result[0].failed_TC
+ document.getElementById('failedm').textContent = result[0].failed_major_TC
+
+
+//
+  // Donut Chart
+  var pieChartCanvas = $('#reportChart').get(0).getContext('2d')
+  console.log(result)
+  var passed = result[0].passed_TC
+  var failed_major = result[0].failed_major_TC
+  var failed_minor = result[0].failed_minor_TC
+  var failed_catest = result[0].failed_cat_TC
+  var failed_warning = result[0].failed_war_TC
+
+  var pieData        = {
+    labels: [
+        'PASSED',
+        'FAILED(Major)',
+        'FAILED(Minor)',
+        'FAILED(Catestrophic)',
+        'FAILED(Warning)',
+    ],
+    datasets: [
+      {
+        data: [passed,failed_major,failed_minor,failed_catest,failed_warning ],
+        backgroundColor : ['#00a65a','#8B0000','#FF7F50','#DEB887','#FFEBCD'],
+      }
+    ]
+  }
+  var pieOptions = {
+    legend: {
+      display: true,
+      position: 'left',
+    },
+    maintainAspectRatio : false,
+    responsive : true,
+  }
+  //Create pie or douhnut chart
+  // You can switch between pie and douhnut using the method below.
+  var pieChart = new Chart(pieChartCanvas, {
+    type: 'doughnut',
+    data: pieData,
+    options: pieOptions
+  });
+
+document.getElementById('date').textContent = result[0].date
+
+pass = result[0].sdn_passed_TC
+fail = result[0].sdn_failed_TC
+total = pass + fail
+pass_per = (pass/ total * 100) + '%'
+data1 = pass.toString()
+data2 = total.toString()
+data = '<b>'+data1+'</b>/'+data2 +' [<b>Passed</b>/Total]'
+$('#sdn_value').html(data)
+$('#sdn_val_per').width(pass_per)
+
+
+pass = result[0].cee_passed_TC
+fail = result[0].cee_failed_TC
+total = pass + fail
+pass_per = (pass/ total * 100) + '%'
+data1 = pass.toString()
+data2 = total.toString()
+data = '<b>'+data1+'</b>/'+data2 +' [<b>Passed</b>/Total]'
+$('#os_value').html(data)
+$('#os_val_per').width(pass_per)
+
+
+pass = result[0].allnode_passed_TC
+fail = result[0].allnode_failed_TC
+total = pass + fail
+pass_per = (pass/ total * 100) + '%'
+data1 = pass.toString()
+data2 = total.toString()
+data = '<b>'+data1+'</b>/'+data2 +' [<b>Passed</b>/Total]'
+$('#srv_value').html(data)
+$('#srv_val_per').width(pass_per)
+
+
+pass = result[0].fuel_passed_TC
+fail = result[0].fuel_failed_TC
+total = pass + fail
+pass_per = (pass/ total * 100) + '%'
+console.log(pass_per)
+data1 = pass.toString()
+data2 = total.toString()
+data = '<b>'+data1+'</b>/'+data2 +' [<b>Passed</b>/Total]'
+$('#con_val_per').width(pass_per)
+$('#con_value').html(data)
+
+
+//Total-Testcases href update on selected date
+sel_date = $('#datelog').val()
+$('#date_report1').attr("href","/dbtable_date?date="+sel_date+"&type=1")
+$('#date_report2').attr("href","/dbtable_date?date="+sel_date+"&type=2")
+$('#date_report3').attr("href","/dbtable_date?date="+sel_date+"&type=3")
+$('#date_report4').attr("href","/dbtable_date?date="+sel_date+"&type=4")
+
+
+
+if ( result[0].os_nova_list == 0 ) { $('#nova_list').html(' <i class="ion ion-thumbsup" style="font-size:30px;color:green"></i>') } else {$('#nova_list').html('<i class="ion ion-thumbsdown" style="font-size:30px;color:red">') }
+if ( result[0].os_nova_hypv == 0 ) { $('#nova_hypv').html(' <i class="ion ion-thumbsup" style="font-size:30px;color:green"></i>') } else {$('#nova_hypv').html('<i class="ion ion-thumbsdown" style="font-size:30px;color:red">') }
+if ( result[0].os_cinder_srv == 0 ) { $('#cinder_srv').html(' <i class="ion ion-thumbsup" style="font-size:30px;color:green"></i>') } else {$('#cinder_srv').html('<i class="ion ion-thumbsdown" style="font-size:30px;color:red">') }
+if ( result[0].os_neutron_agent == 0 ) { $('#neutron_agent').html(' <i class="ion ion-thumbsup" style="font-size:30px;color:green"></i>') } else {$('#neutron_agent').html('<i class="ion ion-thumbsdown" style="font-size:30px;color:red">') }
+if ( result[0].os_nova_srv == 0 ) { $('#nova_srv').html(' <i class="ion ion-thumbsup" style="font-size:30px;color:green"></i>') } else {$('#nova_srv').html('<i class="ion ion-thumbsdown" style="font-size:30px;color:red">') }
+if ( result[0].os_glance_image == 0 ) { $('#glance').html(' <i class="ion ion-thumbsup" style="font-size:30px;color:green"></i>') } else {$('#glance').html('<i class="ion ion-thumbsdown" style="font-size:30px;color:red">') }
+if ( result[0].os_ceilometer_meter == 0 ) { $('#ceilometer').html(' <i class="ion ion-thumbsup" style="font-size:30px;color:green"></i>') } else {$('#ceilometer').html('<i class="ion ion-thumbsdown" style="font-size:30px;color:red">') }
+if ( result[0].os_project_list == 0 ) { $('#project').html(' <i class="ion ion-thumbsup" style="font-size:30px;color:green"></i>') } else {$('#project').html('<i class="ion ion-thumbsdown" style="font-size:30px;color:red">') }
+if ( result[0].os_srv_list == 0 ) { $('#os_srv').html(' <i class="ion ion-thumbsup" style="font-size:30px;color:green"></i>') } else {$('#os_srv').html('<i class="ion ion-thumbsdown" style="font-size:30px;color:red">') }
+if ( result[0].os_neutron_net == 0 ) { $('#neutron_net').html(' <i class="ion ion-thumbsup" style="font-size:30px;color:green"></i>') } else {$('#neutron_net').html('<i class="ion ion-thumbsdown" style="font-size:30px;color:red">') }
+
+
+if ( result[0].srv_watchmen== 0 ) { $('#srv_watchmen').html(' <i class="ion ion-thumbsup" style="font-size:30px;color:green"></i>') } else {$('#srv_watchmen').html('<i class="ion ion-thumbsdown" style="font-size:30px;color:red">') }
+if ( result[0].srv_rabbitmq_cls== 0 ) { $('#srv_rabbitmq_cls').html(' <i class="ion ion-thumbsup" style="font-size:30px;color:green"></i>') } else {$('#srv_rabbitmq_cls').html('<i class="ion ion-thumbsdown" style="font-size:30px;color:red">') }
+if ( result[0].srv_rabbitmq_lst== 0 ) { $('#srv_rabbitmq_lst').html(' <i class="ion ion-thumbsup" style="font-size:30px;color:green"></i>') } else {$('#srv_rabbitmq_lst').html('<i class="ion ion-thumbsdown" style="font-size:30px;color:red">') }
+if ( result[0].srv_galera_mysql== 0 ) { $('#srv_galera_mysql').html(' <i class="ion ion-thumbsup" style="font-size:30px;color:green"></i>') } else {$('#srv_galera_mysql').html('<i class="ion ion-thumbsdown" style="font-size:30px;color:red">') }
+if ( result[0].srv_mongodb== 0 ) { $('#srv_mongodb').html(' <i class="ion ion-thumbsup" style="font-size:30px;color:green"></i>') } else {$('#srv_mongodb').html('<i class="ion ion-thumbsdown" style="font-size:30px;color:red">') }
+if ( result[0].srv_mongodb_rep== 0 ) { $('#srv_mongodb_rep').html(' <i class="ion ion-thumbsup" style="font-size:30px;color:green"></i>') } else {$('#srv_mongodb_rep').html('<i class="ion ion-thumbsdown" style="font-size:30px;color:red">') }
+if ( result[0].srv_rabbitmg_file== 0 ) { $('#srv_rabbitmg_file').html(' <i class="ion ion-thumbsup" style="font-size:30px;color:green"></i>') } else {$('#srv_rabbitmg_file').html('<i class="ion ion-thumbsdown" style="font-size:30px;color:red">') }
+if ( result[0].srv_rest_srv== 0 ) { $('#srv_rest_srv').html(' <i class="ion ion-thumbsup" style="font-size:30px;color:green"></i>') } else {$('#srv_rest_srv').html('<i class="ion ion-thumbsdown" style="font-size:30px;color:red">') }
+if ( result[0].srv_openflow == 0 ) { $('#srv_openflow').html(' <i class="ion ion-thumbsup" style="font-size:30px;color:green"></i>') } else {$('#srv_openflow').html('<i class="ion ion-thumbsdown" style="font-size:30px;color:red">') }
+if ( result[0].srv_ovsdb== 0 ) { $('#srv_ovsdb').html(' <i class="ion ion-thumbsup" style="font-size:30px;color:green"></i>') } else {$('#srv_ovsdb').html('<i class="ion ion-thumbsdown" style="font-size:30px;color:red">') }
+if ( result[0].srv_odlbgp== 0 ) { $('#srv_odlbgp').html(' <i class="ion ion-thumbsup" style="font-size:30px;color:green"></i>') } else {$('#srv_odlbgp').html('<i class="ion ion-thumbsdown" style="font-size:30px;color:red">') }
+
+
+
+if ( result[0].sdn_dpns== 0 ) { $('#dpns').html(' <i class="ion ion-thumbsup" style="font-size:30px;color:green"></i>') } else {$('#dpns').html('<i class="ion ion-thumbsdown" style="font-size:30px;color:red">') }
+if ( result[0].sdn_tep== 0 ) { $('#tep').html(' <i class="ion ion-thumbsup" style="font-size:30px;color:green"></i>') } else {$('#tep').html('<i class="ion ion-thumbsdown" style="font-size:30px;color:red">') }
+if ( result[0].sdn_tunnel== 0 ) { $('#tep_tunnel').html(' <i class="ion ion-thumbsup" style="font-size:30px;color:green"></i>') } else {$('#tep_tunnel').html('<i class="ion ion-thumbsdown" style="font-size:30px;color:red">') }
+if ( result[0].sdn_tunnel_st== 0 ) { $('#tunnel_status').html(' <i class="ion ion-thumbsup" style="font-size:30px;color:green"></i>') } else {$('#tunnel_status').html('<i class="ion ion-thumbsdown" style="font-size:30px;color:red">') }
+if ( result[0].sdn_app_status== 0 ) { $('#op_status').html(' <i class="ion ion-thumbsup" style="font-size:30px;color:green"></i>') } else {$('#op_status').html('<i class="ion ion-thumbsdown" style="font-size:30px;color:red">') }
+
+if ( result[0].sdn_shard_inv_status== 0 ) { $('#inv_conf_status').html(' <i class="ion ion-thumbsup" style="font-size:30px;color:green"></i>') } else {$('#inv_conf_status').html('<i class="ion ion-thumbsdown" style="font-size:30px;color:red">') }
+if ( result[0].sdn_shard_def_status== 0 ) { $('#def_conf_status').html(' <i class="ion ion-thumbsup" style="font-size:30px;color:green"></i>') } else {$('#def_conf_status').html('<i class="ion ion-thumbsdown" style="font-size:30px;color:red">') }
+if ( result[0].sdn_shard_top_status== 0 ) { $('#top_conf_status').html(' <i class="ion ion-thumbsup" style="font-size:30px;color:green"></i>') } else {$('#top_conf_status').html('<i class="ion ion-thumbsdown" style="font-size:30px;color:red">') }
+if ( result[0].sdn_shard_invo_status== 0 ) { $('#invo_conf_status').html(' <i class="ion ion-thumbsup" style="font-size:30px;color:green"></i>') } else {$('#invo_conf_status').html('<i class="ion ion-thumbsdown" style="font-size:30px;color:red">') }
+if ( result[0].sdn_shard_defo_status== 0 ) { $('#defo_conf_status').html(' <i class="ion ion-thumbsup" style="font-size:30px;color:green"></i>') } else {$('#defo_conf_status').html('<i class="ion ion-thumbsdown" style="font-size:30px;color:red">') }
+if ( result[0].sdn_shard_topo_status== 0 ) { $('#topo_conf_status').html(' <i class="ion ion-thumbsup" style="font-size:30px;color:green"></i>') } else {$('#topo_conf_status').html('<i class="ion ion-thumbsdown" style="font-size:30px;color:red">') }
+if ( result[0].sdn_dpn_status== 0 ) { $('#cic1_status').html(' <i class="ion ion-thumbsup" style="font-size:30px;color:green"></i>');$('#cic2_status').html(' <i class="ion ion-thumbsup" style="font-size:30px;color:green"></i>');$('#cic3_status').html(' <i class="ion ion-thumbsup" style="font-size:30px;color:green"></i>');
+} else {$('#cic1_status').html('<i class="ion ion-thumbsdown" style="font-size:30px;color:red">');$('#cic2_status').html('<i class="ion ion-thumbsdown" style="font-size:30px;color:red">'); $('#cic3_status').html('<i class="ion ion-thumbsdown" style="font-size:30px;color:red">') }
+
+
+
+$('#op_count').text(result[0].sdn_app_count)
+$('#tunnel_count').text(result[0].sdn_tunnel_st_count)
+
+
+
+ var salesChart
+
+ console.log(result[0])
+
+ var compare_result = []
+ $.ajax({
+            url : "/ajax-post",
+            type : "POST",
+            dataType: "json",
+            data: { date: $('#datelog1').val(),
+                 'csrfmiddlewaretoken': '{{ csrf_token }}',
+               },
+            async: false,
+            success: function(json) {
+              //result.push(json);
+              compare_result[0]=json;
+            },
+            failure: function(json) {
+                alert('Got an error dude: Contact Support Team.!!');
+            }
+        });
+
+
+ console.log(compare_result[0])
+ var date=$('#datelog').val()
+ var new_date = m='<i class="fas fa-square text-primary"></i>' + date
+ $('#blue_date').html(new_date)
+
+ var date=$('#datelog1').val()
+ var new_date = m='<i class="fas fa-square text-gray"></i>' + date
+ $('#gray_date').html(new_date)
+
+
+  var pass1 = result[0].passed_TC
+  var fail1 = result[0].failed_TC
+  var fail1_major = result[0].failed_major_TC
+  var fail1_minor = result[0].failed_minor_TC
+  var fail1_cat = result[0].failed_cat_TC
+  var fail1_war = result[0].failed_war_TC
+
+  var pass2 = compare_result[0].passed_TC
+  var fail2 = compare_result[0].failed_TC
+  var fail2_major = compare_result[0].failed_major_TC
+  var fail2_minor = compare_result[0].failed_minor_TC
+  var fail2_cat = compare_result[0].failed_cat_TC
+  var fail2_war = compare_result[0].failed_war_TC
+
+  var ticksStyle = {
+    fontColor: '#495057',
+    fontStyle: 'bold'
+  }
+
+  var mode      = 'index'
+  var intersect = true
+
+  var $salesChart = $('#history-chart')
+  if ( salesChart != null ) {
+  salesChart.destroy();
+  }
+    salesChart  = new Chart($salesChart, {
+    type   : 'bar',
+    data   : {
+      labels  : ['PASS', 'FAIL', 'MAJOR(Fail)', 'MINOR(Fail)', 'WARn(Fail)', 'CATs(Fail)'],
+      datasets: [
+        {
+          backgroundColor: '#007bff',
+          borderColor    : '#007bff',
+          data           : [pass1,fail1,fail1_major,fail1_minor,fail1_war,fail1_cat]
+        },
+        {
+          backgroundColor: '#ced4da',
+          borderColor    : '#ced4da',
+          data           : [pass2,fail2,fail2_major,fail2_minor,fail2_war,fail2_cat]
+        }
+      ]
+    },
+    options: {
+      maintainAspectRatio: false,
+      tooltips           : {
+        mode     : mode,
+        intersect: intersect
+      },
+//      hover              : {
+//        mode     : mode,
+//        intersect: intersect
+//      },
+      legend             : {
+        display: false
+      },
+      scales             : {
+        yAxes: [{
+          // display: false,
+          gridLines: {
+            display      : true,
+            lineWidth    : '4px',
+            color        : 'rgba(0, 0, 0, .2)',
+            zeroLineColor: 'transparent'
+          },
+          ticks    : $.extend({
+            beginAtZero: true,
+
+            // Include a dollar sign in the ticks
+            callback: function (value, index, values) {
+              return  value
+            }
+          }, ticksStyle)
+        }],
+        xAxes: [{
+          display  : true,
+          gridLines: {
+            display: false
+          },
+//          ticks    : ticksStyle
+        }]
+      }
+    }
+  });
+
+});
+</script>
+
+{% endblock %}

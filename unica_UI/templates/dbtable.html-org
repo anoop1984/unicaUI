@@ -1,0 +1,120 @@
+{% extends 'admin/base_site.html' %}
+
+
+
+{% block branding %}
+
+<div id="branding">
+        
+
+<h1 id="head" >
+     <img src="/static/img/unica.jpg"  alt="Unica Admin Area"  height="50" width="80"> Unic@Operations
+</h1>
+
+</div>
+        
+{% endblock %}
+
+{% block breadcrumbs %}
+
+ <div  class="breadcrumbs">
+ <a href="/pages">Dashboard</a>
+
+ </div>
+
+{% endblock %}
+{% block content %}
+
+<style>
+* {
+  box-sizing: border-box;
+}
+
+#myInput {
+  background-image: url('img/searchicon.png');
+  background-position: 10px 10px;
+  background-repeat: no-repeat;
+  width: 100%;
+  font-size: 16px;
+  padding: 12px 20px 12px 40px;
+  border: 1px solid #ddd;
+  margin-bottom: 12px;
+}
+
+#myTable {
+  border-collapse: collapse;
+  width: 75%;
+  border: 1px solid #ddd;
+  font-size: 16px;
+}
+
+#myTable th, #myTable td {
+  text-align: left;
+  padding: 10px;
+  border: 2px solid #ddd;
+}
+
+#myTable tr {
+  border-bottom: 1px solid #ddd;
+}
+
+#myTable tr.header, #myTable tr:hover {
+  background-color: #f1f1f1;
+}
+</style>
+
+<input type="text" id="myInput" onkeyup="myFunction()" placeholder="Search for fields.." title="Type in a name">
+<div class="container">
+ {% if monitor_records %}
+   <table id="myTable">
+     <thead>
+        <th>Test Description</th>
+        <th>Severity</th>
+        <th>IpAddress</th>
+        <th>Hostname</th>
+        <th>Command-Executed</th>
+        <th>Verdict</th>
+        <th>Remarks</th>
+        <th>testId</th>
+     </thead>
+   {% for it in monitor_records %}
+      <tr class="header">
+        <td>{{ it.desc }}</td>
+        <td>{{ it.severity }}</td>
+        <td>{{ it.ipaddr }}</td>
+        <td>{{ it.hostname }}</td>
+        <td>{{ it.command }}</td>
+        <td>{{ it.verdict}} </td>
+        <td>{{ it.remarks }}</td>
+        <td>{{ it.test_id }}</td>
+      </td>
+   {% endfor %}
+   </table>
+  {% endif %}
+</div>
+
+<script>
+function myFunction() {
+    var input, filter, found, table, tr, td, i, j;
+    input = document.getElementById("myInput");
+    filter = input.value.toUpperCase();
+    table = document.getElementById("myTable");
+    tr = table.getElementsByTagName("tr");
+    for (i = 1; i < tr.length; i++) {
+        td = tr[i].getElementsByTagName("td");
+        for (j = 0; j < td.length; j++) {
+            if (td[j].innerHTML.toUpperCase().indexOf(filter) > -1) {
+                found = true;
+            }
+        }
+        if (found) {
+            tr[i].style.display = "";
+            found = false;
+        } else {
+            tr[i].style.display = "none";
+        }
+    }
+}
+</script>
+
+{% endblock %}

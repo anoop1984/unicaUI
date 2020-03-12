@@ -1,0 +1,689 @@
+
+{% extends 'base.html' %}
+
+{% load static %}
+{% block content %}
+
+
+  <!-- Content Wrapper. Contains page content -->
+  <div class="content-wrapper">
+    <!-- Content Header (Page header) -->
+    <div class="content-header">
+      <div class="container-fluid">
+        <div class="row mb-2">
+          <div class="col-sm-6">
+            <h1 class="m-0 text-dark">UNICA Healthcheck</h1>
+          </div><!-- /.col -->
+          <div class="col-sm-6">
+            <ol class="breadcrumb float-sm-right">
+              <li class="breadcrumb-item"><a href="#">Home</a></li>
+              <li class="breadcrumb-item active">UNICA Healthcheck</li>
+                <select id="datelog" class="form-control">
+         	{% if dates %}
+        	{% for date in dates %}
+        	<option value="{{ date.date }}">{{ date.date }}</option>
+        	{% endfor %}
+        	{% endif %}
+               </select>
+              
+            </ol>
+          </div><!-- /.col -->
+        </div><!-- /.row -->
+      </div><!-- /.container-fluid -->
+    </div>
+    <!-- /.content-header -->
+
+    <!-- Main content -->
+    <section class="content">
+
+     <div class="row">
+          <div class="col-md-12">
+
+          <!-- /.col -->
+        </div>
+        <!-- /.row -->
+      <div class="container-fluid">
+        <!-- Info boxes -->
+       <!-- info box deleted--> 
+        <!-- /.row -->
+
+        <div class="row">
+          <div class="col-md-12">
+            <div class="card">
+              <div class="card-header">
+                <h5 class="card-title">Health Report</h5>
+
+                <!--div class="card-tools">
+                  <button type="button" class="btn btn-tool" data-card-widget="collapse">
+                    <i class="fas fa-minus"></i>
+                  </button>
+                  <div class="btn-group">
+                    <button type="button" class="btn btn-tool dropdown-toggle" data-toggle="dropdown">
+                      <i class="fas fa-wrench"></i>
+                    </button>
+                    <div class="dropdown-menu dropdown-menu-right" role="menu">
+                      <a href="#" class="dropdown-item">Action</a>
+                      <a href="#" class="dropdown-item">Another action</a>
+                      <a href="#" class="dropdown-item">Something else here</a>
+                      <a class="dropdown-divider"></a>
+                      <a href="#" class="dropdown-item">Separated link</a>
+                    </div>
+                  </div>
+                  <button type="button" class="btn btn-tool" data-card-widget="remove">
+                    <i class="fas fa-times"></i>
+                  </button>
+                </div-->
+              </div>
+              <!-- /.card-header -->
+              <div class="card-body">
+                <div class="row">
+                  <div class="col-md-8">
+                    <p class="text-center">
+                      <strong id="date">--</strong>
+                    </p>
+
+                    <div class="chart">
+                      <!-- Sales Chart Canvas -->
+                      <canvas id="reportChart" height="250" style="height: 250px;"></canvas>
+                    </div>
+                    <!-- /.chart-responsive -->
+                  </div>
+                  <!-- /.col -->
+                  <div class="col-md-4">
+                    <p class="text-center">
+                      <strong>Stats</strong>
+                    </p>
+
+                    <div class="progress-group">
+                      Openstack 
+                      <span class="float-right" id="os_value" >0/0</span>
+                      <div class="progress progress-sm">
+                        <div class="progress-bar bg-primary" id="os_val_per" style="width: 0%"></div>
+                      </div>
+                    </div>
+                    <!-- /.progress-group -->
+
+                    <div class="progress-group">
+                     SDN 
+                      <span class="float-right" id="sdn_value">0/0</span>
+                      <div class="progress progress-sm">
+                        <div class="progress-bar bg-danger" id="sdn_val_per" style="width: 0%"></div>
+                      </div>
+                    </div>
+                    <!-- /.progress-group -->
+                    <div class="progress-group">
+                      <span class="progress-text">Controller</span>
+                      <span class="float-right" id="con_value">0/0</span>
+                      <div class="progress progress-sm">
+                        <div class="progress-bar bg-success" id="con_val_per" style="width: 0%"></div>
+                      </div>
+                    </div>
+
+                    <!-- /.progress-group -->
+                    <div class="progress-group">
+                      Services 
+                      <span class="float-right" id="srv_value">0/0</span>
+                      <div class="progress progress-sm">
+                        <div class="progress-bar bg-warning" id="srv_val_per" style="width: 0%"></div>
+                      </div>
+                    </div>
+                    <!-- /.progress-group -->
+                  </div>
+                  <!-- /.col -->
+                </div>
+                <!-- /.row -->
+              </div>
+              <!-- ./card-body -->
+              <div class="card-footer">
+                <div class="row">
+                  <div class="col-sm-3 col-6">
+                    <div class="description-block border-right">
+                      <span class="description-percentage text-success"><i class="fas fa-caret-up"></i> </span>
+                      <h5 class="description-header"></h5>
+                      <span class="description-text"></span>
+                    </div>
+                    <!-- /.description-block -->
+                  </div>
+                  <!-- /.col -->
+                  <div class="col-sm-3 col-6">
+                    <div class="description-block border-right">
+                      <span class="description-percentage text-warning"><i class="fas fa-caret-left"></i></span>
+                      <h5 class="description-header"></h5>
+                      <span class="description-text"></span>
+                    </div>
+                    <!-- /.description-block -->
+                  </div>
+                  <!-- /.col -->
+                  <div class="col-sm-3 col-6">
+                    <div class="description-block border-right">
+                      <span class="description-percentage text-success"><i class="fas fa-caret-up"></i></span>
+                      <h5 class="description-header"></h5>
+                      <span class="description-text"></span>
+                    </div>
+                    <!-- /.description-block -->
+                  </div>
+                  <!-- /.col -->
+                  <div class="col-sm-3 col-6">
+                    <div class="description-block">
+                      <span class="description-percentage text-danger"><i class="fas fa-caret-down"></i> </span>
+                      <h5 class="description-header"></h5>
+                      <span class="description-text"></span>
+                    </div>
+                    <!-- /.description-block -->
+                  </div>
+                </div>
+                <!-- /.row -->
+              </div>
+              <!-- /.card-footer -->
+            </div>
+            <!-- /.card -->
+          </div>
+          <!-- /.col -->
+        </div>
+        <!-- /.row -->
+
+
+<!---unica-->
+
+        <div class="row">
+          <div class="col-lg-3 col-6">
+            <!-- small box -->
+            <div class="small-box bg-info">
+              <div class="inner">
+                <h3 id="total">0</h3>
+              
+                <p>Total TestCases
+                <i class="ion ion-home"></i></p>
+              </div>
+              <div class="icon">
+                <i class="ion ion-home"></i>
+              </div>
+              <a href="#" class="small-box-footer">More info <i class="fas fa-arrow-circle-right"></i></a>
+            </div>
+          </div>
+          <!-- ./col -->
+          <div class="col-lg-3 col-6">
+            <!-- small box -->
+            <div class="small-box bg-success">
+              <div class="inner">
+                <!--h3>53<sup style="font-size: 20px">%</sup></h3-->
+                <h3 id="passed">0</h3>
+                  
+                <p>Passed</p>
+              </div>  
+              <div class="icon">
+                <i class="ion ion-beer"></i>
+              </div>  
+              <a href="/dbtable" class="small-box-footer">More info <i class="fas fa-arrow-circle-right"></i></a>
+            </div>
+          </div>
+          <!-- ./col -->
+          <div class="col-lg-3 col-6">
+            <!-- small box -->
+            <div class="small-box bg-danger">
+              <div class="inner">
+                <h3 id="failed">0</h3>
+
+                <p>FAILED</p>
+              </div>
+              <div class="icon">
+                <i class="ion ion-alert"></i>
+              </div>
+              <a href="#" class="small-box-footer">More info <i class="fas fa-arrow-circle-right"></i></a>
+            </div>
+          </div>
+          <!-- ./col -->
+          <div class="col-lg-3 col-6">
+            <!-- small box -->
+            <div class="small-box bg-warning">
+              <div class="inner">
+                <h3 id="failedm">0</h3>
+
+                <p>FAILED Major</p>
+              </div>
+              <div class="icon">
+                <i class="ion ion-heart-broken"></i>
+              </div>
+              <a href="#" class="small-box-footer">More info <i class="fas fa-arrow-circle-right"></i></a>
+            </div>
+          </div>
+          <!-- ./col -->
+        </div>
+        <!-- /.row -->
+<!---unica-->
+
+        <!-- Main row -->
+        <div class="row">
+          <!-- Left col -->
+          <div class="col-md-8">
+            <!-- MAP & BOX PANE -->
+            
+            <!-- /.card -->
+            <div class="row">
+<!--Start-->
+              <div class="col-md-6">
+                <!-- DIRECT CHAT -->
+                
+            <div class="card">
+              <div class="card-header">
+                <h3 class="card-title">Bordered Table</h3>
+              </div>
+
+              <!-- /.card-header -->
+              <div class="card-body">
+                <table class="table table-bordered">
+                  <thead>
+                    <tr>
+                      <th style="width: 10px">#</th>
+                      <th>Task</th>
+                      <th>Progress</th>
+                      <th style="width: 40px">Label</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr>
+                      <td>1.</td>
+                      <td>Update software</td>
+                      <td>
+                        <div class="progress progress-xs">
+                          <div class="progress-bar progress-bar-danger" style="width: 55%"></div>
+                        </div>
+                      </td>
+                      <td><span class="badge bg-danger">55%</span></td>
+                    </tr>
+                    <tr>
+                      <td>2.</td>
+                      <td>Clean database</td>
+                      <td>
+                        <div class="progress progress-xs">
+                          <div class="progress-bar bg-warning" style="width: 70%"></div>
+                        </div>
+                      </td>
+                      <td><span class="badge bg-warning">70%</span></td>
+                    </tr>
+                    <tr>
+                      <td>3.</td>
+                      <td>Cron job running</td>
+                      <td>
+                        <div class="progress progress-xs progress-striped active">
+                          <div class="progress-bar bg-primary" style="width: 30%"></div>
+                        </div>
+                      </td>
+                      <td><span class="badge bg-primary">30%</span></td>
+                    </tr>
+                    <tr>
+                      <td>4.</td>
+                      <td>Fix and squish bugs</td>
+                      <td>
+                        <div class="progress progress-xs progress-striped active">
+                          <div class="progress-bar bg-success" style="width: 90%"></div>
+                        </div>
+                      </td>
+                      <td><span class="badge bg-success">90%</span></td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+              <!-- /.card-body -->
+              
+            </div>
+            <!-- /.card -->
+
+                <!--/.direct-chat -->
+              </div>
+
+<!--End-->
+              <!-- /.col -->
+
+<!--start-->
+              <div class="col-md-6">
+                <!-- DIRECT CHAT -->
+                
+            <div class="card">
+              <div class="card-header">
+                <h3 class="card-title">Bordered Table</h3>
+              </div>
+
+              <!-- /.card-header -->
+              <div class="card-body">
+                <table class="table table-bordered">
+                  <thead>
+                    <tr>
+                      <th style="width: 10px">#</th>
+                      <th>Task</th>
+                      <th>Progress</th>
+                      <th style="width: 40px">Label</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr>
+                      <td>1.</td>
+                      <td>Update software</td>
+                      <td>
+                        <div class="progress progress-xs">
+                          <div class="progress-bar progress-bar-danger" style="width: 55%"></div>
+                        </div>
+                      </td>
+                      <td><span class="badge bg-danger">55%</span></td>
+                    </tr>
+                    <tr>
+                      <td>2.</td>
+                      <td>Clean database</td>
+                      <td>
+                        <div class="progress progress-xs">
+                          <div class="progress-bar bg-warning" style="width: 70%"></div>
+                        </div>
+                      </td>
+                      <td><span class="badge bg-warning">70%</span></td>
+                    </tr>
+                    <tr>
+                      <td>3.</td>
+                      <td>Cron job running</td>
+                      <td>
+                        <div class="progress progress-xs progress-striped active">
+                          <div class="progress-bar bg-primary" style="width: 30%"></div>
+                        </div>
+                      </td>
+                      <td><span class="badge bg-primary">30%</span></td>
+                    </tr>
+                    <tr>
+                      <td>4.</td>
+                      <td>Fix and squish bugs</td>
+                      <td>
+                        <div class="progress progress-xs progress-striped active">
+                          <div class="progress-bar bg-success" style="width: 90%"></div>
+                        </div>
+                      </td>
+                      <td><span class="badge bg-success">90%</span></td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+              <!-- /.card-body -->
+              
+            </div>
+            <!-- /.card -->
+
+                <!--/.direct-chat -->
+              </div>
+<!--end-->
+              <!-- /.col -->
+            </div>
+            <!-- /.row -->
+
+
+            <!-- TABLE: LATEST ORDERS -->
+            
+            <!-- /.card -->
+          </div>
+          <!-- /.col -->
+
+          <div class="col-md-4">
+            <!-- Info Boxes Style 2 -->
+            <div class="info-box mb-3 bg-warning">
+              <span class="info-box-icon"><i class="fas fa-tag"></i></span>
+
+              <div class="info-box-content">
+                <span class="info-box-text">Inventory</span>
+                <span class="info-box-number">5,200</span>
+              </div>
+              <!-- /.info-box-content -->
+            </div>
+            <!-- /.info-box -->
+            <div class="info-box mb-3 bg-success">
+              <span class="info-box-icon"><i class="far fa-heart"></i></span>
+
+              <div class="info-box-content">
+                <span class="info-box-text">Mentions</span>
+                <span class="info-box-number">92,050</span>
+              </div>
+              <!-- /.info-box-content -->
+            </div>
+            <!-- /.info-box -->
+            <div class="info-box mb-3 bg-danger">
+              <span class="info-box-icon"><i class="fas fa-cloud-download-alt"></i></span>
+
+              <div class="info-box-content">
+                <span class="info-box-text">Downloads</span>
+                <span class="info-box-number">114,381</span>
+              </div>
+              <!-- /.info-box-content -->
+            </div>
+            <!-- /.info-box -->
+            <div class="info-box mb-3 bg-info">
+              <span class="info-box-icon"><i class="far fa-comment"></i></span>
+
+              <div class="info-box-content">
+                <span class="info-box-text">Direct Messages</span>
+                <span class="info-box-number">163,921</span>
+              </div>
+              <!-- /.info-box-content -->
+            </div>
+            <!-- /.info-box -->
+
+            <!-- /.info-box -->
+	    <div class="info-box mb-3 bg-info">
+              <span class="info-box-icon"><i class="far fa-comment"></i></span>
+
+              <div class="info-box-content">
+                <span class="info-box-text">Direct Messages</span>
+                <span class="info-box-number">163,921</span>
+              </div>
+              <!-- /.info-box-content -->
+            </div>
+            <!-- /.info-box -->
+            
+            <!-- /.card -->
+
+            <!-- PRODUCT LIST -->
+            
+            <!-- /.card -->
+          </div>
+          <!-- /.col -->
+        </div>
+          <div class="row">
+            <div class="col-md-12">
+        
+             <div class="card">
+              <div class="card-header border-transparent">
+                <h3 class="card-title">Failed Test-Cases</h3>
+
+                <div class="card-tools">
+                  <button type="button" class="btn btn-tool" data-card-widget="collapse">
+                    <i class="fas fa-minus"></i>
+                  </button>
+                  <button type="button" class="btn btn-tool" data-card-widget="remove">
+                    <i class="fas fa-times"></i>
+                  </button>
+                </div>
+              </div>
+              <!-- /.card-header -->
+              <div class="card-body p-0">
+                <div class="table-responsive">
+                <table id="example1" class="table table-bordered table-hover" style="width:100%">
+                <thead>
+                <tr>
+                  <th>Date</th>
+                  <th>Description</th>
+                  <th>Severity</th>
+                  <th>IpAddress</th>
+                  <th>Hostname</th>
+                  <th>Command</th>
+                  <th>Verdict</th>
+                  <th>Remarks</th>
+                  <th>TestId</th>
+                </tr>
+                </thead> 
+
+                </table>
+                </div>
+                <!-- /.table-responsive -->
+              </div>
+              <!-- /.card-body -->
+              
+              <!-- /.card-footer -->
+            </div>
+           </div>
+          </div>
+
+        <!-- /.row -->
+      </div><!--/. container-fluid -->
+    </section>
+    <!-- /.content -->
+  </div>
+  <!-- /.content-wrapper -->
+
+  <!-- Control Sidebar -->
+  <aside class="control-sidebar control-sidebar-dark">
+    <!-- Control sidebar content goes here -->
+  </aside>
+  <!-- /.control-sidebar -->
+
+  <!-- Main Footer -->
+  
+</div>
+</div>
+<script src="{% static 'plugins/jquery/jquery.min.js' %}"></script>
+<!--script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script-->
+<script src="{% static 'plugins/datatables/jquery.dataTables.js' %}"></script>
+<script src="https://cdn.datatables.net/1.10.13/js/jquery.dataTables.min.js"></script>
+
+<script>
+
+$('#datelog').change(function(){
+//Anoop/
+ var result = []
+ $.ajax({
+            url : "/ajax-post",
+            type : "POST",
+            dataType: "json",
+            data: { date: $(this).val(),
+                 'csrfmiddlewaretoken': '{{ csrf_token }}',
+               },
+            async: false,
+            success: function(json) {
+              result.push(json);
+            },
+            failure: function(json) {
+                alert('Got an error dude: Contact Support Team.!!');
+            }
+        });
+
+ console.log(result)
+ document.getElementById('total').textContent = result[0].total_TC
+ document.getElementById('passed').textContent = result[0].passed_TC
+ document.getElementById('failed').textContent = result[0].failed_TC
+ document.getElementById('failedm').textContent = result[0].failed_major_TC
+
+
+//
+  // Donut Chart
+  var pieChartCanvas = $('#reportChart').get(0).getContext('2d')
+  console.log(result)
+  var passed = result[0].passed_TC
+  var failed_major = result[0].failed_major_TC
+  var failed_minor = result[0].failed_minor_TC
+  var failed_catest = result[0].failed_cat_TC
+  var failed_warning = result[0].failed_war_TC
+
+  var pieData        = {
+    labels: [
+        'PASSED',
+        'FAILED(Major)',
+        'FAILED(Minor)',
+        'FAILED(Catestrophic)',
+        'FAILED(Warning)',
+    ],
+    datasets: [
+      {
+        data: [passed,failed_major,failed_minor,failed_catest,failed_warning ],
+        backgroundColor : ['#00a65a','#8B0000','#FF7F50','#DEB887','#FFEBCD'],
+      }
+    ]
+  }
+  var pieOptions = {
+    legend: {
+      display: true,
+      position: 'left',
+    },
+    maintainAspectRatio : false,
+    responsive : true,
+  }
+  //Create pie or douhnut chart
+  // You can switch between pie and douhnut using the method below.
+  var pieChart = new Chart(pieChartCanvas, {
+    type: 'doughnut',
+    data: pieData,
+    options: pieOptions
+  });
+
+document.getElementById('date').textContent = result[0].date
+
+pass = result[0].sdn_passed_TC
+fail = result[0].sdn_failed_TC
+total = pass + fail
+pass_per = (pass/ total * 100) + '%'
+data1 = pass.toString()
+data2 = total.toString()
+data = '<b>'+data1+'</b>/'+data2 +' [<b>Passed</b>/Total]'
+$('#sdn_value').html(data)
+$('#sdn_val_per').width(pass_per)
+
+
+pass = result[0].cee_passed_TC
+fail = result[0].cee_failed_TC
+total = pass + fail
+pass_per = (pass/ total * 100) + '%'
+data1 = pass.toString()
+data2 = total.toString()
+data = '<b>'+data1+'</b>/'+data2 +' [<b>Passed</b>/Total]'
+$('#os_value').html(data)
+$('#os_val_er').width(pass_per)
+
+
+pass = result[0].allnode_passed_TC
+fail = result[0].allnode_failed_TC
+total = pass + fail
+pass_per = (pass/ total * 100) + '%'
+data1 = pass.toString()
+data2 = total.toString()
+data = '<b>'+data1+'</b>/'+data2 +' [<b>Passed</b>/Total]'
+$('#srv_value').html(data)
+$('#srv_val_per').width(pass_per)
+
+
+pass = result[0].fuel_passed_TC
+fail = result[0].fuel_failed_TC
+total = pass + fail
+pass_per = (pass/ total * 100) + '%'
+console.log(pass_per)
+data1 = pass.toString()
+data2 = total.toString()
+data = '<b>'+data1+'</b>/'+data2 +' [<b>Passed</b>/Total]'
+$('#con_val_per').width(pass_per)
+$('#con_value').html(data)
+
+$('#example1 td').remove()
+var result_data =  ''
+for(let item of result[0].failed_list) {
+ 	result_data +='<tr>';
+        result_data +='<td>'+item.date+'</td>';
+        result_data +='<td>'+item.desc+'</td>';
+        result_data +='<td>'+item.severity+'</td>';
+        result_data +='<td>'+item.ipaddr+'</td>';
+        result_data +='<td>'+item.hostname+'</td>';
+        result_data +='<td>'+item.command+'</td>';
+        result_data +='<td>'+item.verdict+'</td>';
+        result_data +='<td>'+item.remarks+'</td>';
+        result_data +='<td>'+item.test_id+'</td>';
+	result_data +='</tr>';
+}
+$('#example1').append(result_data)
+
+
+
+});
+
+</script>
+
+{% endblock %}

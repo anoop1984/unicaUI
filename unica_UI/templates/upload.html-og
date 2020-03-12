@@ -1,0 +1,42 @@
+{% extends 'admin/base_site.html' %}
+<!--html>
+<body>
+
+
+<form action="loadjsonindb" method="post">
+{% csrf_token %}
+    <input type="text" name="text" >
+    <input type="submit">
+</form>
+
+</form>
+<body>
+
+</html-->
+
+{% block breadcrumbs %}
+
+{% endblock %}
+
+{% block content %}
+
+
+<form action="loadjsonindb" method="post">
+{% csrf_token %}
+    <input type="text" name="text" >
+    <input type="submit">
+</form>
+
+{% endblock %}
+
+
+{% block extrajs %}
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js">
+</script>
+$(document).ready( function () {
+$('a').hidden = true;
+});
+</script>
+{% endblock %}
+
+

@@ -1,0 +1,52 @@
+{% extends 'base.html' %}
+
+{% load static %}
+
+
+<!--html>
+<body>
+
+
+<form action="loadjsonindb" method="post">
+{% csrf_token %}
+    <input type="text" name="text" >
+    <input type="submit">
+</form>
+
+</form>
+<body>
+
+</html-->
+<div class="container">
+    <div class="d-flex justify-content-center h-100">
+        <div class="card">
+            {% include 'partials/_alerts.html' %}
+            <div class="card-header">
+                <h3>Upload JSON File</h3>
+
+            </div>
+            <div class="card-body">
+                {% block content %}
+                <form action="loadjsonindb" method="post">
+                    {% csrf_token %}
+                    <input type="text" name="text" >
+                    <input type="submit">
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+
+{% block extrajs %}
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js">
+</script>
+$(document).ready( function () {
+$('a').hidden = true;
+});
+</script>
+{% endblock %}
+
+
+

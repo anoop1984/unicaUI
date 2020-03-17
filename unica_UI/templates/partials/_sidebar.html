@@ -36,8 +36,8 @@
             <ul class="nav nav-treeview">
 
               <li class="nav-item">
-                <a href="{% url 'index2' %}"
-                  {% if 'index2' in request.path %}
+                <a href="{% url 'testlab1' %}"
+                  {% if 'testlab1' in request.path %}
                    class="nav-link active"
                    {% else %}
                     class="nav-link"
@@ -49,23 +49,29 @@
                 </a>
               </li>
               <li class="nav-item">
-                <a href="{% url 'index2' %}" class="nav-link">
+                <a href="{% url 'testlab2' %}"
+                  {% if 'testlab2' in request.path %}
+                   class="nav-link active"
+                   {% else %}
+                    class="nav-link"
+                   {% endif %}
+                >
                   <i class="far fa-circle nav-icon"></i>
                   <p>TESTLAB-2</p>
                 </a>
               </li>
-              <li class="nav-item">
-                <a href="{% url 'index2' %}" class="nav-link">
+              <!--li class="nav-item">
+                <a href="{% url 'testlab1' %}" class="nav-link">
                   <i class="far fa-circle nav-icon"></i>
                   <p>ELLAND</p>
                 </a>
               </li>
               <li class="nav-item">
-                <a href="{% url 'index2' %}" class="nav-link">
+                <a href="{% url 'testlab1' %}" class="nav-link">
                   <i class="far fa-circle nav-icon"></i>
                   <p>RUNCORN</p>
                 </a>
-              </li>
+              </li-->
             </ul>
           </li>
 
@@ -73,25 +79,36 @@
             <a href="#" class="nav-link">
               <i class="nav-icon fas fa-table"></i>
               <p>
-               Health Report 
+               Latest Health Report 
                 <i class="fas fa-angle-left right"></i>
               </p>
             </a>
             <ul class="nav nav-treeview">
               <li class="nav-item">
-                <a href="/dbtable_latest"
-                    {% if 'dbtable_latest' in request.path %}
+                <a href="/dbtable_latest" id="testlab1"
+                    {% if site and site == 'test-lab1' %}
                    class="nav-link active"
                    {% else %}
                     class="nav-link"
                    {% endif %}
                 >
-
                   <i class="far fa-circle nav-icon"></i>
-                  <p>Lastest Report</p>
+                  <p>TESTLAB-1</p>
                 </a>
               </li>
               <li class="nav-item">
+                <a href="/dbtable_latest" id="testlab2"
+                    {% if site and site == 'test-lab2' %}
+                   class="nav-link active"
+                   {% else %}
+                    class="nav-link"
+                   {% endif %}
+                >
+                  <i class="far fa-circle nav-icon"></i>
+                  <p>TESTLAB-2</p>
+                </a>
+              </li>
+              <!--li class="nav-item">
                 <a href="/admin/pages/healthcheck/"
                    {% if '/admin/pages/healthcheck/' in request.path %}
                      class="nav-link active"
@@ -102,9 +119,22 @@
                   <i class="far fa-circle nav-icon"></i>
                   <p>Query HealthCheck</p>
                 </a>
-              </li>
+              </li-->
+          </li>
+         </ul>
+          <li class="nav-item has-treeview menu-open" >
+                <a href="/admin/pages/healthcheck/"
+                   {% if '/admin/pages/healthcheck/' in request.path %}
+                     class="nav-link active"
+                   {% else %}
+                     class='nav-link'
+                    {% endif %}
+              >
+              <i class="nav-icon fas fa-table"></i>
+                  <p>Query HealthCheck</p>
+            </a>
 
-        </ul>
+          <li>
       </nav>
       <!-- /.sidebar-menu -->
     </div>

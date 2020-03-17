@@ -12,19 +12,20 @@ class healthCheck(models.Model):
     remarks = models.CharField(max_length=1000)
 """
 class healthCheck(models.Model):
-    desc = models.CharField(max_length = 264)
-    severity =        models.CharField(max_length = 50)
-    #ipaddress =       models.CharField(max_length = 50)
-    ipaddr       = models.GenericIPAddressField()  
-    hostname =        models.CharField(max_length = 100) 
-    command = models.CharField(max_length = 264) 
-    verdict =         models.CharField(max_length = 264) 
-    remarks  =         models.CharField(max_length = 1000) 
-    test_id =          models.CharField(max_length = 100) 
-#    timestamp =       models.DateTimeField(auto_now_add=True)
-    date =            models.DateField()
+    desc 	= models.CharField(max_length = 264)
+    severity 	= models.CharField(max_length = 50)
+    #ipaddress 	= models.CharField(max_length = 50)
+    ipaddr      = models.GenericIPAddressField()  
+    hostname 	= models.CharField(max_length = 100) 
+    command 	= models.CharField(max_length = 264) 
+    verdict 	= models.CharField(max_length = 264) 
+    remarks  	= models.CharField(max_length = 1000) 
+    test_id 	= models.CharField(max_length = 100) 
+#   timestamp 	= models.DateTimeField(auto_now_add=True)
+    date 	= models.DateField()
+    site	= models.CharField(max_length = 100)
 
 
 class Logfile(models.Model):
-    logfile = models.FileField(upload_to='logs/')
+    logfile 	= models.FileField(upload_to='logs/')
     uploaded_at = models.DateField(primary_key=True)

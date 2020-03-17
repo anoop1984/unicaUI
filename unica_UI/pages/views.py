@@ -1,52 +1,54 @@
 from django.shortcuts import render
 from django.http import HttpResponse
 from django.contrib.auth.decorators import login_required
-
 from . models import healthCheck
 from . models import Logfile 
 from . forms import LogfileForm
-
-import json
 from django.http import JsonResponse
+from django.views.decorators.csrf import csrf_exempt
 import datetime
 import re
+import json
 
 # Create your views here.
 @login_required
 def index(reqeust):
     date_list = healthCheck.objects.values("date").distinct().order_by('-date')
     return render(reqeust, 'pages/index.html',{'dates':date_list})
+
 @login_required
 def about(request):
     return render(request, 'pages/about.html')
+
 @login_required
 def index2(request):
-    date_list = healthCheck.objects.values("date").distinct().order_by('-date')
-    return render(request, 'pages/index2.html',{'dates':date_list})
+    date_list = healthCheck.objects.filter(site__contains="test-lab1").values("date").distinct().order_by('-date')
+    return render(request, 'pages/testlab-1.html',{'dates':date_list})
+
+@login_required
+def testlab2(request):
+    date_list = healthCheck.objects.filter(site__contains="test-lab2").values("date").distinct().order_by('-date')
+    return render(request, 'pages/testlab-2.html',{'dates':date_list})
 
 @login_required
 def index3(request):
     return render(request, 'pages/index3.html')
+
 @login_required
 def healtcheck(request):
     return render(request, 'admin/healthcheck.html')
 
 
-from django.views.decorators.csrf import csrf_exempt
 @csrf_exempt
 def loadjsonindb(request):
     if request.method == "POST":
-       #text = request.POST['text']
-
-       #test_json = json.loads(text)
        test_json = json.loads(request.body)
-
-    #   datet = datetime.now()
-       datet = datetime.date(2020, 3, 9)
+       #datet = datetime.date(2020, 3, 9)
        #datet = datetime.date.today() #it will add todays dates.
-       for item in test_json:
+       datet =  datetime.date(*map(int,test_json['Date'].split('-')))
+       for item in test_json['Test-Cases']:
           ip = item['IPAddress'].strip()
-          healthCheck.objects.create(desc=item['Test Description'], severity=item['Severity'], ipaddr=ip, hostname=item['Hostname'], command=item['Command-Executed'], verdict=item['Verdict'], remarks=item['Remarks'],test_id=item['Test ID'],date=datet)
+          healthCheck.objects.create(desc=item['Test Description'], severity=item['Severity'], ipaddr=ip, hostname=item['Hostname'], command=item['Command-Executed'], verdict=item['Verdict'], remarks=item['Remarks'],test_id=item['Test ID'],date=datet, site=test_json['Site'])
           
        #print(test_json) 
        #return HttpResponse(test_json[0]['Test_Description'])
@@ -65,11 +67,13 @@ def dbtable(request):
     data = healthCheck.objects.all()
     data_dict = {'monitor_records': data }
     return render(request,'dbtable.html', context=data_dict)
+
 @login_required
 def dbtable_latest(request):
+    site = request.GET['site']
     date_lst = healthCheck.objects.all().values('date').distinct().order_by('-date')
-    data = healthCheck.objects.filter(date=date_lst[0]['date']) 
-    data_dict = {'monitor_records': data , 'date': date_lst[0]['date']}
+    data = healthCheck.objects.filter(date=date_lst[0]['date'],site__contains=site) 
+    data_dict = {'monitor_records': data , 'date': date_lst[0]['date'], 'site': site}
     return render(request,'dbtable_latest.html', context=data_dict)
 
 
@@ -83,6 +87,7 @@ def ajax1(request):
 
 
 def convert_date(date):
+   if date:
     date_lt = date.split(',')  
     print(date_lt)
     yy = date_lt[1].strip()
@@ -113,10 +118,8 @@ def convert_date(date):
    
     
     
-def date_wise_start(date,date_str):
-    stat_qs = healthCheck.objects.filter(date=date)
-   
-
+def date_wise_start(date,date_str,site):
+    stat_qs = healthCheck.objects.filter(date=date, site__contains=site)
     report={}
     # date
     report['date'] = date_str
@@ -312,11 +315,15 @@ from django.views.decorators.csrf import csrf_exempt
 @csrf_exempt
 def ajax(request):
     date = request.POST['date']
+    site = request.POST['site']
     #convert date string into YYYY-MM-DD formate
     
     date1=convert_date(date)  
-    print("date=",date1)
-    response = date_wise_start(date1,date)
+    print("<<get request>> date = ",date1)
+    
+    print("<<get request>> site = ",site)
+    
+    response = date_wise_start(date1,date,site)
     #print(response)
   
     #print("hahaha: ",type(date1))
@@ -409,21 +416,24 @@ def refine_result(list_of_dict):
 
 
 def dbtable_info(request):
-    date = request.GET['date']
-    date2=date
+    date  = request.GET['date']
+    date2 = date
     rq_type = request.GET['type']
-    print("date=",date)
-    print(rq_type)
+    site = request.GET['site']
+    print("<<More-Info >>date = ",date)
+    print("<<More-Info >>Request_type = ",rq_type)
+    print("<<More-Info >>site = ",site)
     date = convert_date(date)
-    print("date=",date)
+    print("<<More-Info >>Date = ",date)
     logfile = 'unica-healthchk-log-test-lab1-'+date+'.txt'
+    print("<<More-Info>> Logfile = ", logfile)
 
-    if  rq_type == "1" : data = healthCheck.objects.filter(date=date); info="All Testcases"
-    if  rq_type == "2" : data = healthCheck.objects.filter(date=date, verdict__contains = "Passed");  info="All Passed"
-    if  rq_type == "3" : data = healthCheck.objects.filter(date=date, verdict__contains = "Failed"); info="All Failed"
-    if  rq_type == "4" : data = healthCheck.objects.filter(date=date, verdict__contains = "Failed", severity__contains="Major"); info="All Failed Major"
+    if  rq_type == "1" : data = healthCheck.objects.filter(date=date,site__contains=site); info="All Testcases"
+    if  rq_type == "2" : data = healthCheck.objects.filter(date=date, verdict__contains = "Passed",site__contains=site);  info="All Passed"
+    if  rq_type == "3" : data = healthCheck.objects.filter(date=date, verdict__contains = "Failed",site__contains=site); info="All Failed"
+    if  rq_type == "4" : data = healthCheck.objects.filter(date=date, verdict__contains = "Failed", severity__contains="Major",site__contains=site); info="All Failed Major"
 
-    data_dict = {'monitor_records': data , 'date': date2, 'info': info,'logfile':logfile}
+    data_dict = {'monitor_records': data , 'date': date2, 'info': info,'site':site,'logfile':logfile}
     return render(request,'dbtable_bydate.html', context=data_dict)
 
 

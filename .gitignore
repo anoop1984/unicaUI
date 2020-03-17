@@ -1,2 +1,3 @@
 ./unica_UI/db.sqlite3
+*.pyc
 

@@ -37,7 +37,7 @@
 
               <li class="nav-item">
                 <a href="{% url 'testlab1' %}"
-                  {% if 'testlab1' in request.path %}
+                  {% if 'testlab1' in request.path or site_info == 'TEST-LAB1' %}
                    class="nav-link active"
                    {% else %}
                     class="nav-link"
@@ -50,7 +50,7 @@
               </li>
               <li class="nav-item">
                 <a href="{% url 'testlab2' %}"
-                  {% if 'testlab2' in request.path %}
+                  {% if 'testlab2' in request.path or site_info == 'TEST-LAB2' %}
                    class="nav-link active"
                    {% else %}
                     class="nav-link"
@@ -86,7 +86,7 @@
             <ul class="nav nav-treeview">
               <li class="nav-item">
                 <a href="/dbtable_latest" id="testlab1"
-                    {% if site and site == 'test-lab1' %}
+                    {% if 'dbtable_latest' in request.path and site and site == 'TEST-LAB1' %}
                    class="nav-link active"
                    {% else %}
                     class="nav-link"
@@ -98,7 +98,7 @@
               </li>
               <li class="nav-item">
                 <a href="/dbtable_latest" id="testlab2"
-                    {% if site and site == 'test-lab2' %}
+                    {% if 'dbtable_latest' in request.path and site and site == 'TEST-LAB2' %}
                    class="nav-link active"
                    {% else %}
                     class="nav-link"

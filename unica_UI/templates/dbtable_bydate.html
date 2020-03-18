@@ -16,10 +16,10 @@
 
           <div class="card ">
             <div class="card-header">
-              <h3 class="card-title2">Health-Check Report:  {{ date }}  &nbsp;&nbsp;&nbsp;&nbsp; {{ info }}&nbsp;&nbsp;&nbsp;&nbsp; Site: {{site }}&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-              <!--a href="/media/logs/{{ logfile }}" class="fas fa-square text-primary" >Detailed-Logs</a></h3-->
-              <a href="/media/logs/{{ logfile }}" target="popup" 
-  onclick="window.open('/media/logs/{{ logfile }}','popup','width=800,height=600'); return false;" class="fas fa-square text-primary" >Detailed-Logs</a></h3>
+              <h3 class="card-title2">Health-Check Report:  {{ date }}  &nbsp;&nbsp;&nbsp;&nbsp; {{ info }}&nbsp;&nbsp;&nbsp;&nbsp; Site: {{ site_info }}&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+              <!--a href="/logs/{{ logfile }}" class="fas fa-square text-primary" >Detailed-Logs</a></h3-->
+              <a href="/logs/{{ logfile }}" target="popup" 
+  onclick="window.open('/logs/{{ logfile }}','popup','width=800,height=600'); return false;" class="fas fa-square text-primary" >Detailed-Logs</a></h3>
             </div>
             <!-- /.card-header -->
             <div class="card-body col-md-12">

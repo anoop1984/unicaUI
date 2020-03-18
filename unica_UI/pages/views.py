@@ -2,8 +2,10 @@ from django.shortcuts import render
 from django.http import HttpResponse
 from django.contrib.auth.decorators import login_required
 from . models import healthCheck
-from . models import Logfile 
-from . forms import LogfileForm
+from . models import Logfile_Testlab1
+from . models import Logfile_Testlab2
+from . forms import LogfileForm_Testlab1
+from . forms import LogfileForm_Testlab2
 from django.http import JsonResponse
 from django.views.decorators.csrf import csrf_exempt
 import datetime
@@ -22,11 +24,15 @@ def about(request):
 
 @login_required
 def index2(request):
+    """
+    index page of testlab-1
+    """
     date_list = healthCheck.objects.filter(site__contains="test-lab1").values("date").distinct().order_by('-date')
     return render(request, 'pages/testlab-1.html',{'dates':date_list})
 
 @login_required
 def testlab2(request):
+    """index page of testlab-2"""
     date_list = healthCheck.objects.filter(site__contains="test-lab2").values("date").distinct().order_by('-date')
     return render(request, 'pages/testlab-2.html',{'dates':date_list})
 
@@ -46,13 +52,18 @@ def loadjsonindb(request):
        #datet = datetime.date(2020, 3, 9)
        #datet = datetime.date.today() #it will add todays dates.
        datet =  datetime.date(*map(int,test_json['Date'].split('-')))
-       for item in test_json['Test-Cases']:
+       try:
+        for item in test_json['Test-Cases']:
           ip = item['IPAddress'].strip()
           healthCheck.objects.create(desc=item['Test Description'], severity=item['Severity'], ipaddr=ip, hostname=item['Hostname'], command=item['Command-Executed'], verdict=item['Verdict'], remarks=item['Remarks'],test_id=item['Test ID'],date=datet, site=test_json['Site'])
           
        #print(test_json) 
        #return HttpResponse(test_json[0]['Test_Description'])
-       return HttpResponse("<em>DATA Stored</em>")
+        return HttpResponse("<em>DATA Stored</em>",status=201)
+       except Exception as e:
+          print("Exception Occurred while storing json: ",str(e))
+          return HttpResponse("<em>DATA not Stored</em>", status=500)
+
     if request.method == "GET":
       date_list = healthCheck.objects.values("date").distinct()
       print(date_list)
@@ -72,8 +83,11 @@ def dbtable(request):
 def dbtable_latest(request):
     site = request.GET['site']
     date_lst = healthCheck.objects.all().values('date').distinct().order_by('-date')
-    data = healthCheck.objects.filter(date=date_lst[0]['date'],site__contains=site) 
-    data_dict = {'monitor_records': data , 'date': date_lst[0]['date'], 'site': site}
+    if date_lst:
+       data = healthCheck.objects.filter(date=date_lst[0]['date'],site__contains=site) 
+       data_dict = {'monitor_records': data , 'date': date_lst[0]['date'], 'site': site.upper()}
+    else:
+       data_dict = {}
     return render(request,'dbtable_latest.html', context=data_dict)
 
 
@@ -95,12 +109,11 @@ def convert_date(date):
     if '.' in date_lt[0]:
       mm_dd = date_lt[0].split('.')
     else:
-     mm_dd = date_lt[0].split(' ')
+      mm_dd = date_lt[0].split(' ')
     print(mm_dd)
     dd = mm_dd[1].strip()
     print(dd)
     mm = mm_dd[0]
-   
     mm = mm.lower()
     print(mm)
     if "jan" in mm: return yy+"-1-"+dd
@@ -317,8 +330,11 @@ def ajax(request):
     date = request.POST['date']
     site = request.POST['site']
     #convert date string into YYYY-MM-DD formate
-    
-    date1=convert_date(date)  
+    try: 
+     date1=convert_date(date)  
+    except Exception as e:
+       return HttpResponse('Server-Error', status=503)
+
     print("<<get request>> date = ",date1)
     
     print("<<get request>> site = ",site)
@@ -334,60 +350,6 @@ def ajax(request):
     #response={'date':date, 'test-count': testcount} 
     return JsonResponse(response)
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
- 
-    
-    
-
-def dbdata(request):
-    data = healthCheck.objects.all().values()
-    data1 = healthCheck.objects.filter(verdict__contains="Passed").values('remarks')
-    severity_failed_major = healthCheck.objects.filter(severity__contains="Major",verdict__contains="Failed")
-    severity_failed_minor = healthCheck.objects.filter(severity__contains="Minor",verdict__contains="Failed")
-    severity_failed_catestrophic = healthCheck.objects.filter(severity__contains="Catestrophic",verdict__contains="Failed")
-    severity_failed_warning = healthCheck.objects.filter(severity__contains="Warning",verdict__contains="Failed")
-
-    #print(list(data))
-    count_passed = len(data1)
-    print("Passed Test Case",count_passed)
-    fail = healthCheck.objects.filter(verdict__contains="Failed")
-    print("Failed Test Case",len(fail))
-    print("Total Test Case",len(data))
-    date =(data[0])['date'].strftime('%m %B,%Y')
-    result={}
-
-    result['passed']=count_passed
-    result['failed']=len(fail)
-    result['total']=len(data)
-    result['date']=date
-    result['severity_failed_major']=len(severity_failed_major)
-    result['severity_failed_minor']=len(severity_failed_minor)
-    result['severity_failed_catestrophic']=len(severity_failed_catestrophic)
-    result['severity_failed_warning']=len(severity_failed_warning)
-   
-    
-
-    return JsonResponse(result)
-
-    #data_dict = {'monitor_records': list(data) }
-    #return JsonResponse(data_dict)
 
 
 def strip_spaces(list_of_dict):
@@ -410,22 +372,39 @@ def refine_result(list_of_dict):
        else:
           final_dict[k] = [v]	
 
-
   return final_dict
 
 
 
 def dbtable_info(request):
+    """Method to get date wise info"""
+
     date  = request.GET['date']
     date2 = date
     rq_type = request.GET['type']
-    site = request.GET['site']
+    eite = request.GET['site']
     print("<<More-Info >>date = ",date)
     print("<<More-Info >>Request_type = ",rq_type)
     print("<<More-Info >>site = ",site)
-    date = convert_date(date)
+    try:
+      date = convert_date(date)
+    except Exception as e:
+       print("Exception Occurred: ", str(e))
+       return HttpResponse('Server-Error', status=503) 
+
     print("<<More-Info >>Date = ",date)
-    logfile = 'unica-healthchk-log-test-lab1-'+date+'.txt'
+    if site == 'test-lab1':
+       log = Logfile_Testlab1.objects.filter(uploaded_at=date).values()
+       if log:
+          logfile = log[0]['logfile']
+       else:
+          logfile = '#'
+    if site == 'test-lab2':
+       log = Logfile_Testlab2.objects.filter(uploaded_at=date).values()
+       if log:
+          logfile = log[0]['logfile']
+       else:
+          logfile = '#'
     print("<<More-Info>> Logfile = ", logfile)
 
     if  rq_type == "1" : data = healthCheck.objects.filter(date=date,site__contains=site); info="All Testcases"
@@ -433,19 +412,15 @@ def dbtable_info(request):
     if  rq_type == "3" : data = healthCheck.objects.filter(date=date, verdict__contains = "Failed",site__contains=site); info="All Failed"
     if  rq_type == "4" : data = healthCheck.objects.filter(date=date, verdict__contains = "Failed", severity__contains="Major",site__contains=site); info="All Failed Major"
 
-    data_dict = {'monitor_records': data , 'date': date2, 'info': info,'site':site,'logfile':logfile}
+    data_dict = {'monitor_records': data , 'date': date2, 'info': info,'site_info':site.upper(),'logfile':logfile}
     return render(request,'dbtable_bydate.html', context=data_dict)
 
 
-def dbdata1(request):
-    
-    return JsonResponse(result)
-
 
 @csrf_exempt
-def logfile(request):
+def testlab1_logfile(request):
     if request.method == 'POST':
-       form = LogfileForm(request.POST, request.FILES)
+       form = LogfileForm_Testlab1(request.POST, request.FILES)
        #u_file = request.FILES['file']
        print(form)
        form.uploaded_at = datetime.date.today()
@@ -453,10 +428,32 @@ def logfile(request):
        if form.is_valid():
             #return HttpResponse("Log File Uploaded!!!!!! ===")
             form.save()
-            return HttpResponse("Log File Uploaded...Yes")
+            return HttpResponse("Log File Uploaded...Successfully!!!", status=201)
        else:
             print(form.errors)
-            return HttpResponse("Log File Uploaded....NONONO")
+            return HttpResponse("Log File Uploaded....Failed", status=500)
      
     else:
-      return render(request,'test.html')
+      output = Logfile_Testlab1.objects.values()
+      return HttpResponse(output) 
+
+
+@csrf_exempt
+def testlab2_logfile(request):
+    if request.method == 'POST':
+       form = LogfileForm_Testlab2(request.POST, request.FILES)
+       #u_file = request.FILES['file']
+       print(form)
+       #extension = u_file.split(".")[1].lower()
+       if form.is_valid():
+            #return HttpResponse("Log File Uploaded!!!!!! ===")
+            form.save()
+            return HttpResponse("Log File Uploaded...Successfully!!!", status=201)
+       else:
+            print(form.errors)
+            return HttpResponse("Log File Uploaded....Failed", status=500)
+
+    else:
+      output = Logfile_Testlab2.objects.values()
+      return HttpResponse(output)
+

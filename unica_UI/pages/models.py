@@ -26,6 +26,10 @@ class healthCheck(models.Model):
     site	= models.CharField(max_length = 100)
 
 
-class Logfile(models.Model):
-    logfile 	= models.FileField(upload_to='logs/')
+class Logfile_Testlab1(models.Model):
+    logfile 	= models.FileField(upload_to='testlab1/')
+    uploaded_at = models.DateField(primary_key=True)
+
+class Logfile_Testlab2(models.Model):
+    logfile 	= models.FileField(upload_to='testlab2/')
     uploaded_at = models.DateField(primary_key=True)

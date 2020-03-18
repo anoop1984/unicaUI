@@ -1,0 +1,19 @@
+####Command to upload Json###
+# update file varible with name of file that to be uploaded #
+file='unica-healthchk-summary-test-lab2-2020-03-15-0707.json'
+ip=35.226.103.214
+curl -X POST -d @$file http://${ip}:8080/loadjsonindb --header "Content-Type:application/json"
+
+###Command to  upload log txt file###
+###testlab1
+date='2020-3-15'
+ip=35.226.103.214
+file=unica-healthchk-summary-test-lab1-2020-03-15-0707.txt
+curl -X POST -F "logfile=@$file" -F "uploaded_at=$date" http://${$ip}:8080/testlab1_logfile
+
+
+##testlab2
+date='2020-3-15'
+file='unica-healthchk-summary-test-lab2-2020-03-15-0707.txt'
+ip='35.226.103.214'
+curl -X POST -F "logfile=@$file" -F "uploaded_at=$date" http://{$ip}:8080/testlab2_logfile

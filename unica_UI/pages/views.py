@@ -382,7 +382,7 @@ def dbtable_info(request):
     date  = request.GET['date']
     date2 = date
     rq_type = request.GET['type']
-    eite = request.GET['site']
+    site = request.GET['site']
     print("<<More-Info >>date = ",date)
     print("<<More-Info >>Request_type = ",rq_type)
     print("<<More-Info >>site = ",site)
@@ -457,3 +457,11 @@ def testlab2_logfile(request):
       output = Logfile_Testlab2.objects.values()
       return HttpResponse(output)
 
+
+def sample_report(request):
+  if request.method == 'POST':
+      myfile = request.FILES['myfile']
+      return HttpResponse(myfile)
+
+
+  return render(request,'sample_report.html')

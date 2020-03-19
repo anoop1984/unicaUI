@@ -30,6 +30,7 @@ urlpatterns = [
     path('testlab2_logfile',views.testlab2_logfile),
     path('ajax-post', views.ajax),
     path('admin/', admin.site.urls),
+    path('sample_report',views.sample_report),
 
 
 ]

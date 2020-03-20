@@ -150,8 +150,8 @@ def date_wise_start(date,date_str,site):
     #total minor testcases
     report['failed_minor_TC'] = stat_qs.filter(severity__contains="Minor",verdict__contains="Failed").count()
 
-    #total warning testcases
-    report['failed_war_TC'] = stat_qs.filter(severity__contains="Warning",verdict__contains="Failed").count()
+    #total warning testcases#changed to all warning Test-cases
+    report['failed_war_TC'] = stat_qs.filter(severity__contains="Warning").count()
 
     #total catestrophic testcases
     report['failed_cat_TC'] = stat_qs.filter(severity__contains="Catestrophic",verdict__contains="Failed").count()

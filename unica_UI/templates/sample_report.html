@@ -1,0 +1,21 @@
+{% extends 'base.html' %}
+
+{% load static %}
+
+{% block content %}
+<div class="content-wrapper">
+ <div class="row">
+   <div class="card ">
+     <div class="card-header">
+     </div>
+     <div class="card-body col-md-12">
+       <form method="post" enctype="multipart/form-data">
+        {% csrf_token %}
+        <input type="file" name="myfile">
+        <button type="submit">Check-Report</button>
+       </form>
+     </div>
+  </div>
+ </div>
+</div>
+{% endblock %}

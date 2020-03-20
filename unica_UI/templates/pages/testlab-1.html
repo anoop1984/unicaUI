@@ -354,7 +354,7 @@
                   <tbody>
                      <tr>
                         <td><i id="dpns"></i>&ensp;<b>DPN Count:</b></td>
-                        <td><b id="cic1_count"></b>&ensp;<b id="cic2_count"></b>&ensp;<b id="cic3_count"></b></td>
+                        <td><b id="cic_counts"></b></td>
                      </tr>
                      <!--tr>
                         <td><i id="dpns"></i>&ensp;All DPNS </td>
@@ -477,6 +477,7 @@
     var failed_minor = result[0].failed_minor_TC
     var failed_catest = result[0].failed_cat_TC
     var failed_warning = result[0].failed_war_TC
+   //failed_warning contains all warning testcases count
 
     var pieData        = {
    labels: [
@@ -484,7 +485,7 @@
     'FAILED(Major)',
     'FAILED(Minor)',
     'FAILED(Catestrophic)',
-    'FAILED(Warning)',
+    'WARNING',
    ],
    datasets: [
      {
@@ -617,11 +618,11 @@
   $('#invo_conf').text(result[0].sdn_shard_invo_data)
   $('#defo_conf').text(result[0].sdn_shard_defo_data)
   $('#topo_conf').text(result[0].sdn_shard_topo_data)
-  if ( result[0].sdn_dpn_data.length == 3 ){
-  $('#cic1_count').text(result[0].sdn_dpn_data[0])
-  $('#cic2_count').text(result[0].sdn_dpn_data[1])
-  $('#cic3_count').text(result[0].sdn_dpn_data[2])
+  var count_cic=''
+  for(var i=0; i<result[0].sdn_dpn_data.length; i++){
+    count_cic +=result[0].sdn_dpn_data[i] + "   "
   }
+  $('#cic_counts').text(count_cic)
 
  }
  

@@ -12,10 +12,16 @@
        <form method="post" enctype="multipart/form-data">
         {% csrf_token %}
         <input type="file" name="myfile">
-        <button type="submit">Check-Report</button>
+        <button id="kk" type="submit">Check-Report</button>
        </form>
      </div>
   </div>
  </div>
 </div>
+<script>
+$('#kkm').click(function(){
+  $('.card-body').html('<h3>Script Executing...Hold On!!!!</h3>')
+  $('body').load('sample_report',{file: 'as'})
+});
+</script>
 {% endblock %}

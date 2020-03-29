@@ -357,12 +357,19 @@ def strip_spaces(list_of_dict):
     for m in list_of_dict:
         temp = {}
         for k,v in m.items():
-            temp[k]=str(v).strip()
+            if k == 'Test Description':
+              temp['Test_Description']=str(v).strip()
+            elif k == 'Test ID':
+              temp['Test_ID'] = str(v).strip()
+            elif k == 'Command-Executed':
+              temp['Command_Executed'] = str(v).strip()
+            else: 
+              temp[k]=str(v).strip()
         final.append(temp)
     return final
 
 
-@login_required
+#@login_required
 def refine_result(list_of_dict):
   final_dict = {}
   for item in list_of_dict:
@@ -410,7 +417,8 @@ def dbtable_info(request):
     if  rq_type == "1" : data = healthCheck.objects.filter(date=date,site__contains=site); info="All Testcases"
     if  rq_type == "2" : data = healthCheck.objects.filter(date=date, verdict__contains = "Passed",site__contains=site);  info="All Passed"
     if  rq_type == "3" : data = healthCheck.objects.filter(date=date, verdict__contains = "Failed",site__contains=site); info="All Failed"
-    if  rq_type == "4" : data = healthCheck.objects.filter(date=date, verdict__contains = "Failed", severity__contains="Major",site__contains=site); info="All Failed Major"
+    #if  rq_type == "4" : data = healthCheck.objects.filter(date=date, verdict__contains = "Failed", severity__contains="Major",site__contains=site); info="All Failed Major"
+    if  rq_type == "4" : data = healthCheck.objects.filter(date=date, severity__contains="Warning",site__contains=site); info="All Failed Major"
 
     data_dict = {'monitor_records': data , 'date': date2, 'info': info,'site_info':site.upper(),'logfile':logfile}
     return render(request,'dbtable_bydate.html', context=data_dict)
@@ -421,9 +429,17 @@ def dbtable_info(request):
 def testlab1_logfile(request):
     if request.method == 'POST':
        form = LogfileForm_Testlab1(request.POST, request.FILES)
-       #u_file = request.FILES['file']
-       print(form)
-       form.uploaded_at = datetime.date.today()
+       if 'uploaded_at' in request.POST:
+          date = request.POST['uploaded_at']
+       else:
+            return HttpResponse("Failed, Uploaded_at parameter missing in request", status=500)
+  
+       print("uploaded_at =", date)
+       date_record = Logfile_Testlab1.objects.filter(uploaded_at=date)
+       if date_record:
+          print("Logfile already present in Testlab1....Deleted")
+          date_record.delete()
+       #form.uploaded_at = datetime.date.today()
        #extension = u_file.split(".")[1].lower()
        if form.is_valid():
             #return HttpResponse("Log File Uploaded!!!!!! ===")
@@ -431,7 +447,8 @@ def testlab1_logfile(request):
             return HttpResponse("Log File Uploaded...Successfully!!!", status=201)
        else:
             print(form.errors)
-            return HttpResponse("Log File Uploaded....Failed", status=500)
+            #return HttpResponse("Log File Uploaded....Failed", status=500)
+            return HttpResponse(form.errors.as_json(), status=500)
      
     else:
       output = Logfile_Testlab1.objects.values()
@@ -442,16 +459,24 @@ def testlab1_logfile(request):
 def testlab2_logfile(request):
     if request.method == 'POST':
        form = LogfileForm_Testlab2(request.POST, request.FILES)
-       #u_file = request.FILES['file']
-       print(form)
-       #extension = u_file.split(".")[1].lower()
+       if 'uploaded_at' in request.POST:
+          date = request.POST['uploaded_at']
+       else:
+            return HttpResponse("Failed, Uploaded_at parameter missing in request", status=500)
+
+       print("uploaded_at =", date)
+       date_record = Logfile_Testlab2.objects.filter(uploaded_at=date)
+       if date_record:
+          print("Logfile already present in Testlab2....Deleted")
+          date_record.delete()
+
        if form.is_valid():
             #return HttpResponse("Log File Uploaded!!!!!! ===")
             form.save()
             return HttpResponse("Log File Uploaded...Successfully!!!", status=201)
        else:
             print(form.errors)
-            return HttpResponse("Log File Uploaded....Failed", status=500)
+            return HttpResponse(form.errors.as_json(), status=500)
 
     else:
       output = Logfile_Testlab2.objects.values()
@@ -461,7 +486,278 @@ def testlab2_logfile(request):
 def sample_report(request):
   if request.method == 'POST':
       myfile = request.FILES['myfile']
-      return HttpResponse(myfile)
+      myfile = json.load(myfile)
+      myfile = strip_spaces(myfile)
+      myfile1 = myfile
+      myfile = refine_result(myfile)
+      import time
+#      time.sleep(60)
+      output={}
+      total_tc = len(myfile['Verdict'])
+      output['total_tc'] = total_tc
+      pass_tc = myfile['Verdict'].count('Passed')
+      output['pass_tc'] = pass_tc
+      fail_tc = myfile['Verdict'].count('Failed')
+      output['fail_tc'] = fail_tc
+      warning_tc = myfile['Severity'].count('Warning')  
+      output['warning_tc'] = warning_tc
+      fail_mj_tc = 0
+      fail_mi_tc = 0
+      fail_cat_tc = 0
+      sdn_pass = 0 
+      sdn_fail = 0
+      cee_pass = 0
+      cee_fail = 0
+      allnode_pass = 0
+      allnode_fail = 0 
+      fuel_pass = 0
+      fuel_fail = 0
+      for i in range(len(myfile['Verdict'])):
+         if myfile['Verdict'][i] == 'Failed':
+            if myfile['Severity'][i] == 'Major':
+               fail_mj_tc = fail_mj_tc + 1
+            if myfile['Severity'][i] == 'Minor':
+               fail_mi_tc = fail_mi_tc + 1
+            if myfile['Severity'][i] == 'Catestrophic':
+               fail_cat_tc = fail_cat_tc + 1
+            if 'CEE' in myfile['Test_ID'][i]:
+               cee_fail = cee_fail + 1
+            if 'SDN' in myfile['Test_ID'][i]:
+               sdn_fail = sdn_fail + 1
+            if 'FUEL' in myfile['Test_ID'][i]:
+               fuel_fail = fuel_fail + 1
+            if 'ALL-NODE' in myfile['Test_ID'][i]:
+               allnode_fail = allnode_fail + 1
+         if myfile['Verdict'][i] == 'Passed':
+            if 'CEE' in myfile['Test_ID'][i]:
+               cee_pass = cee_pass + 1
+            if 'SDN' in myfile['Test_ID'][i]:
+               sdn_pass = sdn_pass + 1
+            if 'FUEL' in myfile['Test_ID'][i]:
+               fuel_pass = fuel_pass + 1
+            if 'ALL-NODE' in myfile['Test_ID'][i]:
+               allnode_pass = allnode_pass + 1
+       
+      fuel_tc = fuel_pass + fuel_fail
+      output['fuel_tc']=fuel_tc
+      cee_tc = cee_pass + cee_fail
+      output['cee_tc'] = cee_tc
+      sdn_tc = sdn_pass + sdn_fail
+      output['sdn_tc'] = sdn_tc
+      allnode_tc =allnode_pass + allnode_fail
+      output['allnode_tc'] = allnode_tc
+      fuel_per = str(int(fuel_pass/fuel_tc * 100)) + '%'
+      cee_per = str(int(cee_pass/cee_tc * 100)) + '%'
+      print(cee_per)
+      sdn_per = str(int(sdn_pass/sdn_tc * 100)) + '%'
+      allnode_per =str(int(allnode_pass/allnode_tc * 100)) + '%'
 
+      output['fail_mj_tc'] = fail_mj_tc
+      output['fail_mi_tc'] = fail_mi_tc
+      output['fail_cat_tc'] = fail_cat_tc
+      output['cee_fail'] = cee_fail
+      output['sdn_fail'] = sdn_fail
+      output['fuel_fail'] = fuel_fail
+      output['allnode_fail'] = allnode_fail
+      output['cee_pass'] = cee_pass
+      output['sdn_pass'] = sdn_pass
+      output['fuel_pass'] = fuel_pass
+      output['allnode_pass'] = allnode_pass
+      output['fuel_per'] = fuel_per
+      output['cee_per'] = cee_per
+      output['sdn_per'] = sdn_per
+      output['allnode_per'] = allnode_per
+
+
+      ##CEE Commands ##OS
+      os_nova_list = 0
+      os_nova_hypv = 0
+      os_cinder_srv = 0
+      os_neutron_agent = 0
+      os_nova_srv = 0
+      os_glance_image = 0
+      os_ceilometer_meter = 0
+      os_project_list = 0
+      os_srv_list = 0
+      os_neutron_net = 0
+      srv_watchmen =0; srv_rabbitmq_cls=0; srv_rabbitmq_lst=0; srv_galera_mysql=0; srv_mongodb=0; srv_mongodb_rep=0; srv_rabbitmg_file=0
+      srv_rest_srv=0; srv_openflow=0; srv_ovsdb=0; srv_odlbgp=0
+      sdn_dpns = 0;sdn_tep = 0;sdn_tunnel = 0;sdn_tunnel_st =0
+      sdn_tunnel_st_count ='-'; sdn_app_status=0; sdn_app_count='-'; sdn_shard_inv_status=0; sdn_shard_inv_data='-'
+      sdn_shard_def_status=0; sdn_shard_def_data='-'; sdn_shard_top_status=0; sdn_shard_top_data='-'; sdn_shard_invo_status=0; sdn_shard_invo_data='-'
+      sdn_shard_defo_status=0; sdn_shard_defo_data='-';sdn_shard_topo_status=0; sdn_shard_topo_data='-'; sdn_dpn_status=0; sdn_dpn_data=[]
+      
+ 
+      for i in range(len(myfile['Test_ID'])):
+          if 'CEE-001' in myfile['Test_ID'][i].upper() and 'Failed' in myfile['Verdict'][i]:
+              os_nova_list = os_nova_list + 1
+          if 'CEE-002' in myfile['Test_ID'][i].upper() and 'Failed' in myfile['Verdict'][i]:
+              os_nova_hypv = os_nova_hypv + 1
+          if 'CEE-003' in myfile['Test_ID'][i].upper() and 'Failed' in myfile['Verdict'][i]:
+              os_cinder_srv = os_cinder_srv + 1
+          if 'CEE-004' in myfile['Test_ID'][i].upper() and 'Failed' in myfile['Verdict'][i]:
+              os_neutron_agent += 1
+          if 'CEE-005' in myfile['Test_ID'][i].upper() and 'Failed' in myfile['Verdict'][i]:
+              os_nova_srv += 1
+          if 'CEE-006' in myfile['Test_ID'][i].upper() and 'Failed' in myfile['Verdict'][i]:
+              os_glance_image += 1
+          if 'CEE-007' in myfile['Test_ID'][i].upper() and 'Failed' in myfile['Verdict'][i]:
+              os_ceilometer_meter += 1
+          if 'CEE-008' in myfile['Test_ID'][i].upper() and 'Failed' in myfile['Verdict'][i]:
+              os_project_list += 1
+          if 'CEE-009' in myfile['Test_ID'][i].upper() and 'Failed' in myfile['Verdict'][i]:
+              os_srv_list += 1
+          if 'CEE-010' in myfile['Test_ID'][i].upper() and 'Failed' in myfile['Verdict'][i]:
+              os_neutron_net += 1
+
+##Service 
+          if 'CEE-011' in myfile['Test_ID'][i].upper() and 'Failed' in myfile['Verdict'][i]:
+              os_nova_hypv += 1
+          if 'CEE-013' in myfile['Test_ID'][i].upper() and 'Failed' in myfile['Verdict'][i]:
+              srv_rabbitmq_cls += 1
+          if 'CEE-014' in myfile['Test_ID'][i].upper() and 'Failed' in myfile['Verdict'][i]:
+              srv_rabbitmq_lst += 1
+          if 'CEE-015' in myfile['Test_ID'][i].upper() and 'Failed' in myfile['Verdict'][i]:
+              srv_rabbitmq_lst += 1
+          if 'CEE-016' in myfile['Test_ID'][i].upper() and 'Failed' in myfile['Verdict'][i]:
+              srv_mongodb += 1
+          if 'CEE-017' in myfile['Test_ID'][i].upper() and 'Failed' in myfile['Verdict'][i]:
+              srv_mongodb += 1
+          if 'CEE-018' in myfile['Test_ID'][i].upper() and 'Failed' in myfile['Verdict'][i]:
+              srv_mongodb += 1
+
+
+          if 'SDNC-012' in myfile['Test_ID'][i].upper() and 'Failed' in myfile['Verdict'][i]:
+              srv_rest_srv += 1
+          if 'SDNC-013' in myfile['Test_ID'][i].upper() and 'Failed' in myfile['Verdict'][i]:
+              srv_openflow += 1
+          if 'SDNC-014' in myfile['Test_ID'][i].upper() and 'Failed' in myfile['Verdict'][i]:
+              srv_ovsdb += 1
+          if 'SDNC-015' in myfile['Test_ID'][i].upper() and 'Failed' in myfile['Verdict'][i]:
+              srv_odlbgp += 1
+
+          if 'SDNC-001' in myfile['Test_ID'][i].upper() and 'Failed' in myfile['Verdict'][i]:
+              sdn_dpns += 1
+          if 'SDNC-002' in myfile['Test_ID'][i].upper() and 'Failed' in myfile['Verdict'][i]:
+              sdn_tep += 1
+          if 'SDNC-003' in myfile['Test_ID'][i].upper() and 'Failed' in myfile['Verdict'][i]:
+              sdn_tunnel += 1
+          if 'SDNC-004' in myfile['Test_ID'][i].upper() and 'Failed' in myfile['Verdict'][i]:
+              sdn_tunnel_st += 1
+          if 'SDNC-004' in myfile['Test_ID'][i].upper():
+              temp = myfile['Remarks'][i]
+              sdn_tunnel_st_count =  re.search("[0-9]+$",temp.strip()).group()
+           
+          if 'SDNC-005' in myfile['Test_ID'][i].upper() and 'Failed' in myfile['Verdict'][i]:
+              sdn_app_status += 1
+          if 'SDNC-005' in myfile['Test_ID'][i].upper():
+              temp = myfile['Remarks'][i]
+              sdn_app_count = re.search(r"((?<==)|(?<==)\s+)[0-9]+",temp).group().strip() 
+
+          if 'SDNC-006' in myfile['Test_ID'][i].upper() and 'Failed' in myfile['Verdict'][i]:
+              sdn_shard_inv_status = sdn_shard_inv_status + 1
+          if 'SDNC-006' in myfile['Test_ID'][i].upper():
+              temp = myfile['Remarks'][i]
+              sdn_shard_inv_data = re.search('cic-[0-9]+',temp.strip()).group()
+
+          if 'SDNC-007' in myfile['Test_ID'][i].upper() and 'Failed' in myfile['Verdict'][i]:
+              sdn_shard_def_status += 1
+          if 'SDNC-007' in myfile['Test_ID'][i].upper():
+              temp = myfile['Remarks'][i]
+              sdn_shard_def_data = re.search('cic-[0-9]+',temp.strip()).group()
+              
+          if 'SDNC-008' in myfile['Test_ID'][i].upper() and 'Failed' in myfile['Verdict'][i]:
+              sdn_shard_top_status += 1
+          if 'SDNC-008' in myfile['Test_ID'][i].upper():
+              temp = myfile['Remarks'][i]
+              sdn_shard_top_data = re.search('cic-[0-9]+',temp.strip()).group()
+ 
+          if 'SDNC-009' in myfile['Test_ID'][i].upper() and 'Failed' in myfile['Verdict'][i]:
+              sdn_shard_invo_status += 1
+          if 'SDNC-009' in myfile['Test_ID'][i].upper():
+              temp = myfile['Remarks'][i]
+              sdn_shard_invo_data = re.search('cic-[0-9]+',temp.strip()).group()
+
+          if 'SDNC-010' in myfile['Test_ID'][i].upper() and 'Failed' in myfile['Verdict'][i]:
+              sdn_shard_defo_status += 1
+          if 'SDNC-010' in myfile['Test_ID'][i].upper():
+              temp = myfile['Remarks'][i]
+              print("defo=", temp)
+              sdn_shard_defo_data = re.search('cic-[0-9]+',temp.strip()).group()
+
+          if 'SDNC-011' in myfile['Test_ID'][i].upper() and 'Failed' in myfile['Verdict'][i]:
+              sdn_shard_topo_status += 1
+          if 'SDNC-011' in myfile['Test_ID'][i].upper():
+              temp = myfile['Remarks'][i]
+              print("topo=", temp)
+              sdn_shard_topo_data = re.search('cic-[0-9]+',temp.strip()).group()
+       
+          if 'SDNC-016' in myfile['Test_ID'][i].upper() and 'Failed' in myfile['Verdict'][i]:
+              sdn_dpn_status += 1
+
+          if 'SDNC-016' in myfile['Test_ID'][i].upper():
+              temp = myfile['Remarks'][i]
+              val = re.search(r'^(\S+).*\b(\w).*?$',temp.strip())
+              if val:
+                 val1 = val.groups()[0] +": " + val.groups()[1]
+                 sdn_dpn_data.append(val1)
+      
+      output['sdn_dpn_data_sum']=0
+      for i in sdn_dpn_data:
+         val = i.split(':')[1]
+         output['sdn_dpn_data_sum'] += int(val)
+      strg=str(output['sdn_dpn_data_sum']) + '[ '
+      for m in sdn_dpn_data:
+        strg += m + '  '
+      strg += ']'
+      output['os_nova_list'] = os_nova_list
+      output['os_nova_hypv'] = os_nova_hypv
+      output['os_cinder_srv'] = os_cinder_srv
+      output['os_neutron_agent'] = os_cinder_srv
+      output['os_nova_srv'] = os_nova_srv
+      output['os_glance_image'] = os_glance_image
+      output['os_ceilometer_meter'] = os_ceilometer_meter
+      output['os_project_list'] = os_project_list
+      output['os_srv_list'] = os_srv_list
+      output['os_neutron_net'] = os_neutron_net
+      output['srv_watchmen'] = srv_watchmen
+      output['srv_rabbitmq_cls'] = srv_rabbitmq_cls
+      output['srv_rabbitmq_lst']=srv_rabbitmq_lst
+      output['srv_galera_mysql']=srv_galera_mysql
+      output['srv_mongodb']=srv_mongodb
+      output['srv_mongodb_rep']=srv_mongodb_rep
+      output['srv_rabbitmg_file']=srv_rabbitmg_file
+      output['srv_rest_srv']=srv_rest_srv
+      output['srv_openflow']=srv_openflow
+      output['srv_ovsdb']=srv_ovsdb
+      output['srv_odlbgp']=srv_odlbgp
+      output['sdn_dpns'] = sdn_dpns
+      output['sdn_tep'] = sdn_tep
+      output['sdn_tunnel'] = sdn_tunnel
+      output['sdn_tunnel_st'] =sdn_tunnel_st
+      output['sdn_tunnel_st_count'] =sdn_tunnel_st_count
+      output['sdn_app_status']=sdn_app_status
+      output['sdn_app_count']=sdn_app_count
+      output['sdn_shard_inv_status']=sdn_shard_inv_status
+      output['sdn_shard_inv_data']=sdn_shard_inv_data
+      output['sdn_shard_def_status']=sdn_shard_def_status
+      output['sdn_shard_def_data']=sdn_shard_def_data
+      output['sdn_shard_top_status']=sdn_shard_top_status
+      output['sdn_shard_top_data']=sdn_shard_top_data
+      output['sdn_shard_invo_status']=sdn_shard_invo_status
+      output['sdn_shard_invo_data']= sdn_shard_invo_data
+      output['sdn_shard_defo_status']=sdn_shard_defo_status
+      output['sdn_shard_defo_data']=sdn_shard_defo_data
+      output['sdn_shard_topo_status']=sdn_shard_topo_status
+      output['sdn_shard_topo_data']=sdn_shard_topo_data
+      output['sdn_dpn_status']=sdn_dpn_status
+      output['sdn_dpn_data']= strg              
+
+      #return HttpResponse(json.dumps(myfile))
+      #return render(request,'pages/sample.html', {'monitor_records':myfile1, 'tc':total_tc})
+      import pprint
+      pprint.pprint(output)
+      output['monitor_records'] = myfile1
+      return render(request,'pages/sample.html', output)
 
   return render(request,'sample_report.html')

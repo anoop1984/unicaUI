@@ -623,6 +623,16 @@
   }
   $('#cic_counts').text(count_cic)
 
+  if(result[0].sdn_app_count_diff != 0) { $('#op_count').css('background-color','red') }  else { $('#op_count').css('background-color','') }
+  if(result[0].sdn_tunnel_st_count_diff !=0 ) { $('#tunnel_count').css('background-color','red') } else { $('#tunnel_count').css('background-color','') }
+  if(result[0].sdn_shard_inv_data_diff !=0 ) { $('#inv_conf').css('background-color','red') } else { $('#inv_conf').css('background-color','') }
+  if(result[0].sdn_shard_def_data_diff != 0 ) {$('#def_conf').css('background-color','red') } else {$('#def_conf').css('background-color','') }
+  if(result[0].sdn_shard_top_data_diff != 0 ) {$('#top_conf').css('background-color','red') } else {$('#top_conf').css('background-color','') }
+  if(result[0].sdn_shard_invo_data_diff !=0 ) { $('#invo_conf').css('background-color','red') } else { $('#invo_conf').css('background-color','') }
+  if(result[0].sdn_shard_defo_data_diff !=0 ){$('#defo_conf').css('background-color','red') } else {$('#defo_conf').css('background-color','') }
+  if(result[0].sdn_shard_topo_data_diff !=0 ){$('#topo_conf').css('background-color','red') } else {$('#topo_conf').css('background-color','') }
+  if(result[0].sdn_dpn_data_diff !=0 ) {$('#cic_counts').css('background-color','red') } else {$('#cic_counts').css('background-color','') }
+
  }
  
  // $('#datelog1').change(function(){

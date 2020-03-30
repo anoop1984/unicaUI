@@ -93,10 +93,14 @@
 <script>
   $(function () {
     $("#example1").DataTable({
-       fixedHeader: {
-            header: true,
-            footer: true
-       }
+        fixedHeader: {
+             header: true,
+             footer: true
+        },
+    dom: 'Bfrtip',
+        buttons: [
+            'copy', { extend:'csv',messageTop: 'Date: {{date}}' }, { extend:'excel',messageTop: 'Date: {{date}}' }, { extend:'pdf',messageTop: 'Date: {{date}}' }, { extend:'print',messageTop: 'Date: {{date}}' }
+        ]
     });
 
 

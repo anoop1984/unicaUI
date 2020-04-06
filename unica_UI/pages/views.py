@@ -527,14 +527,20 @@ def testlab2_logfile(request):
 
 
 def sample_report(request):
-  if request.method == 'POST':
-      myfile = request.FILES['myfile']
+  return render(request,'sample_report.html')
+  
+#def sample_report(request):
+  #if request.method == 'POST':
+  #    myfile = request.FILES['myfile']
+def sample_report1():
+  myfile = open('test.json','r')
+  if myfile:
       myfile = json.load(myfile)
       myfile = strip_spaces(myfile)
       myfile1 = myfile
       myfile = refine_result(myfile)
       import time
-#      time.sleep(60)
+      time.sleep(6)
       output={}
       total_tc = len(myfile['Verdict'])
       output['total_tc'] = total_tc
@@ -801,9 +807,10 @@ def sample_report(request):
       import pprint
       pprint.pprint(output)
       output['monitor_records'] = myfile1
-      return render(request,'pages/sample.html', output)
+      #return render(request,'pages/sample.html', output)
+      return output
 
-  return render(request,'sample_report.html')
+ # return render(request,'sample_report.html')
 
 
 def date_wise_start_prv(date,site):
@@ -922,3 +929,94 @@ def date_wise_start_prv(date,site):
 
 
     return report
+
+@csrf_exempt
+def adhoc(request):
+    import sys
+    from subprocess import run,PIPE
+    import time
+    timestamp = request.POST['timestamp']
+    print("timestamp=",timestamp)
+    #time.sleep(600)
+    out = run(['/bin/bash', '/tmp/test.sh'], stdout=PIPE)
+    print(out)
+    print(out.returncode)
+    #return HttpResponse("Execution Done", out)
+    m = sample_report1()
+    return render(request,'pages/sample.html', m)
+
+
+#####
+
+@csrf_exempt
+def execute1(request):
+  from . models import Execute1
+  if request.method == 'POST':
+     timestamp = request.POST['timestamp']
+     timestamp_str = request.POST['timestamp_str']
+     Execute1.objects.create(timestamp=timestamp,timestamp_str=timestamp_str,status='started')
+     import sys
+     from subprocess import run,PIPE
+     out = run(['/bin/bash', '/tmp/test.sh',timestamp], stdout=PIPE)
+     print('timestamp_out=',out)
+     print(out.returncode)
+     if out.returncode == 0:
+        print('timestamp success:',timestamp_str)
+        Execute1.objects.filter(timestamp=timestamp).update(status='passed')
+     else:
+        print('timestamp failed:',timestamp_str)
+        Execute1.objects.filter(timestamp=timestamp).update(status='failed')
+
+     data = Execute1.objects.all().order_by('-timestamp')
+     return render(request,'execute1.html', {'data': data})
+
+  data = Execute1.objects.all().order_by('-timestamp')
+  return render(request,'execute1.html', {'data': data})
+
+
+
+def execute1_result(request):
+  from . models import Execute1
+  if request.method == 'GET':
+     timestamp = request.GET['id']
+     data = Execute1.objects.filter(timestamp=timestamp).values('status','timestamp_str')
+     if data:
+        timestamp_str=data[0]['timestamp_str']
+        status = data[0]['status']
+     return render(request,'execute1_result.html', {'timestamp':timestamp,'status':status,'timestamp_str':timestamp_str })
+
+
+def logpoller(request):
+    timestamp = request.GET['timestamp']
+    line = request.GET['num']  
+    import os.path
+    status='-1'
+    file_name='/tmp/'+str(timestamp)+'.log'
+    output={}
+    if os.path.isfile(file_name):
+       file_str = open(file_name,'r')
+       data = file_str.readlines()
+       if int(line) != 0:
+         l=int(line)
+         data = data[l::]
+       data_len = len(data)
+       flag = 'open'
+       print(data)
+       if data and 'END' in data[-1]:
+          flag = 'closed'
+          print(data[-1])
+          status = data[-1].split(':')[0]
+
+       output['data']=data
+       output['len']=data_len
+       output['flag']=flag
+       output['status']=status
+
+    else:
+       output['flag']='error'
+
+
+    return JsonResponse(output)
+
+
+          

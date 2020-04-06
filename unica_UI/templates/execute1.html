@@ -19,8 +19,24 @@
 <div id='loader' style='display: none;'>
   <img src={% static 'img/loading.gif' %} width='132px' height='132px'>
 </div>
-
+<div class="progress">
+  <div class="progress-bar progress-bar-striped progress-bar-animated" role="progressbar" aria-valuenow="75" style="width: 75%"></div>
+</div>
 <!-- Image loader -->
+  <ul>
+    {% for obj in data %}
+      <li>
+        <a href="execute1_result?id={{ obj.timestamp }}">Link</a>
+        <small>(Executed at: {{ obj.timestamp_str }})</small>
+        {% if obj.status == 'started' %}
+        <img src={% static 'img/loading.gif' %} width='50px' height='25px'>
+        {% endif %}
+        {% if obj.status == 'passed' %}
+        <small class="badge badge-success">Passed</small>
+        {% endif %}
+      </li>
+    {% endfor %}
+  </ul>
  </div>
   <!--/div-->
 
@@ -38,12 +54,15 @@
 <script>
 
 $('#kk').click(function(){
-  $('.card-body').html('<h3>Script Executing...Hold On!!!!</h3>')
-  $("#loader").show()
+  //$('.card-body').html('<h3>Script Executing...Hold On!!!!</h3>')
+  //$("#loader").show()
   var timestamp = $.now()
   var d = new Date(timestamp)
   var timestamp_str = d.getDate()+"-"+(d.getMonth() + 1)+"-"+d.getFullYear()+" "+d.getHours()+":"+d.getMinutes()+":"+d.getSeconds()+','+d.getMilliseconds()
-  $('body').load('adhoc',{'timestamp':$.now()})
+  $('body').load('execute1',{'timestamp':timestamp,'timestamp_str':timestamp_str})
 });
+
+setInterval(function(){location.reload(true);},60000)
+
 </script>
 {% endblock %}

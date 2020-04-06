@@ -1,0 +1,123 @@
+{% extends 'base.html' %}
+
+{% load static %}
+
+
+{% block content %}
+
+<style>
+.terminal {
+  width: 100%;
+  padding: 4px;
+  background-color: black;
+  opacity: 0.7;
+  height: 650px;
+  color: #fff;
+  font-family: 'Source Code Pro', monospace;
+  font-weight: 200;
+  font-size: 14px;
+  white-space: pre-wrap;
+  white-space: -moz-pre-wrap;
+  white-space: -pre-wrap;
+  white-space: -o-pre-wrap;
+  word-wrap: break-word;
+  border-bottom-left-radius: 5px;
+  border-bottom-right-radius: 5px;
+  overflow-y: auto;
+}
+
+.terminal div {
+  display: inline-block;
+}
+
+.terminal .static {
+  color: #5ed7ff;
+  font-weight: bold;
+}
+
+.console-arrow {
+  color: #bde371;
+}
+</style>
+  
+<div class="content-wrapper">
+   <div class="card ">
+     <div class="card-header">
+         <h3>Health Script Execution Log : {{ timestamp_str }}</h3>
+         <h4>ID: {{ timestamp }}</h4>
+     </div>
+     <div class="card-body">
+       <div id="terminal" class="terminal"></div>
+     </div>
+   </div>
+</div>
+
+<script>
+$(function() {
+	connectToServer(0);
+});
+function sleep(milliseconds) { 
+            let timeStart = new Date().getTime(); 
+            while (true) { 
+                let elapsedTime = new Date().getTime() - timeStart; 
+                if (elapsedTime > milliseconds) { 
+                    break; 
+                } 
+            } 
+        } 
+  
+function connectToServer(linenum) {
+	$.ajax({
+  		dataType: "json",
+		url: "logpoller",
+		data: {num:linenum,timestamp:{{timestamp}}},
+		timeout: 120000, // in milliseconds
+		success:function(data) {
+            		if (data == null){
+				//console.log("Got back junk");
+            			console.log('ajax failed. reloading...');
+				connectToServer(0);
+				$("#terminal").html("Error, reloading...");
+		        } 
+			else {
+				//console.log("Got back good data");
+                                var len = data['len'] + linenum
+                                var lines = data['data'] 
+                                var st = data['status']
+                                var flag = data['flag']
+                                if(flag=='error'){console.log('{{timestamp}}.log file not exits'); connectToServer(0)}else
+                                {
+                                //for(var i=0;i<=lines;i++){
+		                var newlines = '<p>' + lines.join( "</p><p>" ) + '</p>'
+                                //console.log(newlines)
+                                console.log(flag)
+        		        $("#terminal").append(newlines);
+                                if(flag=='open'){console.log('file still in progress');console.log(len);sleep(10000);connectToServer(len)}
+                                if(flag=='closed'){console.log('End of File reached')}
+                                }
+
+
+
+
+        		} // end else
+		}, // end success
+		error: function(request, status, err) {
+                        console.log(status)
+            		if(status == "timeout") {
+				console.log('ajax failed. reloading...');
+                                connectToServer(0);
+                                $("#terminal").html("Local timeout, reloading...");
+            		}// end if
+            		if(status == "error") {
+				console.log('ajax failed. Error...');
+                                //connectToServer(0);
+                                $("#terminal").html("Error Occured...");
+            		}// end if
+        	} // end error
+	}); // end ajax
+}
+
+
+
+</script>
+{% endblock %}

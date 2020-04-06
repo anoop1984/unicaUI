@@ -33,3 +33,12 @@ class Logfile_Testlab1(models.Model):
 class Logfile_Testlab2(models.Model):
     logfile 	= models.FileField(upload_to='testlab2/')
     uploaded_at = models.DateField(primary_key=True)
+
+class Execute1(models.Model):
+    user = models.CharField(max_length=50, blank=True)
+    #logfile = models.FileField(upload_to='execute1/', blank=True)
+    #jsonfile = models.FileField(upload_to='execute1/', blank=True)
+    timestamp = models.CharField(max_length=50,primary_key=True)
+    timestamp_str = models.CharField(max_length=50)
+    status = models.CharField(max_length=50, blank=True)
+

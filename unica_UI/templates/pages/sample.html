@@ -1,0 +1,552 @@
+
+{% extends 'base.html' %}
+
+{% load static %}
+{% block content %}
+
+
+  <!-- Content Wrapper. Contains page content -->
+  <div class="content-wrapper">
+    <!-- Content Header (Page header) -->
+    <div class="content-header">
+      <div class="container-fluid">
+        <div class="row mb-0">
+          <div class="col-sm-6">
+            <h1 class="m-0 text-dark">UNICA Healthcheck - Uploaded Json</h1>
+          </div><!-- /.col -->
+          <div class="col-sm-6">
+            <ol class="breadcrumb float-sm-right">
+              
+                
+              
+            </ol>
+          </div><!-- /.col -->
+        </div><!-- /.row -->
+      </div><!-- /.container-fluid -->
+    </div>
+    <!-- /.content-header -->
+
+    <!-- Main content -->
+    <section class="content">
+
+
+       <div class="container-fluid">
+<!--1st Row starts-->     
+        <div class="row">
+          <div class="col-md-12">
+            <div class="card h-100">
+              <div class="card-header">
+                <h5 class="card-title">Health Report</h5>
+                <!--div class="card-tools">
+                  <button type="button" class="btn btn-tool" data-card-widget="collapse">
+                    <i class="fas fa-minus"></i>
+                  </button>
+                  <div class="btn-group">
+                    <button type="button" class="btn btn-tool dropdown-toggle" data-toggle="dropdown">
+                      <i class="fas fa-wrench"></i>
+                    </button>
+                    <div class="dropdown-menu dropdown-menu-right" role="menu">
+                      <a href="#" class="dropdown-item">Action</a>
+                      <a href="#" class="dropdown-item">Another action</a>
+                      <a href="#" class="dropdown-item">Something else here</a>
+                      <a class="dropdown-divider"></a>
+                      <a href="#" class="dropdown-item">Separated link</a>
+                    </div>
+                  </div>
+                  <button type="button" class="btn btn-tool" data-card-widget="remove">
+                    <i class="fas fa-times"></i>
+                  </button>
+                </div-->
+              </div>
+              <!-- /.card-header -->
+              <div class="card-body">
+                <div class="row">
+                  <div class="col-md-8">
+                      <strong id="date"></strong>
+
+                    <div class="chart">
+                      <!-- Sales Chart Canvas -->
+                      <canvas id="reportChart" height="300" style="height: 300px;"></canvas>
+                    </div>
+                    <!-- /.chart-responsive -->
+                  </div>
+                  <!-- /.col -->
+                  <div class="col-md-4">
+                    <p class="text-center">
+                        <strong><B>UNICA Components</B></strong>
+                    </p>
+
+                    <div class="progress-group">
+                      CEE
+                      <span class="float-right" id="os_value" ><b>{{ cee_pass }}</b>/{{ cee_tc }}[<b>PASSED</b>/Total]</span>
+                      <div class="progress progress-sm">
+                        <div class="progress-bar bg-primary" id="os_val_per" style="width: {{cee_per}}"></div>
+                      </div>
+                    </div>
+                    <!-- /.progress-group -->
+
+                    <div class="progress-group">
+                     CSC
+                      <span class="float-right" id="sdn_value"><b>{{sdn_pass}}</b>/{{sdn_tc}}[<b>PASSED</b>/Total]</span>
+                      <div class="progress progress-sm">
+                        <div class="progress-bar bg-danger" id="sdn_val_per" style="width: {{sdn_per}}"></div>
+                      </div>
+                    </div>
+                    <!-- /.progress-group -->
+                    <div class="progress-group">
+                      <span class="progress-text">FUEL</span>
+                      <span class="float-right" id="con_value"><b>{{fuel_pass}}</b>/{{fuel_tc}}[<b>PASSED</b>/Total]</span>
+                      <div class="progress progress-sm">
+                        <div class="progress-bar bg-success" id="con_val_per" style="width: {{fuel_per}}"></div>
+                      </div>
+                    </div>
+
+                    <!-- /.progress-group -->
+                    <div class="progress-group">
+                      Computes
+                      <span class="float-right" id="srv_value"><b>{{allnode_pass}}</b>/{{allnode_tc}}[<b>PASSED</b>/Total]</span>
+                      <div class="progress progress-sm">
+                        <div class="progress-bar bg-warning" id="srv_val_per" style="width: {{allnode_per}}"></div>
+                      </div>
+                    </div>
+                    <!-- /.progress-group -->
+                  </div>
+                  <!-- /.col -->
+                </div>
+                <!-- /.row -->
+              </div>
+              <!-- ./card-body -->
+              
+              <!-- /.card-footer -->
+            </div>
+            <!-- /.card -->
+          </div>
+<!---End Pie Graph --->
+
+<!---Adding Histor Char Graph--> 
+             
+<!---End Histor Char Grap--> 
+          <!-- /.col -->
+        </div>
+<!-- 1.row ended-->
+
+
+<!---2nd row starts-->
+
+        <div class="row">
+          <div class="col-lg-3 col-6">
+            <!-- small box -->
+            <div class="small-box bg-info">
+              <div class="inner">
+                <h3 id="total">{{total_tc}}</h3>
+              
+                <p>Total TestCases
+                <i class="ion ion-home"></i></p>
+              </div>
+              <div class="icon">
+                <i class="ion ion-home"></i>
+              </div>
+              <a id="date_report1" href="#" class="small-box-footer">More info <i class="fas fa-arrow-circle-right"></i></a>
+            </div>
+          </div>
+          <!-- ./col -->
+          <div class="col-lg-3 col-6">
+            <!-- small box -->
+            <div class="small-box bg-success">
+              <div class="inner">
+                <!--h3>53<sup style="font-size: 20px">%</sup></h3-->
+                <h3 id="passed">{{pass_tc}}</h3>
+                  
+                <p>Passed</p>
+              </div>  
+              <div class="icon">
+                <i class="ion ion-thumbsup"></i>
+              </div>  
+              <a id="date_report2" href="#" class="small-box-footer">More info <i class="fas fa-arrow-circle-right"></i></a>
+            </div>
+          </div>
+          <!-- ./col -->
+          <div class="col-lg-3 col-6">
+            <!-- small box -->
+            <div class="small-box bg-danger">
+              <div class="inner">
+                <h3 id="failed">{{fail_tc}}</h3>
+
+                <p>FAILED</p>
+              </div>
+              <div class="icon">
+                <i class="ion ion-thumbsdown"></i>
+              </div>
+              <a id="date_report3" href="#" class="small-box-footer">More info <i class="fas fa-arrow-circle-right"></i></a>
+            </div>
+          </div>
+          <!-- ./col -->
+          <div class="col-lg-3 col-6">
+            <!-- small box -->
+            <div class="small-box bg-warning">
+              <div class="inner">
+                <h3 id="failedm">{{warning_tc}}</h3>
+
+                <p>WARNING</p>
+              </div>
+              <div class="icon">
+                <i class="ion ion-alert"></i>
+              </div>
+              <a id="date_report4" href="#" class="small-box-footer">More info <i class="fas fa-arrow-circle-right"></i></a>
+            </div>
+          </div>
+          <!-- ./col -->
+        </div>
+        <!-- /.row -->
+<!---2nd Row ends-->
+
+<!---3rd Row starts-->
+         <div class="row">
+
+             <div class="col-md-4">             
+            <div class="card h-100">
+               <div class="card-header border-0">
+                  <h3 class="card-title">CEE Commands</h3>
+               </div>
+
+               <!-- /.card-header -->
+               <div class="card-body table-responsive p-0" >
+               <table  class="table table-striped table-hover">
+               <!--table  class="table table-striped table-valign-middle"-->
+                  <tbody>
+                     <tr>
+                       <td><i id="nova_list"></i>&ensp;Nova List</td>
+                       <td><i id="nova_hypv"></i>&ensp;Nova Hypervisor </td>
+                     </tr>
+                     <tr>
+                       <td><i id="cinder_srv"></i>&ensp;Cinder Service </td>
+                       <td><i id="neutron_agent"></i>&ensp;Neutron Agent </td>
+                     </tr>
+                     <tr>
+                        <td><i id="nova_srv"></i>&ensp;Nova Service </td>
+                        <td><i id="glance"></i>&ensp;Glance Image </td>
+                     </tr>
+                     <tr>
+                        <td><i id="ceilometer"></i>&ensp;Ceilometer Meter </td>
+                        <td><i id="project"></i>&ensp;Openstack Project </td>
+                     </tr>
+                     <tr>
+                        <td><i id="os_srv"></i>&ensp;Openstack Service </td>
+                        <td><i id="neutron_net"></i>&ensp;Neutron Net </td>
+                     </tr>
+                  </tbody>
+               </table>
+                </div>
+              <!-- /.card-body -->
+              
+            </div>
+            <!-- /.card -->
+         </div>
+
+
+
+<!--start-->
+             <div class="col-md-4">               
+            <div class="card h-100">
+               <div class="card-header border-0">
+                  <h3 class="card-title">Services Status</h3>
+               </div>
+
+              <!-- /.card-header -->
+               <div class="card-body table-responsive p-0">
+                  <table class="table table-striped table-valign-middle">  
+                     <tbody>
+                        <tr>
+                          <td><i id="srv_watchmen"></i>&ensp;Watchmen </td>
+                          <td><i id="srv_rabbitmq_cls"></i>&ensp;Rabbitmq Cluster </td>
+                        </tr>
+                        <tr>
+                           <td><i id="srv_rabbitmq_lst"></i>&ensp;Rabbitmq List </td>
+                           <td><i id="srv_galera_mysql"></i>&ensp;Galera Mysql </td>
+                        </tr> 
+                        <tr>
+                           <td><i id="srv_mongodb"></i>&ensp;MongoDB Service </td>
+                           <td><i id="srv_mongodb_rep"></i>&ensp;MonogDB Replica </td>
+                        </tr>
+                        <tr>
+                           <td><i id="srv_rabbitmg_file"></i>&ensp;Rabbitmq File </td>
+                           <td><i id="srv_rest_srv"></i>&ensp;Rest Service </td>
+                        </tr>
+                        <tr>
+                           <td><i id="srv_openflow"></i>&ensp;OpenFlow </td>
+                           <td><i id="srv_ovsdb"></i>&ensp;OVSDB </td>
+                        </tr>
+                        <tr>
+                           <td><i id="srv_odlbgp"></i>&ensp;ODLBGP </td>
+                           <td></td>
+                        </tr>
+                     </tbody> 
+                  </table>
+               </div>
+              <!-- /.card-body -->
+              
+            </div>
+            <!-- /.card -->
+
+            </div>
+<!--end-->
+
+
+         <div class="col-md-4">
+            <div class="card h-100">
+               <div class="card-header border-0">
+                  <h3 class="card-title">CSC Information</h3>
+               </div>
+
+            <!-- /.card-header -->
+              <div class="card-body table-responsive p-0">
+               <table class="table table-striped table-valign-middle">
+                  <tbody>
+                     <tr>
+                        <td><i id="dpns"></i>&ensp;<b>DPN Count:</b></td>
+                        <td><b id="cic_counts"></b></td>
+                     </tr>
+                     <!--tr>
+                        <td><i id="dpns"></i>&ensp;All DPNS </td>
+                        <td><i id="tep"></i>&ensp;TEP Config </td> 
+			<td><i id="tep_tunnel"></i>&ensp;TEP Tunnel </td>
+                     </tr-->
+                     <tr>
+			<td><i id="tunnel_status"></i>&ensp;<b>TEP COUNT:</b></td>
+                        <td><b id="tunnel_count">-</b></td>
+                     </tr>
+                     <tr>
+                        <td><i id="op_status"> </i>&ensp;<b>Operationl Count:</td>
+                        <td> <b id="op_count">-</b></td>
+                     </tr>
+                     <tr>
+			<td><b>Shard Leader: </b></td>
+                        <td></td> 
+                     </tr>
+                     <tr> 
+			<td><i id="inv_conf_status"></i>&ensp;Inventory Config:&ensp; <b id="inv_conf">-</b></td>
+                        <td><i id="def_conf_status"></i>&ensp;Default Config:&ensp;  <b id="def_conf">-</b></td>			
+                     </tr>
+                     <tr>
+		       <td><i id="top_conf_status"></i>&ensp;Topology Config:&ensp; <b id="top_conf">-</b> </td> 
+                       <td><i id="invo_conf_status"></i>&ensp;Inventory Operation:&ensp; <b id="invo_conf">-</b></td>
+                     </tr>
+                     <tr>
+			<td> <i id="defo_conf_status"></i>&ensp;Default Operation: &ensp; <b id="defo_conf">-</b></td> 
+                        <td> <i id="topo_conf_status"></i>&ensp;Topology Operation:&ensp; <b id="topo_conf">-</b></td>
+                     </tr>
+                     
+                  </tbody>
+               </table>
+              </div>
+              <!-- /.card-body -->
+              
+            </div>
+            <!-- /.card -->
+
+         </div>
+          <!-- /.col -->
+
+          
+
+        </div>
+ <!--3rdRow Ends-->         
+<!--Table Added -->
+      <div class="row">
+          
+          <!-- /.card -->
+
+          <!--div class="card "-->
+            
+            <!-- /.card-header -->
+            <!--div class="card-body col-md-12"-->
+            <div class="col-md-12">
+             <div class="card ">
+              <div class="card-header">
+                <h4>Health-Check Report</h4>
+              </div>
+             <div class="card-body">
+              <!--table id="example1" class="table table-bordered table-striped"-->
+            {% if monitor_records %}
+              <!--table id="example1" class="table table-bordered table-hover" style="width:100%"-->
+              <table id="example1" class="table table-bordered table-hover" >
+                <thead>
+                <tr>
+                  <th>TestId</th>
+                  <th>Description</th>
+                  <th>Severity</th>
+                  <th>IpAddress</th>
+                  <th>Hostname</th>
+                  <th>Command</th>
+                  <th>Verdict</th>
+                  <th>Remarks</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr>
+              {% for it in monitor_records %}
+                 <td>{{ it.Test_ID }}</td>
+                 <td>{{ it.Test_Description }}</td>
+                 <td>{{ it.Severity }}</td>
+                 <td>{{ it.IPAddress }}</td>
+                 <td>{{ it.Hostname }}</td>
+                 <td>{{ it.Command_Executed. }}</td>
+                 {% if "Passed" in it.Verdict %} 
+                 <td class="badge badge-success">{{ it.Verdict }}</td>
+                 {% else %}
+                 <td class="badge badge-danger">{{ it.Verdict }}</td>
+                 {% endif %}
+                 <td>{{ it.Remarks }}</td>
+                </tr>
+             {% endfor %}
+                </tbody>
+                <tfoot>
+                <tr>
+                  <th>TestId</th>
+                  <th>Description</th>
+                  <th>Severity</th>
+                  <th>IpAddress</th>
+                  <th>Hostname</th>
+                  <th>Command</th>
+                  <th>Verdict</th>
+                  <th>Remarks</th>
+                </tr>
+                </tfoot>
+              </table>
+            {% endif %}
+            </div>
+            </div>
+              </div>
+            <!-- /.card-body -->
+          <!--/div-->
+          <!-- /.card -->
+        <!-- /.col -->
+      </div>
+<!-- Table End -->
+        
+      </div>
+     <!--/. container-fluid -->
+    </section>
+    <!-- /.content -->
+  </div>
+  <!-- /.content-wrapper -->
+
+  <!-- Control Sidebar -->
+  <aside class="control-sidebar control-sidebar-dark">
+    <!-- Control sidebar content goes here -->
+  </aside>
+  <!-- /.control-sidebar -->
+
+  <!-- Main Footer -->
+  
+</div>
+</div>
+
+<script>
+  $(function () {
+    $("#example1").DataTable({
+       fixedHeader: {
+            header: true,
+            footer: true
+       },
+    dom: 'Bfrtip',
+        buttons: [
+            'copy', 'csv', 'excel', 'pdf', 'print'
+        ]
+    });
+   console.log({{tc}})
+
+  });
+var pieChartCanvas = $('#reportChart').get(0).getContext('2d')
+   var pieData        = {
+   labels: [
+    'PASSED',
+    'FAILED(Major)',
+    'FAILED(Minor)',
+    'FAILED(Catestrophic)',
+    'FAILED(Warning)',
+   ],
+   datasets: [
+     {
+    data: [{{pass_tc}},{{fail_mj_tc}},{{fail_mi_tc}},{{fail_cat_tc}},{{warning_tc}} ],
+    backgroundColor : ['#00a65a','#8B0000','#FF7F50','#DEB887','#FFEBCD'],
+     }
+   ]
+    }
+    var pieOptions = {
+   legend: {
+     display: true,
+     position: 'left',
+   },
+   maintainAspectRatio : false,
+   responsive : true,
+    }
+    //Create pie or douhnut chart
+    // You can switch between pie and douhnut using the method below.
+    var pieChart = new Chart(pieChartCanvas, {
+   type: 'doughnut',
+   data: pieData,
+   options: pieOptions
+    });
+
+
+
+
+  var thumbsup = '<i class="ion ion-thumbsup" style="font-size:30px;color:green"></i>'
+  var thumbsdown = '<i class="ion ion-thumbsdown" style="font-size:30px;color:red">'
+  if ( {{os_nova_list }}== 0 ) { $('#nova_list').html(thumbsup) } else {$('#nova_list').html(thumbsdown) }
+  if ( {{os_nova_hypv }}== 0 ) { $('#nova_hypv').html(thumbsup) } else {$('#nova_hypv').html(thumbsdown) }
+  if ( {{os_cinder_srv }}== 0 ) { $('#cinder_srv').html(thumbsup) } else {$('#cinder_srv').html(thumbsdown) }
+  if ( {{os_neutron_agent}} == 0 ) { $('#neutron_agent').html(thumbsup) } else {$('#neutron_agent').html(thumbsdown) }
+  if ( {{os_nova_srv}} == 0 ) { $('#nova_srv').html(thumbsup) } else {$('#nova_srv').html(thumbsdown) }
+  if ( {{os_glance_image}} == 0 ) { $('#glance').html(thumbsup) } else {$('#glance').html(thumbsdown) }
+  if ( {{os_ceilometer_meter}} == 0 ) { $('#ceilometer').html(thumbsup) } else {$('#ceilometer').html(thumbsdown) }
+  if ( {{os_project_list }}== 0 ) { $('#project').html(thumbsup) } else {$('#project').html(thumbsdown) }
+  if ( {{os_srv_list }}== 0 ) { $('#os_srv').html(thumbsup) } else {$('#os_srv').html(thumbsdown) }
+  if ( {{os_neutron_net}} == 0 ) { $('#neutron_net').html(thumbsup) } else {$('#neutron_net').html(thumbsdown) }
+
+
+  if ( {{srv_watchmen}}==0 ) { $('#srv_watchmen').html(thumbsup) } else {$('#srv_watchmen').html(thumbsdown) }
+  if ( {{srv_rabbitmq_cls}}== 0 ) { $('#srv_rabbitmq_cls').html(thumbsup) } else {$('#srv_rabbitmq_cls').html(thumbsdown) }
+  if ( {{srv_rabbitmq_lst}}== 0 ) { $('#srv_rabbitmq_lst').html(thumbsup) } else {$('#srv_rabbitmq_lst').html(thumbsdown) }
+  if ( {{srv_galera_mysql}}== 0 ) { $('#srv_galera_mysql').html(thumbsup) } else {$('#srv_galera_mysql').html(thumbsdown) }
+  if ( {{srv_mongodb}}== 0 ) { $('#srv_mongodb').html(thumbsup) } else {$('#srv_mongodb').html(thumbsdown) }
+  if ( {{srv_mongodb_rep}}== 0 ) { $('#srv_mongodb_rep').html(thumbsup) } else {$('#srv_mongodb_rep').html(thumbsdown) }
+  if ( {{srv_rabbitmg_file}}== 0 ) { $('#srv_rabbitmg_file').html(thumbsup) } else {$('#srv_rabbitmg_file').html(thumbsdown) }
+  if ( {{srv_rest_srv}}== 0 ) { $('#srv_rest_srv').html(thumbsup) } else {$('#srv_rest_srv').html(thumbsdown) }
+  if ( {{srv_openflow }}== 0 ) { $('#srv_openflow').html(thumbsup) } else {$('#srv_openflow').html(thumbsdown) }
+  if ( {{srv_ovsdb}}== 0 ) { $('#srv_ovsdb').html(thumbsup) } else {$('#srv_ovsdb').html(thumbsdown) }
+  if ( {{srv_odlbgp}}== 0 ) { $('#srv_odlbgp').html(thumbsup) } else {$('#srv_odlbgp').html(thumbsdown) }
+
+
+
+  if ( {{sdn_dpns}}==0 ) { $('#dpns').html(thumbsup) } else {$('#dpns').html(thumbsdown) }
+  if ( {{sdn_tep}}==0 ) { $('#tep').html(thumbsup) } else {$('#tep').html(thumbsdown) }
+  if ( {{sdn_tunnel}}==0 ) { $('#tep_tunnel').html(thumbsup) } else {$('#tep_tunnel').html(thumbsdown) }
+  if ( {{sdn_tunnel_st}}==0 ) { $('#tunnel_status').html(thumbsup) } else {$('#tunnel_status').html(thumbsdown) }
+  if ( {{sdn_app_status}}==0 ) { $('#op_status').html(thumbsup) } else {$('#op_status').html(thumbsdown) }
+
+  if ( {{sdn_shard_inv_status}}==0 ) { $('#inv_conf_status').html(thumbsup) } else {$('#inv_conf_status').html(thumbsdown) }
+  if ( {{sdn_shard_def_status}}==0 ) { $('#def_conf_status').html(thumbsup) } else {$('#def_conf_status').html(thumbsdown) } 
+  if ( {{sdn_shard_top_status}}==0 ) { $('#top_conf_status').html(thumbsup) } else {$('#top_conf_status').html(thumbsdown) }
+  if ( {{sdn_shard_invo_status}}==0 ) { $('#invo_conf_status').html(thumbsup) } else {$('#invo_conf_status').html(thumbsdown) }
+  if ( {{sdn_shard_defo_status}}==0 ) { $('#defo_conf_status').html(thumbsup) } else {$('#defo_conf_status').html(thumbsdown) }
+  if ( {{sdn_shard_topo_status}}==0 ) { $('#topo_conf_status').html(thumbsup) } else {$('#topo_conf_status').html(thumbsdown) }
+  if ( {{sdn_dpn_status}}==0 ) { $('#cic1_status').html(thumbsup);$('#cic2_status').html(thumbsup);$('#cic3_status').html(thumbsup);
+  } else {$('#cic1_status').html(thumbsdown);$('#cic2_status').html(thumbsdown); $('#cic3_status').html(thumbsdown) }
+
+
+
+  $('#op_count').text('{{sdn_app_count}}')
+  $('#tunnel_count').text('{{sdn_tunnel_st_count}}')
+  $('#inv_conf').text('{{sdn_shard_inv_data}}')
+  $('#def_conf').text('{{sdn_shard_def_data}}')
+  $('#top_conf').text('{{sdn_shard_top_data}}')
+  $('#invo_conf').text('{{sdn_shard_invo_data}}')
+  $('#defo_conf').text('{{sdn_shard_defo_data}}')
+  $('#topo_conf').text('{{sdn_shard_topo_data}}')
+  $('#cic_counts').text('{{sdn_dpn_data}}')
+</script>
+
+{% endblock %}
+

@@ -31,6 +31,10 @@ urlpatterns = [
     path('ajax-post', views.ajax),
     path('admin/', admin.site.urls),
     path('sample_report',views.sample_report),
+    path('adhoc',views.adhoc),
+    path('execute1',views.execute1),
+    path('execute1_result',views.execute1_result),
+    path('logpoller',views.logpoller),
 
 
 ]

@@ -7,10 +7,10 @@
  <!--div class="row"-->
    <div class="card ">
      <div class="card-header">
-     <h3>Adhoc Health-Check Execution</h3>
+     <h3>Health-Check Execution: TEST-LAB1</h3>
      </div>
      <div class="card-body">
-      <div clas="update">
+      <div class="update">
         <button id="kk" type="submit">Execute Script</button>
      </div>
      </div>
@@ -19,9 +19,7 @@
 <div id='loader' style='display: none;'>
   <img src={% static 'img/loading.gif' %} width='132px' height='132px'>
 </div>
-<div class="progress">
-  <div class="progress-bar progress-bar-striped progress-bar-animated" role="progressbar" aria-valuenow="75" style="width: 75%"></div>
-</div>
+
 <!-- Image loader -->
   <ul>
     {% for obj in data %}
@@ -29,10 +27,13 @@
         <a href="execute1_result?id={{ obj.timestamp }}">Link</a>
         <small>(Executed at: {{ obj.timestamp_str }})</small>
         {% if obj.status == 'started' %}
-        <img src={% static 'img/loading.gif' %} width='50px' height='25px'>
+        <img src={% static 'img/loading.gif' %} width='50px' height='50px'>
         {% endif %}
         {% if obj.status == 'passed' %}
         <small class="badge badge-success">Passed</small>
+        {% endif %}
+        {% if obj.status == 'timeout' %}
+        <small class="badge badge-warning">Timeout</small>
         {% endif %}
       </li>
     {% endfor %}
@@ -40,14 +41,14 @@
  </div>
   <!--/div-->
 
-<div class="card">
+<!--div class="card">
   <h5 class="card-header">Featured</h5>
   <div class="card-body">
     <h5 class="card-title">Special title treatment</h5>
     <p class="card-text">With supporting text below as a natural lead-in to additional content.</p>
     <a href="#" class="btn btn-primary">Go somewhere</a>
   </div>
-</div>
+</div-->
 
 
 </div>
@@ -55,10 +56,25 @@
 
 $('#kk').click(function(){
   //$('.card-body').html('<h3>Script Executing...Hold On!!!!</h3>')
-  //$("#loader").show()
+  $("#loader").show()
+  $('#kk').attr("disabled", true);
   var timestamp = $.now()
   var d = new Date(timestamp)
-  var timestamp_str = d.getDate()+"-"+(d.getMonth() + 1)+"-"+d.getFullYear()+" "+d.getHours()+":"+d.getMinutes()+":"+d.getSeconds()+','+d.getMilliseconds()
+  var month = new Array();
+  month[0] = "January";
+  month[1] = "February";
+  month[2] = "March";
+  month[3] = "April";
+  month[4] = "May";
+  month[5] = "June";
+  month[6] = "July";
+  month[7] = "August";
+  month[8] = "September";
+  month[9] = "October";
+  month[10] = "November";
+  month[11] = "December";
+  var timestamp_str = d.getDate()+"-"+month[d.getMonth()]+"-"+d.getFullYear()+" "+d.getHours()+":"+d.getMinutes()+":"+d.getSeconds()+'.'+d.getMilliseconds()
+  $('.update').append('<p>Execution Start:'+timestamp_str+' !!!!</p>')
   $('body').load('execute1',{'timestamp':timestamp,'timestamp_str':timestamp_str})
 });
 

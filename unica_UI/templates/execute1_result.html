@@ -43,7 +43,7 @@
 <div class="content-wrapper">
    <div class="card ">
      <div class="card-header">
-         <h3>Health Script Execution Log : {{ timestamp_str }}</h3>
+         <h3>Health Script Execution Log :</h3> <p> {{ timestamp_str }}</p>
          <h4>ID: {{ timestamp }}</h4>
      </div>
      <div class="card-body">
@@ -73,9 +73,12 @@ function connectToServer(linenum) {
 		data: {num:linenum,timestamp:{{timestamp}}},
 		timeout: 120000, // in milliseconds
 		success:function(data) {
+                        var retry_escape_time = ($.now() - {{timestamp}})/1000
+                        //15 minutes
             		if (data == null){
 				//console.log("Got back junk");
-            			console.log('ajax failed. reloading...');
+            			console.log('ajax failed. meloading...');
+                                //sleep(10000);
 				connectToServer(0);
 				$("#terminal").html("Error, reloading...");
 		        } 
@@ -85,14 +88,14 @@ function connectToServer(linenum) {
                                 var lines = data['data'] 
                                 var st = data['status']
                                 var flag = data['flag']
-                                if(flag=='error'){console.log('{{timestamp}}.log file not exits'); connectToServer(0)}else
+                                if(flag=='error'){console.log('{{timestamp}}.log file not exits');$("#terminal").append('****Log File Not Found*****') }else
                                 {
                                 //for(var i=0;i<=lines;i++){
 		                var newlines = '<p>' + lines.join( "</p><p>" ) + '</p>'
                                 //console.log(newlines)
                                 console.log(flag)
         		        $("#terminal").append(newlines);
-                                if(flag=='open'){console.log('file still in progress');console.log(len);sleep(10000);connectToServer(len)}
+                                if(flag=='open'){console.log('file still in progress');console.log(len);if(retry_escape_time < 900){connectToServer(len)}else{$("#terminal").append('****ELAPSED TIMER REACHED****')}}
                                 if(flag=='closed'){console.log('End of File reached')}
                                 }
 

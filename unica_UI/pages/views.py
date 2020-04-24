@@ -11,6 +11,16 @@ from django.views.decorators.csrf import csrf_exempt
 import datetime
 import re
 import json
+from django.shortcuts import redirect
+from . models import failedPositive
+
+
+@login_required(login_url='/')
+def handler404(request, exception):
+    return render(request, '404.html', status=404)
+
+def handler500(request):
+    return render(request, '500.html', status=500)
 
 # Create your views here.
 @login_required
@@ -22,7 +32,7 @@ def index(reqeust):
 def about(request):
     return render(request, 'pages/about.html')
 
-@login_required
+@login_required(login_url='/')
 def index2(request):
     """
     index page of testlab-1
@@ -55,7 +65,20 @@ def loadjsonindb(request):
        try:
         for item in test_json['Test-Cases']:
           ip = item['IPAddress'].strip()
-          healthCheck.objects.create(desc=item['Test Description'], severity=item['Severity'], ipaddr=ip, hostname=item['Hostname'], command=item['Command-Executed'], verdict=item['Verdict'], remarks=item['Remarks'],test_id=item['Test ID'],date=datet, site=test_json['Site'])
+          desc = item['Test Description'].strip()
+          severity = item['Severity'].strip()
+          hostname = item['Hostname'].strip()
+          command = item['Command-Executed'].strip()
+          verdict = item['Verdict'].strip()
+          remarks = item['Remarks'].strip()
+          test_id = item['Test ID'].strip()
+
+          entry = failedPositive.objects.filter(test_id=test_id,desc=desc,severity=severity,ipaddr=ip,hostname=hostname,command=command,verdict=verdict,remarks=remarks)
+          if entry:
+             print("Failed Positive Found..Modifying Verdict from Failed -> Failed Positive")
+             verdict = "Failed Positive"
+          #healthCheck.objects.create(desc=item['Test Description'], severity=item['Severity'], ipaddr=ip, hostname=item['Hostname'], command=item['Command-Executed'], verdict=item['Verdict'], remarks=item['Remarks'],test_id=item['Test ID'],date=datet, site=test_json['Site'])
+          healthCheck.objects.create(desc=desc, severity=severity, ipaddr=ip, hostname=hostname, command=command, verdict=verdict, remarks=remarks, test_id=test_id, date=datet, site=test_json['Site'])
           
        #print(test_json) 
        #return HttpResponse(test_json[0]['Test_Description'])
@@ -73,13 +96,15 @@ def loadjsonindb(request):
 
 
 
-@login_required
+#@login_required
+@login_required(login_url='/')
 def dbtable(request):
     data = healthCheck.objects.all()
     data_dict = {'monitor_records': data }
     return render(request,'dbtable.html', context=data_dict)
 
-@login_required
+#@login_required
+@login_required(login_url='/')
 def dbtable_latest(request):
     site = request.GET['site']
     date_lst = healthCheck.objects.all().values('date').distinct().order_by('-date')
@@ -440,7 +465,8 @@ def dbtable_info(request):
       date = convert_date(date)
     except Exception as e:
        print("Exception Occurred: ", str(e))
-       return HttpResponse('Server-Error', status=503) 
+       #return HttpResponse('Server-Error', status=503) 
+       return render(request,'500.html',status=500)
 
     print("<<More-Info >>Date = ",date)
     if site == 'test-lab1':
@@ -970,6 +996,14 @@ def execute1(request):
      data = Execute1.objects.all().order_by('-timestamp')
      return render(request,'execute1.html', {'data': data})
 
+  import time
+  current = int(time.time())
+  pending_item = Execute1.objects.filter(status='started').values('timestamp')
+  if pending_item:
+    for item in pending_item:
+       delta_time = int(current - int(item['timestamp'])/1000)
+       if delta_time > 900:
+          pending_item.update(status='timeout')
   data = Execute1.objects.all().order_by('-timestamp')
   return render(request,'execute1.html', {'data': data})
 
@@ -1002,7 +1036,7 @@ def logpoller(request):
        data_len = len(data)
        flag = 'open'
        print(data)
-       if data and 'END' in data[-1]:
+       if data and ':END' in data[-1]:
           flag = 'closed'
           print(data[-1])
           status = data[-1].split(':')[0]
@@ -1020,3 +1054,38 @@ def logpoller(request):
 
 
           
+
+
+from django.views.decorators.csrf import csrf_exempt
+@csrf_exempt
+def failed_positive(request):
+    #data = request.POST['dat']
+    data = request.POST.get('dat', False)
+    site = request.POST.get('site',False)
+    data_dic = json.loads(data)
+    #print(type(data))
+    #print(type(data_dic))
+    ##data = request.body
+    print("<<Failed Positive>> data = ",data_dic)
+    print ("<<Site>> site =", site)
+    saved = 0
+    for it,val in data_dic.items():
+        test_id=val[0]
+        desc=val[1]
+        severity=val[2]
+        ipaddr=val[3]
+        host=val[4]
+        command=val[5]
+        verdict=val[6]
+        remarks=val[7]
+        entry = failedPositive.objects.filter(test_id=test_id,desc=desc,severity=severity,ipaddr=ipaddr,hostname=host,command=command,verdict=verdict,remarks=remarks)
+        if not entry:
+           print("Row not in DB: ", val)
+           failedPositive.objects.create(test_id=test_id,desc=desc,severity=severity,ipaddr=ipaddr,hostname=host,command=command,verdict=verdict,remarks=remarks)
+           saved += 1   
+
+        else:
+           print("Row Alreay in DB: ",val) 
+
+    print("Total Row Saved in DB: ",saved)
+    return JsonResponse({})

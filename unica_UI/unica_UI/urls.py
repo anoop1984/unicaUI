@@ -19,6 +19,8 @@ from pages import views
 from django.conf import settings
 from django.conf.urls.static import static
 
+handler404 = 'pages.views.handler404'
+handler500 = 'pages.views.handler500'
 urlpatterns = [
     path('unica/', include('pages.urls') ),
     path('loadjsonindb', views.loadjsonindb),
@@ -35,6 +37,7 @@ urlpatterns = [
     path('execute1',views.execute1),
     path('execute1_result',views.execute1_result),
     path('logpoller',views.logpoller),
+    path('failed_positive',views.failed_positive),
 
 
 ]

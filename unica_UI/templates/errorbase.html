@@ -43,10 +43,8 @@
 <body >
     <div class="wrapper">
         <!-- Nav Bar -->
-        {% include 'partials/_navbar.html' %}
 
         <!-- Side Bar -->
-        {% include 'partials/_sidebar.html' %}
 
 
         <!-- jQuery -->
@@ -94,11 +92,6 @@
 <script src="https://cdn.datatables.net/buttons/1.6.1/js/buttons.print.min.js"></script>
 
         {% block content %} {%  endblock %}
-        {% include 'partials/_footer.html' %}
-       <script>
-          $('#testlab1').attr('href','/dbtable_latest?site=test-lab1') 
-          $('#testlab2').attr('href','/dbtable_latest?site=test-lab2') 
-       </script>
     </div>
 </body>
 

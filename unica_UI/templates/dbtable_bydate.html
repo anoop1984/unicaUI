@@ -50,6 +50,8 @@
                  <td>{{ it.command }}</td>
                  {% if "Passed" in it.verdict %} 
                  <td class="badge badge-success">{{ it.verdict}}</td>
+                 {% elif "Failed Positive" in it.verdict %} 
+                 <td class="badge badge-warning">{{ it.verdict}}</td>
                  {% else %}
                  <td class="badge badge-danger">{{ it.verdict}}</td>
                  {% endif %}

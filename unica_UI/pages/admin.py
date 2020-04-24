@@ -11,3 +11,8 @@ class healthcheckAdmin(admin.ModelAdmin):
 
 #admin.site.register(healthCheck,healthcheckAdmin)
 admin.site.register(healthCheck, healthcheckAdmin)
+
+
+from .models import Execute1
+
+admin.site.register(Execute1)

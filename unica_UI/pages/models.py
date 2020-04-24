@@ -42,3 +42,18 @@ class Execute1(models.Model):
     timestamp_str = models.CharField(max_length=50)
     status = models.CharField(max_length=50, blank=True)
 
+
+
+class failedPositive(models.Model):
+    desc        = models.CharField(max_length = 264)
+    severity    = models.CharField(max_length = 50)
+    #ipaddress  = models.CharField(max_length = 50)
+    ipaddr      = models.GenericIPAddressField()
+    hostname    = models.CharField(max_length = 100)
+    command     = models.CharField(max_length = 264)
+    verdict     = models.CharField(max_length = 264)
+    remarks     = models.CharField(max_length = 1000)
+    test_id     = models.CharField(max_length = 100)
+#   timestamp   = models.DateTimeField(auto_now_add=True)
+    site        = models.CharField(max_length = 100)
+

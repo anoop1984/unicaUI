@@ -16,3 +16,14 @@ admin.site.register(healthCheck, healthcheckAdmin)
 from .models import Execute1
 
 admin.site.register(Execute1)
+
+
+
+from .models import failedPositive
+class listfailedpositive(admin.ModelAdmin):
+    list_display =  ('id' ,'test_id', 'desc', 'severity', 'ipaddr', 'hostname', 'command', 'verdict','remarks')
+    #list_display_links = ('id', 'test_id')
+    list_filter = ('verdict', 'severity', 'command', 'hostname')
+    search_fields = ('test_id', 'hostname' , 'ipaddr', 'command', 'verdict' , 'severity' ,'command', 'hostname')
+
+admin.site.register(failedPositive, listfailedpositive)

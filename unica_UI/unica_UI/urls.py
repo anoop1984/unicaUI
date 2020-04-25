@@ -38,6 +38,7 @@ urlpatterns = [
     path('execute1_result',views.execute1_result),
     path('logpoller',views.logpoller),
     path('failed_positive',views.failed_positive),
+    path('list_failed_positive',views.list_failed_positive),
 
 
 ]

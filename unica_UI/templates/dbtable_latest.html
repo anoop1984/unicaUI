@@ -22,6 +22,7 @@
               <h3 class="card-title2">Health-Check Report:&nbsp;&nbsp;&nbsp;&nbsp;{{ date }}&nbsp;&nbsp;&nbsp;&nbsp;{{site}}</h3>
               <input id="button1" type="button" class="btn btn-outline-primary align-self-end" value="Add Failed Positive"> 
               <input id="button2" type="button" class="btn btn-outline-primary align-self-end" value="Unselect"> 
+              <button id="button3" class="btn btn-outline-primary align-self-end">View</button> 
               <!--input id="button1" type="button"  class="btn btn-outline-primary align-self-end" value="Add Failed Positive" style="position: absolute;top:20%;right:20px"-->
             </div>
             <!-- /.card-header -->
@@ -183,6 +184,11 @@ dom:
 
     } );
 
+  });
+
+  $('#button3').click( function () {
+  $('#button3').html("<span class=\"spinner-grow spinner-grow-sm\"></span>Loading")
+  $('body').load('list_failed_positive')
   });
 </script>
 

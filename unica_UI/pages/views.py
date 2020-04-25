@@ -1089,3 +1089,7 @@ def failed_positive(request):
 
     print("Total Row Saved in DB: ",saved)
     return JsonResponse({})
+
+
+def list_failed_positive(request):
+     return redirect('/admin/pages/failedpositive/')

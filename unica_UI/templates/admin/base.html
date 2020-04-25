@@ -1,11 +1,14 @@
-<% load static %>
 {% load i18n static %}<!DOCTYPE html>
+
 {% get_current_language as LANGUAGE_CODE %}{% get_current_language_bidi as LANGUAGE_BIDI %}
-<html lang="{{ LANGUAGE_CODE|default:"en-us" }}" {% if LANGUAGE_BIDI %}dir="rtl"{% endif %}>
+
+<!--html lang="{{ LANGUAGE_CODE|default:"en-us" }}" {% if LANGUAGE_BIDI %}dir="rtl"{% endif %}-->
+<html>
+
 <head>
-    <title>{% block title %}{% endblock %}</title>
+    <title>{% block title %}Unica HealthCheck{% endblock %}</title>
     <link rel="stylesheet" type="text/css" href="{% block stylesheet %}{% static "admin/css/base.css" %}{% endblock %}">
-    {% block extrastyle %}{% endblock %}
+    {% block extrastyle %} {% endblock %}
     {% if LANGUAGE_BIDI %}<link rel="stylesheet" type="text/css" href="{% block stylesheet_rtl %}{% static "admin/css/rtl.css" %}{% endblock %}">{% endif %}
     {% block extrahead %}{% endblock %}
     {% block responsive %}
@@ -13,7 +16,6 @@
     <link rel="stylesheet" type="text/css" href="{% static "admin/css/responsive.css" %}">
     {% if LANGUAGE_BIDI %}<link rel="stylesheet" type="text/css" href="{% static "admin/css/responsive_rtl.css" %}">{% endif %}
     {% endblock %}
-    {% block blockbots %}<meta name="robots" content="NONE,NOARCHIVE">{% endblock %}
     <!-- Font Awesome -->
     <link rel="stylesheet" href="{% static 'plugins/fontawesome-free/css/all.min.css' %}">
     <!-- Ionicons -->
@@ -72,16 +74,15 @@
     {% include 'partials/_footer.html' %}
 
     <!-- END Container -->
-    $.widget.bridge('uibutton', $.ui.button)
 
     <!-- Bootstrap 4 -->
-    <script src="{% static 'plugins/bootstrap/js/bootstrap.bundle.min.js' %}"></script>
     <script src="{% static 'plugins/jquery/jquery.min.js' %}"></script>
+    <script src="{% static 'plugins/bootstrap/js/bootstrap.bundle.min.js' %}"></script>
     <!-- jQuery UI 1.11.4 -->
         <script src="{% static 'plugins/jquery-ui/jquery-ui.min.js' %}"></script>
         <!-- Resolve conflict in jQuery UI tooltip with Bootstrap tooltip -->
         <script>
-             $.widget.bridge('uibutton', $.ui.button)
+    //         $.widget.bridge('uibutton', $.ui.button)
         </script>
     <!-- ChartJS -->
     <script src="{% static 'plugins/chart.js/Chart.min.js' %}"></script>
@@ -102,16 +103,24 @@
     <!-- overlayScrollbars -->
     <script src="{% static 'plugins/overlayScrollbars/js/jquery.overlayScrollbars.min.js' %}"></script>
   <!-- overlayScrollbars -->
-        <script src="{% static 'plugins/overlayScrollbars/js/jquery.overlayScrollbars.min.js' %}"></script>
-        <!-- AdminLTE App -->
-        <script src="{% static 'js/adminlte.js' %}"></script>
-        <!-- AdminLTE dashboard demo (This is only for demo purposes) -->
-        <script src="{% static 'js/pages/dashboard.js' %}"></script>
+    <script src="{% static 'plugins/overlayScrollbars/js/jquery.overlayScrollbars.min.js' %}"></script>
+    <!-- AdminLTE App -->
+    <script src="{% static 'js/adminlte.js' %}"></script>
+    <!-- AdminLTE dashboard demo (This is only for demo purposes) -->
+        <!--script src="{% static 'js/pages/dashboard.js' %}"></script-->
         <!-- AdminLTE for demo purposes -->
-        <script src="{% static 'js/demo.js' %}"></script>
+        <!--script src="{% static 'js/demo.js' %}"></script-->
        <script>
           $('#testlab1').attr('href','/dbtable_latest?site=test-lab1') 
           $('#testlab2').attr('href','/dbtable_latest?site=test-lab2') 
+
+          $(document).ready(function(){
+          $('#changelist-filter').click(function(){
+          $('#changelist-filter > h3').toggle()
+          $('#changelist-filter > ul').toggle()
+          $('#changelist-filter > .admindatefilter').toggle()
+          });
+          });
        </script>
 </div>
 

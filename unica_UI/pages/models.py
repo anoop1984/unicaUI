@@ -57,3 +57,27 @@ class failedPositive(models.Model):
 #   timestamp   = models.DateTimeField(auto_now_add=True)
     site        = models.CharField(max_length = 100)
 
+
+class ignoreTest(models.Model):
+    desc        = models.CharField(max_length = 264)
+    severity    = models.CharField(max_length = 50)
+    #ipaddress  = models.CharField(max_length = 50)
+    ipaddr      = models.GenericIPAddressField()
+    hostname    = models.CharField(max_length = 100)
+    command     = models.CharField(max_length = 264)
+    verdict     = models.CharField(max_length = 264)
+    remarks     = models.CharField(max_length = 1000)
+    test_id     = models.CharField(max_length = 100)
+#   timestamp   = models.DateTimeField(auto_now_add=True)
+    site        = models.CharField(max_length = 100)
+
+
+    
+class adhocData(models.Model):
+    user 		= models.CharField(max_length=50, blank=True)
+    timestamp 		= models.CharField(max_length=50,primary_key=True)
+    timestamp_str 	= models.CharField(max_length=50)
+    logfile     	= models.FileField()
+    jsonfile    	= models.FileField()
+    site		= models.CharField(max_length=50)
+

@@ -20,9 +20,11 @@
           <div class="card ">
             <div class="card-header">
               <h3 class="card-title2">Health-Check Report:&nbsp;&nbsp;&nbsp;&nbsp;{{ date }}&nbsp;&nbsp;&nbsp;&nbsp;{{site}}</h3>
-              <input id="button1" type="button" class="btn btn-outline-primary align-self-end" value="Add Failed Positive"> 
-              <input id="button2" type="button" class="btn btn-outline-primary align-self-end" value="Unselect"> 
-              <button id="button3" class="btn btn-outline-primary align-self-end">View</button> 
+              <button id="button1" class="btn btn-outline-primary align-self-end" title="Add Selected Testacase as Failed Positive">Mark Fail Positive</button> 
+              <button id="button4" class="btn btn-outline-primary align-self-end" title="Add Selected TestCases as Ignore" >Mark Ignore</button> 
+              <button id="button2" class="btn btn-outline-success align-self-end" title="Unslect the selected Testcases" style="position: absolute; right:50%">Unselect</button> 
+              <button id="button3" class="btn btn-outline-dark align-self-end" title="View Marked Ignore" style="position: absolute; right: 5px;border-radius: 25px;">View I</button> 
+              <button id="button5" class="btn btn-outline-dark align-self-end" title="View Marked Failed Positive" style="position: absolute; right: 20%;border-radius: 25px;">View F</button> 
               <!--input id="button1" type="button"  class="btn btn-outline-primary align-self-end" value="Add Failed Positive" style="position: absolute;top:20%;right:20px"-->
             </div>
             <!-- /.card-header -->
@@ -52,12 +54,16 @@
                  <td>{{ it.ipaddr }}</td>
                  <td>{{ it.hostname }}</td>
                  <td>{{ it.command }}</td>
-                 {% if "Passed" in it.verdict %} 
-                 <td class="badge badge-success">{{ it.verdict}}</td>
-                 {% elif "Failed Positive" in it.verdict %} 
-                 <td class="badge badge-warning">{{ it.verdict}}</td>
+                 {% if "passed" in it.verdict|lower %} 
+                 <td><span class="badge badge-success">{{ it.verdict}}<span></td>
+                 {% elif "false positive" in it.verdict|lower %} 
+                 <td><span class="badge badge-info">{{ it.verdict}}<span></td>
+                 {% elif "ignore" in it.verdict|lower %} 
+                 <td><span class="badge badge-secondary">{{ it.verdict}}<span></td>
+                 {% elif "failed" in it.verdict|lower %} 
+                 <td><span class="badge badge-danger">{{ it.verdict}}<span></td>
                  {% else %}
-                 <td class="badge badge-danger">{{ it.verdict}}</td>
+                 <td><span class="badge badge-light">{{ it.verdict}}</span></td>
                  {% endif %}
                  <td>{{ it.remarks }}</td>
                 </tr>
@@ -136,10 +142,10 @@ dom:
   } );
 
   $('#button2').click( function () {
- table.rows('.highlight').every(function() {
-  this.nodes().to$().removeClass('highlight')
-})
- } );
+     table.rows('.highlight').every(function() {
+     this.nodes().to$().removeClass('highlight')
+   })
+ });
 
   $('#button1').click( function () {
         var data = table.rows('.highlight').data().toArray()
@@ -150,27 +156,29 @@ dom:
         for( var i=0; i<data.length; i++)
          {
           item = data[i]
-          verdict = item[6]
+          verdict = $(item[6]).text()
+          severity = item[2] 
+        
           if (verdict.toLowerCase() != "failed")
                {
-                alert(data.length + 'row(s) Selected' + "\nError...!!  Only Select Failed Testcases.")
+                if (severity.toLowerCase() != "warning") {
+                alert(data.length + 'row(s) Selected' + "\nError...!!  Select Failed/Warning Testcases only to mark them as \"False Positive\".")
                 return 1
                }
+              }
          }
          
        // alert( data.length  +' row(s) selected' );
      console.log(obj)
-         $.ajax({
-     url : "/failed_positive",
+     $.ajax({
+     url : "/failed_positive_n_ignore",
      type : "POST",
      dataType: "json",
-     data: { dat : JSON.stringify(obj), site: '{{site}}',
+     data: { dat : JSON.stringify(obj), site: '{{site}}', type: 'fail',
            'csrfmiddlewaretoken': '{{ csrf_token }}'},
      async: false,
      success: function(json) {
-       //result.push(json);
-      // result[0]=json;
-     alert('Successfully Posted Data');
+        alert('False-Positive Data Saved Successfully.!!\nFuture Health-Checks  Will Be Filtered With False-Positive Data');
      },
      failure: function(json) {
       alert('Got an error dude: Contact Support Team.!!');
@@ -184,11 +192,62 @@ dom:
 
     } );
 
-  });
 
+  $('#button5').click( function () {
+  $('#button5').html("<span class=\"spinner-grow spinner-grow-sm\"></span>Loading")
+  //$('body').load('list_failed_positive')
+  location.replace('list_failed_positive')
+  });
   $('#button3').click( function () {
   $('#button3').html("<span class=\"spinner-grow spinner-grow-sm\"></span>Loading")
-  $('body').load('list_failed_positive')
+  //$('body').load('list_ignore')
+  location.replace('list_ignore')
+  });
+
+  $('#button4').click( function () {
+        var data = table.rows('.highlight').data().toArray()
+        var obj = Object.assign({},data)
+        if ( data.length == 0 ){
+         return alert('0 rows(s) Selected');
+         }
+        for( var i=0; i<data.length; i++)
+         {
+          item = data[i]
+          verdict = $(item[6]).text()
+          severity = item[2]
+          console.log(severity)
+       //alert( data.length  +' row(s) selected' );
+         if (verdict.toLowerCase() != "failed")
+               {
+                if (severity.toLowerCase() != "warning") {
+                alert(data.length + 'row(s) Selected' + "\nError...!!  Select Failed/Warning Testcases only to mark them as \"False Positive\".")
+                return 1
+               }
+              }
+         }
+     console.log(obj)
+     $.ajax({
+     url : "/failed_positive_n_ignore",
+     type : "POST",
+     dataType: "json",
+     data: { dat : JSON.stringify(obj), site: '{{site}}', type: 'ignore',
+           'csrfmiddlewaretoken': '{{ csrf_token }}'},
+     async: false,
+     success: function(json) {
+        alert('Ignore-Test Data Saved Successfully.!!\nFuture Health-Checks  Will Be Filtered With Ignore Data');
+     },
+     failure: function(json) {
+      alert('Got an error dude: Contact Support Team.!!');
+     },
+      statusCode: {
+       500: function() {
+      alert("Something Went Wrong Contact Support Team.!!");
+      }
+     },
+    });
+
+    } );
+
   });
 </script>
 

@@ -13,7 +13,11 @@ import re
 import json
 from django.shortcuts import redirect
 from . models import failedPositive
-
+from . models import ignoreTest 
+from django.db.models import Q
+from . models import adhocData
+from . forms import adhocData_Form 
+ 
 
 @login_required(login_url='/')
 def handler404(request, exception):
@@ -37,14 +41,22 @@ def index2(request):
     """
     index page of testlab-1
     """
-    date_list = healthCheck.objects.filter(site__contains="test-lab1").values("date").distinct().order_by('-date')
+    date_list = healthCheck.objects.filter(site__icontains="test-lab1").values("date").distinct().order_by('-date')
     return render(request, 'pages/testlab-1.html',{'dates':date_list})
 
 @login_required
 def testlab2(request):
     """index page of testlab-2"""
-    date_list = healthCheck.objects.filter(site__contains="test-lab2").values("date").distinct().order_by('-date')
-    return render(request, 'pages/testlab-2.html',{'dates':date_list})
+    date_list = healthCheck.objects.filter(site__icontains="test-lab2").values("date").distinct().order_by('-date')
+    qs = healthCheck.objects.filter(site__icontains="test-lab2").values_list("date", flat=True).distinct().order_by('-date')
+    print(date_list)
+    print(list(qs))
+    s=list(qs)
+    s = [m.strftime('%Y-%m-%d') for m in s]
+    l = {}
+    l['dd']=json.dumps(s)
+    print(s)
+    return render(request, 'pages/testlab-2.html',{'dates':date_list,'dd':l})
 
 @login_required
 def index3(request):
@@ -72,11 +84,16 @@ def loadjsonindb(request):
           verdict = item['Verdict'].strip()
           remarks = item['Remarks'].strip()
           test_id = item['Test ID'].strip()
+          site=test_json['Site'].strip()
 
-          entry = failedPositive.objects.filter(test_id=test_id,desc=desc,severity=severity,ipaddr=ip,hostname=hostname,command=command,verdict=verdict,remarks=remarks)
+          entry = failedPositive.objects.filter(site=site,test_id=test_id,desc=desc,severity=severity,ipaddr=ip,hostname=hostname,command=command,verdict=verdict,remarks=remarks)
+          ignore = ignoreTest.objects.filter(site=site,test_id=test_id,desc=desc,severity=severity,ipaddr=ip,hostname=hostname,command=command,verdict=verdict,remarks=remarks)
           if entry:
-             print("Failed Positive Found..Modifying Verdict from Failed -> Failed Positive")
-             verdict = "Failed Positive"
+             print("Failed Positive Found..Modifying Verdict from Failed -> False Positive")
+             verdict = "False Positive"
+          if ignore: 
+             print("Ignore Test Found .. Verdict -> Ignore")
+             verdict = "Ignore"
           #healthCheck.objects.create(desc=item['Test Description'], severity=item['Severity'], ipaddr=ip, hostname=item['Hostname'], command=item['Command-Executed'], verdict=item['Verdict'], remarks=item['Remarks'],test_id=item['Test ID'],date=datet, site=test_json['Site'])
           healthCheck.objects.create(desc=desc, severity=severity, ipaddr=ip, hostname=hostname, command=command, verdict=verdict, remarks=remarks, test_id=test_id, date=datet, site=test_json['Site'])
           
@@ -109,7 +126,7 @@ def dbtable_latest(request):
     site = request.GET['site']
     date_lst = healthCheck.objects.all().values('date').distinct().order_by('-date')
     if date_lst:
-       data = healthCheck.objects.filter(date=date_lst[0]['date'],site__contains=site) 
+       data = healthCheck.objects.filter(date=date_lst[0]['date'],site__icontains=site) 
        data_dict = {'monitor_records': data , 'date': date_lst[0]['date'], 'site': site.upper()}
     else:
        data_dict = {}
@@ -157,10 +174,10 @@ def convert_date(date):
     
     
 def date_wise_start(date,date_str,site):
-    stat_qs = healthCheck.objects.filter(date=date, site__contains=site)
+    stat_qs = healthCheck.objects.filter(date=date, site__icontains=site)
     report_prv = {} 
     if date:
-      date_previous_qs = healthCheck.objects.filter(date__lt=date, site__contains=site).values('date').distinct().order_by('-date')
+      date_previous_qs = healthCheck.objects.filter(date__lt=date, site__icontains=site).values('date').distinct().order_by('-date')
       if date_previous_qs:
         date_previous = date_previous_qs[0]['date']
         print("Previous Date:", date_previous)
@@ -173,79 +190,79 @@ def date_wise_start(date,date_str,site):
     #total test cases
     report['total_TC'] = stat_qs.count()
     #total passed testcases
-    report['passed_TC'] = stat_qs.filter(verdict__contains="Passed").count()
+    report['passed_TC'] = stat_qs.filter(Q(verdict__icontains="Passed") | Q(verdict__icontains="False Positive") | Q(verdict__icontains="Ignore")).count()
 
     #total failed testcases
-    report['failed_TC'] = stat_qs.filter(verdict__contains="Failed").count()
+    report['failed_TC'] = stat_qs.filter(verdict__icontains="Failed").count()
 
     #total failed major testcases
-    report['failed_major_TC'] = stat_qs.filter(severity__contains="Major",verdict__contains="Failed").count()
+    report['failed_major_TC'] = stat_qs.filter(severity__icontains="Major",verdict__icontains="Failed").count()
 
     #total minor testcases
-    report['failed_minor_TC'] = stat_qs.filter(severity__contains="Minor",verdict__contains="Failed").count()
+    report['failed_minor_TC'] = stat_qs.filter(severity__icontains="Minor",verdict__icontains="Failed").count()
 
     #total warning testcases#changed to all warning Test-cases
-    report['failed_war_TC'] = stat_qs.filter(severity__contains="Warning").count()
+    report['failed_war_TC'] = stat_qs.filter(severity__icontains="Warning").count()
 
     #total catestrophic testcases
-    report['failed_cat_TC'] = stat_qs.filter(severity__contains="Catestrophic",verdict__contains="Failed").count()
+    report['failed_cat_TC'] = stat_qs.filter(severity__icontains="Catestrophic",verdict__icontains="Failed").count()
 
     #SDN passed test-cases
-    report['sdn_passed_TC'] = stat_qs.filter(verdict__contains="Passed", test_id__icontains="SDNC").count()
+    report['sdn_passed_TC'] = stat_qs.filter(verdict__icontains="Passed", test_id__icontains="SDNC").count()
     #SDN Failed test-cases
-    report['sdn_failed_TC'] = stat_qs.filter(verdict__contains="Failed", test_id__icontains="SDNC").count()
+    report['sdn_failed_TC'] = stat_qs.filter(verdict__icontains="Failed", test_id__icontains="SDNC").count()
 
     #FUEL Passed test-cases
-    report['fuel_passed_TC'] = stat_qs.filter(verdict__contains="Passed", test_id__icontains="FUEL").count()
+    report['fuel_passed_TC'] = stat_qs.filter(verdict__icontains="Passed", test_id__icontains="FUEL").count()
     #FUEL Failed test-cases
-    report['fuel_failed_TC'] = stat_qs.filter(verdict__contains="Failed", test_id__icontains="FUEL").count()
+    report['fuel_failed_TC'] = stat_qs.filter(verdict__icontains="Failed", test_id__icontains="FUEL").count()
 
     #CEE passed test-cases
-    report['cee_passed_TC'] = stat_qs.filter(verdict__contains="Passed", test_id__icontains="CEE").count()
+    report['cee_passed_TC'] = stat_qs.filter(verdict__icontains="Passed", test_id__icontains="CEE").count()
     #CEE failed test-cases
-    report['cee_failed_TC'] = stat_qs.filter(verdict__contains="Failed", test_id__icontains="CEE").count()
+    report['cee_failed_TC'] = stat_qs.filter(verdict__icontains="Failed", test_id__icontains="CEE").count()
 
     #All-node passed test-cases
-    report['allnode_passed_TC'] = stat_qs.filter(verdict__contains="Passed", test_id__icontains="ALL-NODE").count()    
+    report['allnode_passed_TC'] = stat_qs.filter(verdict__icontains="Passed", test_id__icontains="ALL-NODE").count()    
     #ALL-node failed test-cases
-    report['allnode_failed_TC'] = stat_qs.filter(verdict__contains="Failed", test_id__icontains="ALL-NODE").count()
+    report['allnode_failed_TC'] = stat_qs.filter(verdict__icontains="Failed", test_id__icontains="ALL-NODE").count()
      
-    #report['failed_list'] = list(stat_qs.filter(verdict__contains="Failed").values())
+    #report['failed_list'] = list(stat_qs.filter(verdict__icontains="Failed").values())
   
      # Openstack data
-    report['os_nova_list'] = stat_qs.filter(test_id__icontains="CEE-001", verdict__contains="Failed").count()
-    report['os_nova_hypv'] = stat_qs.filter(test_id__icontains="CEE-002", verdict__contains="Failed").count()
-    report['os_cinder_srv'] = stat_qs.filter(test_id__icontains="CEE-003", verdict__contains="Failed").count()
-    report['os_neutron_agent'] = stat_qs.filter(test_id__icontains="CEE-004", verdict__contains="Failed").count()
-    report['os_nova_srv'] = stat_qs.filter(test_id__icontains="CEE-005", verdict__contains="Failed").count()
-    report['os_glance_image'] = stat_qs.filter(test_id__icontains="CEE-006", verdict__contains="Failed").count()
-    report['os_ceilometer_meter'] = stat_qs.filter(test_id__icontains="CEE-007", verdict__contains="Failed").count()
-    report['os_project_list'] = stat_qs.filter(test_id__icontains="CEE-008", verdict__contains="Failed").count()
-    report['os_srv_list'] = stat_qs.filter(test_id__icontains="CEE-009", verdict__contains="Failed").count()
-    report['os_neutron_net'] = stat_qs.filter(test_id__icontains="CEE-010", verdict__contains="Failed").count()
+    report['os_nova_list'] = stat_qs.filter(test_id__icontains="CEE-001", verdict__icontains="Failed").count()
+    report['os_nova_hypv'] = stat_qs.filter(test_id__icontains="CEE-002", verdict__icontains="Failed").count()
+    report['os_cinder_srv'] = stat_qs.filter(test_id__icontains="CEE-003", verdict__icontains="Failed").count()
+    report['os_neutron_agent'] = stat_qs.filter(test_id__icontains="CEE-004", verdict__icontains="Failed").count()
+    report['os_nova_srv'] = stat_qs.filter(test_id__icontains="CEE-005", verdict__icontains="Failed").count()
+    report['os_glance_image'] = stat_qs.filter(test_id__icontains="CEE-006", verdict__icontains="Failed").count()
+    report['os_ceilometer_meter'] = stat_qs.filter(test_id__icontains="CEE-007", verdict__icontains="Failed").count()
+    report['os_project_list'] = stat_qs.filter(test_id__icontains="CEE-008", verdict__icontains="Failed").count()
+    report['os_srv_list'] = stat_qs.filter(test_id__icontains="CEE-009", verdict__icontains="Failed").count()
+    report['os_neutron_net'] = stat_qs.filter(test_id__icontains="CEE-010", verdict__icontains="Failed").count()
 
 
     #service data
-    report['srv_watchmen'] = stat_qs.filter(test_id__icontains="CEE-011", verdict__contains="Failed").count()
-    report['srv_rabbitmq_cls'] = stat_qs.filter(test_id__icontains="CEE-013", verdict__contains="Failed").count()
-    report['srv_rabbitmq_lst'] = stat_qs.filter(test_id__icontains="CEE-014", verdict__contains="Failed").count()
-    report['srv_galera_mysql'] = stat_qs.filter(test_id__icontains="CEE-015", verdict__contains="Failed").count()
-    report['srv_mongodb'] = stat_qs.filter(test_id__icontains="CEE-016", verdict__contains="Failed").count()
-    report['srv_mongodb_rep'] = stat_qs.filter(test_id__icontains="CEE-017", verdict__contains="Failed").count()
-    report['srv_rabbitmg_file'] = stat_qs.filter(test_id__icontains="CEE-018", verdict__contains="Failed").count()
-    report['srv_rest_srv'] = stat_qs.filter(test_id__icontains="SDNC-012", verdict__contains="Failed").count()
-    report['srv_openflow'] = stat_qs.filter(test_id__icontains="SDNC-013", verdict__contains="Failed").count()
-    report['srv_ovsdb'] = stat_qs.filter(test_id__icontains="SDNC-014", verdict__contains="Failed").count()
-    report['srv_odlbgp'] = stat_qs.filter(test_id__icontains="SDNC-015", verdict__contains="Failed").count()
+    report['srv_watchmen'] = stat_qs.filter(test_id__icontains="CEE-011", verdict__icontains="Failed").count()
+    report['srv_rabbitmq_cls'] = stat_qs.filter(test_id__icontains="CEE-013", verdict__icontains="Failed").count()
+    report['srv_rabbitmq_lst'] = stat_qs.filter(test_id__icontains="CEE-014", verdict__icontains="Failed").count()
+    report['srv_galera_mysql'] = stat_qs.filter(test_id__icontains="CEE-015", verdict__icontains="Failed").count()
+    report['srv_mongodb'] = stat_qs.filter(test_id__icontains="CEE-016", verdict__icontains="Failed").count()
+    report['srv_mongodb_rep'] = stat_qs.filter(test_id__icontains="CEE-017", verdict__icontains="Failed").count()
+    report['srv_rabbitmg_file'] = stat_qs.filter(test_id__icontains="CEE-018", verdict__icontains="Failed").count()
+    report['srv_rest_srv'] = stat_qs.filter(test_id__icontains="SDNC-012", verdict__icontains="Failed").count()
+    report['srv_openflow'] = stat_qs.filter(test_id__icontains="SDNC-013", verdict__icontains="Failed").count()
+    report['srv_ovsdb'] = stat_qs.filter(test_id__icontains="SDNC-014", verdict__icontains="Failed").count()
+    report['srv_odlbgp'] = stat_qs.filter(test_id__icontains="SDNC-015", verdict__icontains="Failed").count()
     
 
 
     #sdnc
-    report['sdn_dpns'] = stat_qs.filter(test_id__icontains="SDNC-001", verdict__contains="Failed").count()
-    report['sdn_tep'] = stat_qs.filter(test_id__icontains="SDNC-002", verdict__contains="Failed").count()
-    report['sdn_tunnel'] = stat_qs.filter(test_id__icontains="SDNC-003", verdict__contains="Failed").count()
+    report['sdn_dpns'] = stat_qs.filter(test_id__icontains="SDNC-001", verdict__icontains="Failed").count()
+    report['sdn_tep'] = stat_qs.filter(test_id__icontains="SDNC-002", verdict__icontains="Failed").count()
+    report['sdn_tunnel'] = stat_qs.filter(test_id__icontains="SDNC-003", verdict__icontains="Failed").count()
 
-    report['sdn_tunnel_st'] = stat_qs.filter(test_id__icontains="SDNC-004", verdict__contains="Failed").count()
+    report['sdn_tunnel_st'] = stat_qs.filter(test_id__icontains="SDNC-004", verdict__icontains="Failed").count()
 
     temp = list(stat_qs.filter(test_id__icontains="SDNC-004").distinct().values('remarks'))
     if temp:
@@ -258,7 +275,7 @@ def date_wise_start(date,date_str,site):
     else:
       report['sdn_tunnel_st_count'] = '-' 
 
-    report['sdn_app_status'] = stat_qs.filter(test_id__icontains="SDNC-005", verdict__contains="Failed").count()
+    report['sdn_app_status'] = stat_qs.filter(test_id__icontains="SDNC-005", verdict__icontains="Failed").count()
 
     temp = list(stat_qs.filter(test_id__icontains="SDNC-005").distinct().values('remarks'))
     if temp:
@@ -271,7 +288,7 @@ def date_wise_start(date,date_str,site):
        report['sdn_app_count'] = '-' 
 
 
-    report['sdn_shard_inv_status'] = stat_qs.filter(test_id__icontains="SDNC-006", verdict__contains="Failed").count()
+    report['sdn_shard_inv_status'] = stat_qs.filter(test_id__icontains="SDNC-006", verdict__icontains="Failed").count()
     temp = list(stat_qs.filter(test_id__icontains="SDNC-006").values('remarks'))
     if temp:
       val = re.search('cic-[0-9]+',temp[0]['remarks'].strip())
@@ -282,7 +299,7 @@ def date_wise_start(date,date_str,site):
     else:
        report['sdn_shard_inv_data'] = '-'
 
-    report['sdn_shard_def_status'] = stat_qs.filter(test_id__icontains="SDNC-007", verdict__contains="Failed").count()
+    report['sdn_shard_def_status'] = stat_qs.filter(test_id__icontains="SDNC-007", verdict__icontains="Failed").count()
     temp = list(stat_qs.filter(test_id__icontains="SDNC-007").values('remarks'))
     if temp:
       val = re.search('cic-[0-9]+',temp[0]['remarks'].strip())
@@ -293,7 +310,7 @@ def date_wise_start(date,date_str,site):
     else: 
       report['sdn_shard_def_data'] = '-'
 
-    report['sdn_shard_top_status'] = stat_qs.filter(test_id__icontains="SDNC-008", verdict__contains="Failed").count()
+    report['sdn_shard_top_status'] = stat_qs.filter(test_id__icontains="SDNC-008", verdict__icontains="Failed").count()
     temp = list(stat_qs.filter(test_id__icontains="SDNC-008").values('remarks'))
     if temp:
       val = re.search('cic-[0-9]+',temp[0]['remarks'].strip())
@@ -304,7 +321,7 @@ def date_wise_start(date,date_str,site):
     else:
       report['sdn_shard_top_data'] = '-'
 
-    report['sdn_shard_invo_status'] = stat_qs.filter(test_id__icontains="SDNC-009", verdict__contains="Failed").count()
+    report['sdn_shard_invo_status'] = stat_qs.filter(test_id__icontains="SDNC-009", verdict__icontains="Failed").count()
 
     temp = list(stat_qs.filter(test_id__icontains="SDNC-009").values('remarks'))
     if temp:
@@ -317,7 +334,7 @@ def date_wise_start(date,date_str,site):
         report['sdn_shard_invo_data'] = '-'
 
 
-    report['sdn_shard_defo_status'] = stat_qs.filter(test_id__icontains="SDNC-010", verdict__contains="Failed").count()
+    report['sdn_shard_defo_status'] = stat_qs.filter(test_id__icontains="SDNC-010", verdict__icontains="Failed").count()
     temp = list(stat_qs.filter(test_id__icontains="SDNC-010").values('remarks'))
     if temp:
        val = re.search('cic-[0-9]+',temp[0]['remarks'].strip())
@@ -329,7 +346,7 @@ def date_wise_start(date,date_str,site):
          report['sdn_shard_defo_data'] = '-'
 
 
-    report['sdn_shard_topo_status'] = stat_qs.filter(test_id__icontains="SDNC-011", verdict__contains="Failed").count()
+    report['sdn_shard_topo_status'] = stat_qs.filter(test_id__icontains="SDNC-011", verdict__icontains="Failed").count()
     temp = list(stat_qs.filter(test_id__icontains="SDNC-011").values('remarks'))
     if temp:
        val = re.search('cic-[0-9]+',temp[0]['remarks'].strip())
@@ -340,7 +357,7 @@ def date_wise_start(date,date_str,site):
     else:
       report['sdn_shard_topo_data'] = '-'
 
-    report['sdn_dpn_status']= stat_qs.filter(test_id__icontains="SDNC-016",verdict__contains="Failed").count()
+    report['sdn_dpn_status']= stat_qs.filter(test_id__icontains="SDNC-016",verdict__icontains="Failed").count()
 
     temp = list(stat_qs.filter(test_id__icontains="SDNC-016").values('remarks'))
     val2 = []
@@ -370,7 +387,7 @@ def date_wise_start(date,date_str,site):
     report['sdn_dpn_data_diff'] = 0     
     if  report_prv:
         if report_prv['sdn_tunnel_st_count'] != report['sdn_tunnel_st_count']:
-            report['sdn_tunnel_st_count_diff'] = 1
+              report['sdn_tunnel_st_count_diff'] = 1
         if report_prv['sdn_app_count'] != report['sdn_app_count']:
             report['sdn_app_count_diff'] = 1
         if report_prv['sdn_shard_inv_data'] != report['sdn_shard_inv_data']:
@@ -388,6 +405,72 @@ def date_wise_start(date,date_str,site):
         if report_prv['sdn_dpn_data'] != report['sdn_dpn_data']:
             report['sdn_dpn_data_diff'] = 1
 
+        if report_prv['os_nova_list'] != report['os_nova_list']:
+           if (report_prv['os_nova_list'] == 0 and report['os_nova_list'] !=0 ) or  (report_prv['os_nova_list'] != 0 and report['os_nova_list'] == 0 ):
+              report['os_nova_list_diff'] = 1
+        if report_prv['os_nova_hypv'] != report['os_nova_hypv']:
+           if (report_prv['os_nova_hypv'] == 0 and report['os_nova_hypv'] !=0 ) or  (report_prv['os_nova_hypv'] != 0 and report['os_nova_hypv'] == 0 )  :
+              report['os_nova_hypv_diff'] = 1
+        if report_prv['os_cinder_srv'] != report['os_cinder_srv']:
+           if (report_prv['os_cinder_srv'] == 0 and report['os_cinder_srv'] !=0 ) or  (report_prv['os_cinder_srv'] != 0 and report['os_cinder_srv'] == 0 )  :
+              report['os_cinder_srv_diff'] = 1
+        if report_prv['os_neutron_agent'] != report['os_neutron_agent']:
+           if (report_prv['os_neutron_agent'] == 0 and report['os_neutron_agent'] !=0 ) or  (report_prv['os_neutron_agent'] != 0 and report['os_neutron_agent'] == 0 )  :
+              report['os_neutron_agent_diff'] = 1
+        if report_prv['os_nova_srv'] != report['os_nova_srv']:
+           if (report_prv['os_nova_srv'] == 0 and report['os_nova_srv'] !=0 ) or  (report_prv['os_nova_srv'] != 0 and report['os_nova_srv'] == 0 )  :
+              report['os_nova_srv_diff'] = 1
+        if report_prv['os_glance_image'] != report['os_glance_image']:
+           if (report_prv['os_glance_image'] == 0 and report['os_glance_image'] !=0 ) or  (report_prv['os_glance_image'] != 0 and report['os_glance_image'] == 0 )  :
+              report['os_glance_image_diff'] = 1
+        if report_prv['os_ceilometer_meter'] != report['os_ceilometer_meter']:
+           if (report_prv['os_ceilometer_meter'] == 0 and report['os_ceilometer_meter'] !=0 ) or  (report_prv['os_ceilometer_meter'] != 0 and report['os_ceilometer_meter'] == 0 )  :
+              report['os_ceilometer_meter_diff'] = 1
+        if report_prv['os_project_list'] != report['os_project_list']:
+           if (report_prv['os_project_list'] == 0 and report['os_project_list'] !=0 ) or  (report_prv['os_project_list'] != 0 and report['os_project_list'] == 0 )  :
+              report['os_project_list_diff'] = 1
+        if report_prv['os_srv_list'] != report['os_srv_list']:
+           if (report_prv['os_srv_list'] == 0 and report['os_srv_list'] !=0 ) or  (report_prv['os_srv_list'] != 0 and report['os_srv_list'] == 0 )  :
+              report['os_srv_list_diff'] = 1
+        if report_prv['os_neutron_net'] != report['os_neutron_net']:
+           if (report_prv['os_neutron_net'] == 0 and report['os_neutron_net'] !=0 ) or  (report_prv['os_neutron_net'] != 0 and report['os_neutron_net'] == 0 )  :
+              report['os_neutron_net_diff'] = 1
+
+
+        if report_prv['srv_watchmen'] != report['srv_watchmen']:
+           if (report_prv['srv_watchmen'] == 0 and report['srv_watchmen'] !=0 ) or  (report_prv['srv_watchmen'] != 0 and report['srv_watchmen'] == 0 )  :
+              report['srv_watchmen_diff'] = 1
+        if report_prv['srv_rabbitmq_cls'] != report['srv_rabbitmq_cls']:
+           if (report_prv['srv_rabbitmq_cls'] == 0 and report['srv_rabbitmq_cls'] !=0 ) or  (report_prv['srv_rabbitmq_cls'] != 0 and report['srv_rabbitmq_cls'] == 0 )  :
+              report['srv_rabbitmq_cls_diff'] = 1
+        if report_prv['srv_rabbitmq_lst'] != report['srv_rabbitmq_lst']:
+           if (report_prv['srv_rabbitmq_lst'] == 0 and report['srv_rabbitmq_lst'] !=0 ) or  (report_prv['srv_rabbitmq_lst'] != 0 and report['srv_rabbitmq_lst'] == 0 )  :
+              report['srv_rabbitmq_lst_diff'] = 1
+        if report_prv['srv_galera_mysql'] != report['srv_galera_mysql']:
+           if (report_prv['srv_galera_mysql'] == 0 and report['srv_galera_mysql'] !=0 ) or  (report_prv['srv_galera_mysql'] != 0 and report['srv_galera_mysql'] == 0 )  :
+              report['srv_galera_mysql_diff'] = 1
+        if report_prv['srv_mongodb'] != report['srv_mongodb']:
+           if (report_prv['srv_mongodb'] == 0 and report['srv_mongodb'] !=0 ) or  (report_prv['srv_mongodb'] != 0 and report['srv_mongodb'] == 0 )  :
+              report['srv_mongodb_diff'] = 1
+        if report_prv['srv_mongodb_rep'] != report['srv_mongodb_rep']:
+           if (report_prv['srv_mongodb_rep'] == 0 and report['srv_mongodb_rep'] !=0 ) or  (report_prv['srv_mongodb_rep'] != 0 and report['srv_mongodb_rep'] == 0 )  :
+              report['srv_mongodb_rep_diff'] = 1
+        if report_prv['srv_rabbitmg_file'] != report['srv_rabbitmg_file']:
+           if (report_prv['srv_rabbitmg_file'] == 0 and report['srv_rabbitmg_file'] !=0 ) or  (report_prv['srv_rabbitmg_file'] != 0 and report['srv_rabbitmg_file'] == 0 )  :
+              report['srv_rabbitmg_file_diff'] = 1
+        if report_prv['srv_rest_srv'] != report['srv_rest_srv']:
+           if (report_prv['srv_rest_srv'] == 0 and report['srv_rest_srv'] !=0 ) or  (report_prv['srv_rest_srv'] != 0 and report['srv_rest_srv'] == 0 )  :
+              report['srv_rest_srv_diff'] = 1
+        if report_prv['srv_openflow'] != report['srv_openflow']:
+           if (report_prv['srv_openflow'] == 0 and report['srv_openflow'] !=0 ) or  (report_prv['srv_openflow'] != 0 and report['srv_openflow'] == 0 )  : 
+              report['srv_openflow_diff'] = 1
+        if report_prv['srv_ovsdb'] != report['srv_ovsdb']:
+           if (report_prv['srv_ovsdb'] == 0 and report['srv_ovsdb'] !=0 ) or  (report_prv['srv_ovsdb'] != 0 and report['srv_ovsdb'] == 0 )  :
+              report['srv_ovsdb_diff'] = 1
+        if report_prv['srv_odlbgp'] != report['srv_odlbgp']:
+           if (report_prv['srv_odlbgp'] == 0 and report['srv_odlbgp'] !=0 ) or  (report_prv['srv_odlbgp'] != 0 and report['srv_odlbgp'] == 0 )  :
+              report['srv_odlbgp_diff'] = 1          	
+
     return report
 
 
@@ -398,16 +481,19 @@ def ajax(request):
     date = request.POST['date']
     site = request.POST['site']
     #convert date string into YYYY-MM-DD formate
+    """
     try: 
      date1=convert_date(date)  
     except Exception as e:
        return HttpResponse('Server-Error', status=503)
-
-    print("<<get request>> date = ",date1)
+    """
+    #print("<<get request>> date = ",date1)
+    print("<<get request>> date = ",date)
     
     print("<<get request>> site = ",site)
     
-    response = date_wise_start(date1,date,site)
+    #response = date_wise_start(date1,date,site)
+    response = date_wise_start(date,date,site)
     #print(response)
   
     #print("hahaha: ",type(date1))
@@ -461,13 +547,14 @@ def dbtable_info(request):
     print("<<More-Info >>date = ",date)
     print("<<More-Info >>Request_type = ",rq_type)
     print("<<More-Info >>site = ",site)
+    """
     try:
       date = convert_date(date)
     except Exception as e:
        print("Exception Occurred: ", str(e))
        #return HttpResponse('Server-Error', status=503) 
        return render(request,'500.html',status=500)
-
+    """
     print("<<More-Info >>Date = ",date)
     if site == 'test-lab1':
        log = Logfile_Testlab1.objects.filter(uploaded_at=date).values()
@@ -483,11 +570,11 @@ def dbtable_info(request):
           logfile = '#'
     print("<<More-Info>> Logfile = ", logfile)
 
-    if  rq_type == "1" : data = healthCheck.objects.filter(date=date,site__contains=site); info="All Testcases"
-    if  rq_type == "2" : data = healthCheck.objects.filter(date=date, verdict__contains = "Passed",site__contains=site);  info="All Passed"
-    if  rq_type == "3" : data = healthCheck.objects.filter(date=date, verdict__contains = "Failed",site__contains=site); info="All Failed"
-    #if  rq_type == "4" : data = healthCheck.objects.filter(date=date, verdict__contains = "Failed", severity__contains="Major",site__contains=site); info="All Failed Major"
-    if  rq_type == "4" : data = healthCheck.objects.filter(date=date, severity__contains="Warning",site__contains=site); info="All Failed Major"
+    if  rq_type == "1" : data = healthCheck.objects.filter(date=date,site__icontains=site); info="All Testcases"
+    if  rq_type == "2" : data = healthCheck.objects.filter(Q(date=date, verdict__icontains = "Passed",site__icontains=site) | Q(date=date, verdict__icontains = "False Positive",site__icontains=site) | Q(date=date, verdict__icontains = "Ignore",site__icontains=site));  info="All Passed"
+    if  rq_type == "3" : data = healthCheck.objects.filter(date=date, verdict__icontains = "Failed",site__icontains=site); info="All Failed"
+    #if  rq_type == "4" : data = healthCheck.objects.filter(date=date, verdict__icontains = "Failed", severity__icontains="Major",site__icontains=site); info="All Failed Major"
+    if  rq_type == "4" : data = healthCheck.objects.filter(date=date, severity__icontains="Warning",site__icontains=site); info="All Failed Major"
 
     data_dict = {'monitor_records': data , 'date': date2, 'info': info,'site_info':site.upper(),'logfile':logfile}
     return render(request,'dbtable_bydate.html', context=data_dict)
@@ -497,6 +584,11 @@ def dbtable_info(request):
 @csrf_exempt
 def testlab1_logfile(request):
     if request.method == 'POST':
+       #print (request.META)
+       print(":-:-:-:-")
+       print(request.META['HTTP_AUTHORIZATION'])
+       #print(request.META['password'])
+       print(":-:-:-:-----------")
        form = LogfileForm_Testlab1(request.POST, request.FILES)
        if 'uploaded_at' in request.POST:
           date = request.POST['uploaded_at']
@@ -842,7 +934,36 @@ def sample_report1():
 def date_wise_start_prv(date,site):
     report = {}
     print('prev date:' , date)
-    stat_qs = healthCheck.objects.filter(date=date, site__contains=site)
+
+    stat_qs = healthCheck.objects.filter(date=date, site__icontains=site)
+
+     # Openstack data
+    report['os_nova_list'] = stat_qs.filter(test_id__icontains="CEE-001", verdict__icontains="Failed").count()
+    report['os_nova_hypv'] = stat_qs.filter(test_id__icontains="CEE-002", verdict__icontains="Failed").count()
+    report['os_cinder_srv'] = stat_qs.filter(test_id__icontains="CEE-003", verdict__icontains="Failed").count()
+    report['os_neutron_agent'] = stat_qs.filter(test_id__icontains="CEE-004", verdict__icontains="Failed").count()
+    report['os_nova_srv'] = stat_qs.filter(test_id__icontains="CEE-005", verdict__icontains="Failed").count()
+    report['os_glance_image'] = stat_qs.filter(test_id__icontains="CEE-006", verdict__icontains="Failed").count()
+    report['os_ceilometer_meter'] = stat_qs.filter(test_id__icontains="CEE-007", verdict__icontains="Failed").count()
+    report['os_project_list'] = stat_qs.filter(test_id__icontains="CEE-008", verdict__icontains="Failed").count()
+    report['os_srv_list'] = stat_qs.filter(test_id__icontains="CEE-009", verdict__icontains="Failed").count()
+    report['os_neutron_net'] = stat_qs.filter(test_id__icontains="CEE-010", verdict__icontains="Failed").count()
+
+
+    #service data
+    report['srv_watchmen'] = stat_qs.filter(test_id__icontains="CEE-011", verdict__icontains="Failed").count()
+    report['srv_rabbitmq_cls'] = stat_qs.filter(test_id__icontains="CEE-013", verdict__icontains="Failed").count()
+    report['srv_rabbitmq_lst'] = stat_qs.filter(test_id__icontains="CEE-014", verdict__icontains="Failed").count()
+    report['srv_galera_mysql'] = stat_qs.filter(test_id__icontains="CEE-015", verdict__icontains="Failed").count()
+    report['srv_mongodb'] = stat_qs.filter(test_id__icontains="CEE-016", verdict__icontains="Failed").count()
+    report['srv_mongodb_rep'] = stat_qs.filter(test_id__icontains="CEE-017", verdict__icontains="Failed").count()
+    report['srv_rabbitmg_file'] = stat_qs.filter(test_id__icontains="CEE-018", verdict__icontains="Failed").count()
+    report['srv_rest_srv'] = stat_qs.filter(test_id__icontains="SDNC-012", verdict__icontains="Failed").count()
+    report['srv_openflow'] = stat_qs.filter(test_id__icontains="SDNC-013", verdict__icontains="Failed").count()
+    report['srv_ovsdb'] = stat_qs.filter(test_id__icontains="SDNC-014", verdict__icontains="Failed").count()
+    report['srv_odlbgp'] = stat_qs.filter(test_id__icontains="SDNC-015", verdict__icontains="Failed").count()
+
+
     temp = list(stat_qs.filter(test_id__icontains="SDNC-004").distinct().values('remarks'))
     if temp:
       val = re.search("[0-9]+$",temp[0]['remarks'].strip())
@@ -854,7 +975,7 @@ def date_wise_start_prv(date,site):
     else:
       report['sdn_tunnel_st_count'] = '-' 
 
-    report['sdn_app_status'] = stat_qs.filter(test_id__icontains="SDNC-005", verdict__contains="Failed").count()
+    report['sdn_app_status'] = stat_qs.filter(test_id__icontains="SDNC-005", verdict__icontains="Failed").count()
 
     temp = list(stat_qs.filter(test_id__icontains="SDNC-005").distinct().values('remarks'))
     if temp:
@@ -867,7 +988,7 @@ def date_wise_start_prv(date,site):
        report['sdn_app_count'] = '-' 
 
 
-    report['sdn_shard_inv_status'] = stat_qs.filter(test_id__icontains="SDNC-006", verdict__contains="Failed").count()
+    report['sdn_shard_inv_status'] = stat_qs.filter(test_id__icontains="SDNC-006", verdict__icontains="Failed").count()
     temp = list(stat_qs.filter(test_id__icontains="SDNC-006").values('remarks'))
     if temp:
       val = re.search('cic-[0-9]+',temp[0]['remarks'].strip())
@@ -878,7 +999,7 @@ def date_wise_start_prv(date,site):
     else:
        report['sdn_shard_inv_data'] = '-'
 
-    report['sdn_shard_def_status'] = stat_qs.filter(test_id__icontains="SDNC-007", verdict__contains="Failed").count()
+    report['sdn_shard_def_status'] = stat_qs.filter(test_id__icontains="SDNC-007", verdict__icontains="Failed").count()
     temp = list(stat_qs.filter(test_id__icontains="SDNC-007").values('remarks'))
     if temp:
       val = re.search('cic-[0-9]+',temp[0]['remarks'].strip())
@@ -889,7 +1010,7 @@ def date_wise_start_prv(date,site):
     else: 
       report['sdn_shard_def_data'] = '-'
 
-    report['sdn_shard_top_status'] = stat_qs.filter(test_id__icontains="SDNC-008", verdict__contains="Failed").count()
+    report['sdn_shard_top_status'] = stat_qs.filter(test_id__icontains="SDNC-008", verdict__icontains="Failed").count()
     temp = list(stat_qs.filter(test_id__icontains="SDNC-008").values('remarks'))
     if temp:
       val = re.search('cic-[0-9]+',temp[0]['remarks'].strip())
@@ -900,7 +1021,7 @@ def date_wise_start_prv(date,site):
     else:
       report['sdn_shard_top_data'] = '-'
 
-    report['sdn_shard_invo_status'] = stat_qs.filter(test_id__icontains="SDNC-009", verdict__contains="Failed").count()
+    report['sdn_shard_invo_status'] = stat_qs.filter(test_id__icontains="SDNC-009", verdict__icontains="Failed").count()
 
     temp = list(stat_qs.filter(test_id__icontains="SDNC-009").values('remarks'))
     if temp:
@@ -913,7 +1034,7 @@ def date_wise_start_prv(date,site):
         report['sdn_shard_invo_data'] = '-'
 
 
-    report['sdn_shard_defo_status'] = stat_qs.filter(test_id__icontains="SDNC-010", verdict__contains="Failed").count()
+    report['sdn_shard_defo_status'] = stat_qs.filter(test_id__icontains="SDNC-010", verdict__icontains="Failed").count()
     temp = list(stat_qs.filter(test_id__icontains="SDNC-010").values('remarks'))
     if temp:
        val = re.search('cic-[0-9]+',temp[0]['remarks'].strip())
@@ -925,7 +1046,7 @@ def date_wise_start_prv(date,site):
          report['sdn_shard_defo_data'] = '-'
 
 
-    report['sdn_shard_topo_status'] = stat_qs.filter(test_id__icontains="SDNC-011", verdict__contains="Failed").count()
+    report['sdn_shard_topo_status'] = stat_qs.filter(test_id__icontains="SDNC-011", verdict__icontains="Failed").count()
     temp = list(stat_qs.filter(test_id__icontains="SDNC-011").values('remarks'))
     if temp:
        val = re.search('cic-[0-9]+',temp[0]['remarks'].strip())
@@ -936,7 +1057,7 @@ def date_wise_start_prv(date,site):
     else:
       report['sdn_shard_topo_data'] = '-'
 
-    report['sdn_dpn_status']= stat_qs.filter(test_id__icontains="SDNC-016",verdict__contains="Failed").count()
+    report['sdn_dpn_status']= stat_qs.filter(test_id__icontains="SDNC-016",verdict__icontains="Failed").count()
 
     temp = list(stat_qs.filter(test_id__icontains="SDNC-016").values('remarks'))
     val2 = []
@@ -1058,10 +1179,11 @@ def logpoller(request):
 
 from django.views.decorators.csrf import csrf_exempt
 @csrf_exempt
-def failed_positive(request):
+def failed_positive_n_ignore(request):
     #data = request.POST['dat']
     data = request.POST.get('dat', False)
     site = request.POST.get('site',False)
+    type = request.POST.get('type',False)
     data_dic = json.loads(data)
     #print(type(data))
     #print(type(data_dic))
@@ -1078,18 +1200,80 @@ def failed_positive(request):
         command=val[5]
         verdict=val[6]
         remarks=val[7]
-        entry = failedPositive.objects.filter(test_id=test_id,desc=desc,severity=severity,ipaddr=ipaddr,hostname=host,command=command,verdict=verdict,remarks=remarks)
-        if not entry:
-           print("Row not in DB: ", val)
-           failedPositive.objects.create(test_id=test_id,desc=desc,severity=severity,ipaddr=ipaddr,hostname=host,command=command,verdict=verdict,remarks=remarks)
-           saved += 1   
-
-        else:
-           print("Row Alreay in DB: ",val) 
+        if type == "fail":
+           entry = failedPositive.objects.filter(site=site,test_id=test_id,desc=desc,severity=severity,ipaddr=ipaddr,hostname=host,command=command,verdict="Failed",remarks=remarks)
+           if not entry:
+             print("Row not in DB: ", val)
+             failedPositive.objects.create(site=site,test_id=test_id,desc=desc,severity=severity,ipaddr=ipaddr,hostname=host,command=command,verdict="Failed",remarks=remarks)
+             saved += 1   
+           else:
+             print("Row Alreay in DB: ",val) 
+        if type == "ignore":
+           entry = ignoreTest.objects.filter(site=site,test_id=test_id,desc=desc,severity=severity,ipaddr=ipaddr,hostname=host,command=command,verdict="Failed",remarks=remarks)
+           if not entry:
+             print("Row not in DB: ", val)
+             ignoreTest.objects.create(site=site,test_id=test_id,desc=desc,severity=severity,ipaddr=ipaddr,hostname=host,command=command,verdict="Failed",remarks=remarks)
+             saved += 1
+           else:
+             print("Row Alreay in DB: ",val)
 
     print("Total Row Saved in DB: ",saved)
-    return JsonResponse({})
+    return JsonResponse({'saved':saved})
 
 
 def list_failed_positive(request):
      return redirect('/admin/pages/failedpositive/')
+def list_ignore(request):
+     return redirect('/admin/pages/ignoretest/')
+
+
+@csrf_exempt
+def adhoc_logs_upload(request):
+    if request.method == 'POST':
+       if 'HTTP_AUTHORIZATION' not in request.META or not request.META['HTTP_AUTHORIZATION']:
+            return HttpResponse('401 Unauthorized - User:Password Not provided In Request', status=401)
+			
+       auth_data = request.META['HTTP_AUTHORIZATION']
+       print (auth_data)
+       import base64
+       user_auth_data_en = auth_data.split('Basic ')[1]
+       user_auth_data = base64.b64decode(user_auth_data_en).decode('utf-8').split(':')
+       print(user_auth_data)
+       from django.contrib.auth import authenticate
+       user = authenticate(username=user_auth_data[0],password=user_auth_data[1])
+       if user is None:
+          return HttpResponse('401 : User Not Authenticated', status=401)
+          
+	   
+       form = adhocData_Form(request.POST, request.FILES)
+       print(request.POST)
+       #if 'timestamp' in request.POST and 'site' in request.POST and 'logfile' in request.POST and 'jsonfile' in request.POST:
+       if 'timestamp' in request.POST and 'site' in request.POST :
+          timestamp = request.POST['timestamp']
+          site = request.POST['site']
+       else:
+          return HttpResponse("400: Bad Request - Required Data Missing..", status=400)
+
+       print("timestamp =", timestamp)
+	   
+       timestamp_record = adhocData.objects.filter(timestamp=timestamp,site=site)
+       if timestamp_record:
+          print("Error!  Timestamp : %s already exists for site: %s" % (timestamp,site))
+          return HttpResponse("400: Timestamp Already Exists", status=400)
+
+       if form.is_valid():
+            path = 'adhoc/' + site +'/'+timestamp
+            instance = form.save(commit=False)
+            instance.logfile.field.upload_to = path
+            instance.jsonfile.field.upload_to = path
+            form.save()
+            print("Hurry!!! HealthChecks Logs Uploaded Successfully :-)") 
+            return HttpResponse("Hurry!!! HealthChecks Logs Uploaded Successfully :-)", status=201)
+       else:
+            print(form.errors)
+            return HttpResponse(form.errors.as_json(), status=500)
+
+    else:
+      output = adhocData.objects.values('site','timestamp')
+      return HttpResponse(output)
+

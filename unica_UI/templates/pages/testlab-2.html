@@ -4,7 +4,11 @@
 {% load static %}
 {% block content %}
 
-
+<style>
+#datepicker{width:180px; margin: 0 20px 20px 20px;}
+#datepicker > span:hover{cursor: pointer;}
+</style>
+<link rel="stylesheet" href="{% static 'plugins/datepicker/css/bootstrap-datepicker.css' %}">
   <!-- Content Wrapper. Contains page content -->
   <div class="content-wrapper">
     <!-- Content Header (Page header) -->
@@ -16,14 +20,25 @@
           </div><!-- /.col -->
           <div class="col-sm-6">
             <ol class="breadcrumb float-sm-right">
-              <li class="breadcrumb-item active"><h1 class="m-0 text-dark">Select Date &ensp;</h1></li>
-                <select id="datelog" class="form-control" style="width:250px">
+              <!--li class="breadcrumb-item active"><h1 class="m-0 text-dark">Select Date &ensp;</h1></li-->
+                <!--select id="datelog" class="form-control" style="width:250px">
                   {% if dates %}
                   {% for date in dates %}
                      <option value="{{ date.date }}">{{ date.date }}</option>
                   {% endfor %}
                {% endif %}
-            </select>
+            </select-->
+
+
+              <!-- Date -->
+              <div class="form-group">
+<label>Select Date: </label>
+<div id="datepicker" class="input-group date" data-date-format="yyyy-mm-dd">
+    <input id="display" class="form-control" type="text" readonly />
+    <span class="input-group-addon"><i class="fa fa-calendar"></i></span>
+</div>
+                </div>
+                <!-- /.input group -->
               
             </ol>
           </div><!-- /.col -->
@@ -132,16 +147,22 @@
 <!---Adding Histor Char Graph--> 
           <div class="col-md-6">
             <div class="card h-100">
-              <div class="card-header">
+              <div class="card-header no-border">
                 <div class="d-flex justify-content-between">
                   <h3 class="card-title">Comparison</h3>
-                <select id="datelog1" class="form-control" style="width:150px; height:32px;">
+                <!--select id="datelog1" class="form-control" style="width:150px; height:32px;">
                   {% if dates %}
                      {% for date in dates %}
                         <option value="{{ date.date }}">{{ date.date }}</option>
                      {% endfor %}
                   {% endif %}
-               </select>
+               </select-->
+              <div class="form-group">
+   		<div id="datepicker1" class="input-group date" data-date-format="yyyy-mm-dd">
+    		<input id="display1" class="form-control" type="text" readonly />
+    		<span class="input-group-addon"><i class="fa fa-calendar"></i></span>
+		</div>
+                </div>
                 </div> 
               </div>
               <div class="card-body">
@@ -265,24 +286,24 @@
                <!--table  class="table table-striped table-valign-middle"-->
                   <tbody>
                      <tr>
-                       <td><i id="nova_list"></i>&ensp;Nova List</td>
-                       <td><i id="nova_hypv"></i>&ensp;Nova Hypervisor </td>
+                       <td><i id="nova_list"></i>&ensp;<span id="nova_list_txt">Nova List</span></td>
+                       <td><i id="nova_hypv"></i>&ensp;<span id="nova_hypv_txt">Nova Hypervisor</span> </td>
                      </tr>
                      <tr>
-                       <td><i id="cinder_srv"></i>&ensp;Cinder Service </td>
-                       <td><i id="neutron_agent"></i>&ensp;Neutron Agent </td>
+                       <td><i id="cinder_srv"></i>&ensp;<span id="cinder_srv_txt">Cinder Service</span> </td>
+                       <td><i id="neutron_agent"></i>&ensp;<span id="neutron_agent_txt">Neutron Agent</span> </td>
                      </tr>
                      <tr>
-                        <td><i id="nova_srv"></i>&ensp;Nova Service </td>
-                        <td><i id="glance"></i>&ensp;Glance Image </td>
+                        <td><i id="nova_srv"></i>&ensp;<span id="nova_srv_txt">Nova Service</span> </td>
+                        <td><i id="glance"></i>&ensp;<span id="glance_txt">Glance Image</span> </td>
                      </tr>
                      <tr>
-                        <td><i id="ceilometer"></i>&ensp;Ceilometer Meter </td>
-                        <td><i id="project"></i>&ensp;Openstack Project </td>
+                        <td><i id="ceilometer"></i>&ensp;<span id="ceilometer_txt">Ceilometer Meter</span> </td>
+                        <td><i id="project"></i>&ensp;<span id="project_txt">Openstack Project</span> </td>
                      </tr>
                      <tr>
-                        <td><i id="os_srv"></i>&ensp;Openstack Service </td>
-                        <td><i id="neutron_net"></i>&ensp;Neutron Net </td>
+                        <td><i id="os_srv"></i>&ensp;<span id="os_srv_txt">Openstack Service</span> </td>
+                        <td><i id="neutron_net"></i>&ensp;<span id="neutron_net_txt">Neutron Net</span> </td>
                      </tr>
                   </tbody>
                </table>
@@ -307,27 +328,27 @@
                   <table class="table table-striped table-valign-middle">  
                      <tbody>
                         <tr>
-                          <td><i id="srv_watchmen"></i>&ensp;Watchmen </td>
-                          <td><i id="srv_rabbitmq_cls"></i>&ensp;Rabbitmq Cluster </td>
+                          <td><i id="srv_watchmen"></i>&ensp;<span id="srv_watchmen_txt">Watchmen</span> </td>
+                          <td><i id="srv_rabbitmq_cls"></i>&ensp;<span id="srv_rabbitmq_cls_txt">Rabbitmq Cluster</span> </td>
                         </tr>
                         <tr>
-                           <td><i id="srv_rabbitmq_lst"></i>&ensp;Rabbitmq List </td>
-                           <td><i id="srv_galera_mysql"></i>&ensp;Galera Mysql </td>
+                           <td><i id="srv_rabbitmq_lst"></i>&ensp;<span id="srv_rabbitmq_lst_txt">Rabbitmq List</span> </td>
+                           <td><i id="srv_galera_mysql"></i>&ensp;<span id="srv_galera_mysql_txt">Galera Mysql</span> </td>
                         </tr> 
                         <tr>
-                           <td><i id="srv_mongodb"></i>&ensp;MongoDB Service </td>
-                           <td><i id="srv_mongodb_rep"></i>&ensp;MonogDB Replica </td>
+                           <td><i id="srv_mongodb"></i>&ensp;<span id="srv_mongodb_txt">MongoDB Service</span> </td>
+                           <td><i id="srv_mongodb_rep"></i>&ensp;<span id="srv_mongodb_rep_txt">MonogDB Replica</span> </td>
                         </tr>
                         <tr>
-                           <td><i id="srv_rabbitmg_file"></i>&ensp;Rabbitmq File </td>
-                           <td><i id="srv_rest_srv"></i>&ensp;Rest Service </td>
+                           <td><i id="srv_rabbitmg_file"></i>&ensp;<span id="srv_rabbitmg_file_txt">Rabbitmq File</span> </td>
+                           <td><i id="srv_rest_srv"></i>&ensp;<span id="srv_rest_srv_txt">Rest Service</span> </td>
                         </tr>
                         <tr>
-                           <td><i id="srv_openflow"></i>&ensp;OpenFlow </td>
-                           <td><i id="srv_ovsdb"></i>&ensp;OVSDB </td>
+                           <td><i id="srv_openflow"></i>&ensp;<span id="srv_openflow_txt">OpenFlow</span> </td>
+                           <td><i id="srv_ovsdb"></i>&ensp;<span id="srv_ovsdb_txt">OVSDB</span> </td>
                         </tr>
                         <tr>
-                           <td><i id="srv_odlbgp"></i>&ensp;ODLBGP </td>
+                           <td><i id="srv_odlbgp"></i>&ensp;<span id="srv_odlbgp_txt">ODLBGP</span> </td>
                            <td></td>
                         </tr>
                      </tbody> 
@@ -424,19 +445,91 @@
 <!--script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script-->
 <script src="{% static 'plugins/datatables/jquery.dataTables.js' %}"></script>
 <script src="https://cdn.datatables.net/1.10.13/js/jquery.dataTables.min.js"></script>
+<script src="{% static 'plugins/datepicker/js/bootstrap-datepicker.js' %}"></script>
+
 
 <script>
  var result = []
  var salesChart
  //$('#datelog').change(function(){
  $(function(){
+
+
+    console.log({{ dd.dd | safe }})
+
+
+
+	//availableDates = ['04-25-2020','04-27-2020','04-02-2020'];
+	availableDates = {{ dd.dd | safe }}
+    $('#datepicker').datepicker({
+    dateFormat: 'mm-dd-yy',
+    beforeShowDay: function(d) {
+        var dmy = d.getFullYear()+"-";
+        if(d.getMonth()<9) 
+            dmy+="0"+(d.getMonth()+1) 
+        else
+            dmy+=(d.getMonth()+1)
+        dmy+= "-"; 
+
+        if(d.getDate()<10) dmy+="0"; 
+            dmy+=d.getDate(); 
+
+ //       console.log(dmy+' : '+($.inArray(dmy, availableDates)));
+
+        if ($.inArray(dmy, availableDates) != -1) {
+            return [true, "","Available",""]; 
+        } else{
+             //return [False,"","unAvailable",""]; 
+             return {enabled: false, classes: "highlighted-cal-dates", tooltip: 'Health-Checks not available on this day', content:""}
+        }
+    },
+    //todayBtn: "linked",
+    autoclose: true,
+    //todayHighlight: true
+    });
+
+
+    $('#datepicker1').datepicker({
+    dateFormat: 'mm-dd-yy',
+    orientation: "bottom",
+    beforeShowDay: function(d) {
+        var dmy = d.getFullYear()+"-";
+        if(d.getMonth()<9) 
+            dmy+="0"+(d.getMonth()+1) 
+        else
+            dmy+=(d.getMonth()+1)
+        dmy+= "-"; 
+
+        if(d.getDate()<10) dmy+="0"; 
+            dmy+=d.getDate(); 
+
+ //       console.log(dmy+' : '+($.inArray(dmy, availableDates)));
+
+        if ($.inArray(dmy, availableDates) != -1) {
+            return [true, "","Available",""]; 
+        } else{
+             //return [False,"","unAvailable",""]; 
+             return {enabled: false, classes: "highlighted-cal-dates", tooltip: 'Health-Checks not available on this day', content:""}
+        }
+    },
+    //todayBtn: "linked",
+    autoclose: true,
+    //todayHighlight: true
+    });
+
+
+
+    $('#display').val(availableDates[0])
+    $('#display1').val(availableDates[0])
     loadlog()
     loadhistorychart()
  });
- $('#datelog').change(function(){
+ //$('#datelog').change(function(){
+ $('#display').change(function(){
    loadlog()
  });
- $('#datelog1').change(function(){
+ //$('#datelog1').change(function(){
+ $('#display1').change(function(){
   loadhistorychart()
  });
  function loadlog(){
@@ -444,7 +537,9 @@
      url : "/ajax-post",
      type : "POST",
      dataType: "json",
-     data: { date: $('#datelog').val(),
+     //data: { date: $('#datelog').val(),
+     data: { date: $('#display').val(),
+     //data: { date: '2020-05-11',
              site: 'test-lab2',
        'csrfmiddlewaretoken': '{{ csrf_token }}',
         },
@@ -558,7 +653,8 @@
 
 
   //Total-Testcases href update on selected date
-  sel_date = $('#datelog').val()
+  //sel_date = $('#datelog').val()
+  sel_date = $('#display').val()
   $('#date_report1').attr("href","/dbtable_date?date="+sel_date+"&type=1&site=test-lab2")
   $('#date_report2').attr("href","/dbtable_date?date="+sel_date+"&type=2&site=test-lab2")
   $('#date_report3').attr("href","/dbtable_date?date="+sel_date+"&type=3&site=test-lab2")
@@ -633,6 +729,28 @@
   if(result[0].sdn_shard_topo_data_diff !=0 ){$('#topo_conf').css('background-color','red') } else {$('#topo_conf').css('background-color','') }
   if(result[0].sdn_dpn_data_diff !=0 ) {$('#cic_counts').css('background-color','red') } else {$('#cic_counts').css('background-color','') }
 
+  if( result[0].os_nova_list_diff ) {$('#nova_list_txt').css('background-color','red') } else {$('#nova_list_txt').css('background-color','') }
+  if( result[0].os_nova_hypv_diff ) {$('#nova_hypv_txt').css('background-color','red') } else {$('#nova_hypv_txt').css('background-color','') }
+  if( result[0].os_cinder_srv_diff ) {$('#cinder_srv_txt').css('background-color','red') } else {$('#cinder_srv_txt').css('background-color','') }
+  if( result[0].os_neutron_agent_diff ) {$('#neutron_agent_txt').css('background-color','red') } else {$('#neutron_agent_txt').css('background-color','') }
+  if( result[0].os_nova_srv_diff ) {$('#nova_srv_txt').css('background-color','red') } else {$('#nova_srv_txt').css('background-color','') }
+  if( result[0].os_glance_image_diff ) {$('#glance_txt').css('background-color','red') } else {$('#glance_txt').css('background-color','') }
+  if( result[0].os_ceilometer_meter_diff ) {$('#ceilometer_txt').css('background-color','red') } else {$('#ceilometer_txt').css('background-color','') }
+  if( result[0].os_project_list_diff ) {$('#project_txt').css('background-color','red') } else {$('#project_txt').css('background-color','') }
+  if( result[0].os_srv_list_diff ) {$('#os_srv_txt').css('background-color','red') } else {$('#os_srv_txt').css('background-color','') }
+  if( result[0].os_neutron_net_diff ) {$('#neutron_net_txt').css('background-color','red') } else {$('#neutron_net_txt').css('background-color','') }
+
+  if( result[0].srv_watchmen_diff ) {$('#srv_watchmen_txt').css('background-color','red') } else {$('#srv_watchmen_txt').css('background-color','') }
+  if( result[0].srv_rabbitmq_cls_diff ) {$('#srv_rabbitmq_cls_txt').css('background-color','red') } else {$('#srv_rabbitmq_cls_txt').css('background-color','') }
+  if( result[0].srv_rabbitmq_lst_diff ) {$('#srv_rabbitmq_lst_txt').css('background-color','red') } else {$('#srv_rabbitmq_lst_txt').css('background-color','') }
+  if( result[0].srv_galera_mysql_diff ) {$('#srv_galera_mysql_txt').css('background-color','red') } else {$('#srv_galera_mysql_txt').css('background-color','') }
+  if( result[0].srv_mongodb_diff ) {$('#srv_mongodb_txt').css('background-color','red') } else {$('#srv_mongodb_txt').css('background-color','') }
+  if( result[0].srv_mongodb_rep_diff ) {$('#srv_mongodb_rep_txt').css('background-color','red') } else {$('#srv_mongodb_rep_txt').css('background-color','') }
+  if( result[0].srv_rabbitmg_file_diff ) {$('#srv_rabbitmg_file_txt').css('background-color','red') } else {$('#srv_rabbitmg_file_txt').css('background-color','') }
+  if( result[0].srv_rest_srv_diff ) {$('#srv_rest_srv_txt').css('background-color','red') } else {$('#srv_rest_srv_txt').css('background-color','') }
+  if( result[0].srv_openflow_diff ) {$('#srv_openflow_txt').css('background-color','red') } else {$('#srv_openflow_txt').css('background-color','') }
+  if( result[0].srv_ovsdb_diff ) {$('#srv_ovsdb_txt').css('background-color','red') } else {$('#srv_ovsdb_txt').css('background-color','') }
+  if( result[0].srv_odlbgp_diff ) {$('#srv_odlbgp_txt').css('background-color','red') } else {$('#srv_odlbgp_txt').css('background-color','') }
  }
  
  // $('#datelog1').change(function(){
@@ -642,7 +760,8 @@
      url : "/ajax-post",
      type : "POST",
      dataType: "json",
-     data: { date: $('#datelog1').val(),
+     //data: { date: $('#datelog1').val(),
+     data: { date: $('#display1').val(),
              site: 'test-lab2',
        'csrfmiddlewaretoken': '{{ csrf_token }}',
         },
@@ -662,11 +781,13 @@
     });
    console.log(compare_result[0])
    
-   var date=$('#datelog').val()
+   //var date=$('#datelog').val()
+   var date=$('#display').val()
    var new_date = m='<i class="fas fa-square text-primary"></i>' + date
    $('#blue_date').html(new_date)
 
-   var date=$('#datelog1').val()
+   //var date=$('#datelog1').val()
+   var date=$('#display1').val()
    var new_date = m='<i class="fas fa-square text-gray"></i>' + date
    $('#gray_date').html(new_date)
 

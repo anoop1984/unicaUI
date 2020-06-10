@@ -32,13 +32,15 @@ urlpatterns = [
     path('testlab2_logfile',views.testlab2_logfile),
     path('ajax-post', views.ajax),
     path('admin/', admin.site.urls),
-    path('sample_report',views.sample_report),
+    path('sample_report',views.sample_report1),
     path('adhoc',views.adhoc),
     path('execute1',views.execute1),
     path('execute1_result',views.execute1_result),
     path('logpoller',views.logpoller),
-    path('failed_positive',views.failed_positive),
+    path('failed_positive_n_ignore',views.failed_positive_n_ignore),
     path('list_failed_positive',views.list_failed_positive),
+    path('list_ignore',views.list_ignore),
+    path('upload_adhoc_data',views.adhoc_logs_upload),
 
 
 ]

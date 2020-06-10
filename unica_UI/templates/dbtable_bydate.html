@@ -48,12 +48,16 @@
                  <td>{{ it.ipaddr }}</td>
                  <td>{{ it.hostname }}</td>
                  <td>{{ it.command }}</td>
-                 {% if "Passed" in it.verdict %} 
-                 <td class="badge badge-success">{{ it.verdict}}</td>
-                 {% elif "Failed Positive" in it.verdict %} 
-                 <td class="badge badge-warning">{{ it.verdict}}</td>
+                 {% if "passed" in it.verdict|lower %}
+                 <td><span class="badge badge-success">{{ it.verdict}}<span></td>
+                 {% elif "false positive" in it.verdict|lower %}
+                 <td><span class="badge badge-info">{{ it.verdict}}<span></td>
+                 {% elif "ignore" in it.verdict|lower %}
+                 <td><span class="badge badge-secondary">{{ it.verdict}}<span></td>
+                 {% elif "failed" in it.verdict|lower %}
+                 <td><span class="badge badge-danger">{{ it.verdict}}<span></td>
                  {% else %}
-                 <td class="badge badge-danger">{{ it.verdict}}</td>
+                 <td><span class="badge badge-light">{{ it.verdict}}</span></td>
                  {% endif %}
                  <td>{{ it.remarks }}</td>
                 </tr>
@@ -92,11 +96,25 @@
 <!-- page script -->
 <script>
   $(function () {
-    $("#example1").DataTable({
-       fixedHeader: {
-            header: true,
-            footer: true
-       }
+    var table = $("#example1").DataTable({
+        fixedHeader: {
+             header: true,
+             footer: true
+        },
+        oLanguage: {
+        sLengthMenu: "Show Entries_MENU_ " },
+	dom:
+                        "<'row'<'col-sm-3'l><'col-sm-6'f><'col-sm-3 right-aligned'B>>" +
+                        "<'row'<'col-sm-12'tr>>" +
+                        "<'row'<'col-sm-5'i><'col-sm-7'p>>",
+        buttons: [
+        {
+            extend: 'collection',
+            text: 'Export',
+            buttons: [
+            'copy', { extend:'csv',messageTop: 'Date: {{date}}' }, { extend:'excel',messageTop: 'Date: {{date}}' }, { extend:'pdf',messageTop: 'Date: {{date}}',pageSize : 'A3' }, { extend:'print',messageTop: 'Date: {{date}}' } ]
+        }
+                 ],
     });
   });
 

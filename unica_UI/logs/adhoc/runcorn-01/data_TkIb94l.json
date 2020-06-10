@@ -1,0 +1,1733 @@
+{
+    "Date": "2020-04-07", 
+    "Site": "test-lab2", 
+    "Test-Cases": [
+        {
+            "Test Description": " Check fuel node output", 
+            "Severity": " Catestrophic", 
+            "IPAddress": "127.0.0.1", 
+            "Hostname": "localhost", 
+            "Command-Executed": " fuel node", 
+            "Verdict": " Passed", 
+            "Remarks": " Fuel node command ok.", 
+            "Test ID": "FUEL-001"
+        }, 
+        {
+            "Test Description": " Check if any of the utils are not running", 
+            "Severity": "Catestrophic", 
+            "IPAddress": " 127.0.0.1", 
+            "Hostname": "localhost", 
+            "Command-Executed": " fuel-utils check_all", 
+            "Verdict": " Passed", 
+            "Remarks": " All Fuel services running!!", 
+            "Test ID": " FUEL-002"
+        }, 
+        {
+            "Test Description": " Check if nova tenants are active and up", 
+            "Severity": "Major", 
+            "IPAddress": "192.168.0.30", 
+            "Hostname": "cic-2", 
+            "Command-Executed": " nova list --all-tenants", 
+            "Verdict": " Failed", 
+            "Remarks": " Tenant - eemhnprp_vm1 Status - ERROR Host Status - ", 
+            "Test ID": "CEE-001"
+        }, 
+        {
+            "Test Description": " Check if nova tenants are active and up", 
+            "Severity": "Major", 
+            "IPAddress": "192.168.0.29", 
+            "Hostname": "cic-1", 
+            "Command-Executed": " nova list --all-tenants", 
+            "Verdict": " Failed", 
+            "Remarks": " Tenant - eemhnprp_vm1 Status - ERROR Host Status - ", 
+            "Test ID": "CEE-001"
+        }, 
+        {
+            "Test Description": " Check if nova tenants are active and up", 
+            "Severity": "Major", 
+            "IPAddress": "192.168.0.28", 
+            "Hostname": "cic-3", 
+            "Command-Executed": " nova list --all-tenants", 
+            "Verdict": " Failed", 
+            "Remarks": " Tenant - eemhnprp_vm1 Status - ERROR Host Status - ", 
+            "Test ID": "CEE-001"
+        }, 
+        {
+            "Test Description": " Check if the hyervisor are up and enabled", 
+            "Severity": "Major", 
+            "IPAddress": " 192.168.0.30", 
+            "Hostname": "cic-2 ", 
+            "Command-Executed": " nova hypervisor-list", 
+            "Verdict": " Passed", 
+            "Remarks": " All Hypervisor up and enabled!!", 
+            "Test ID": " CEE-002 "
+        }, 
+        {
+            "Test Description": " Check if the hyervisor are up and enabled", 
+            "Severity": "Major", 
+            "IPAddress": " 192.168.0.29", 
+            "Hostname": "cic-1 ", 
+            "Command-Executed": " nova hypervisor-list", 
+            "Verdict": " Passed", 
+            "Remarks": " All Hypervisor up and enabled!!", 
+            "Test ID": " CEE-002 "
+        }, 
+        {
+            "Test Description": " Check glance image services", 
+            "Severity": "Major", 
+            "IPAddress": " 192.168.0.28", 
+            "Hostname": "cic-3 ", 
+            "Command-Executed": " glance image-list ", 
+            "Verdict": "Passed", 
+            "Remarks": " glance image-list successful!!", 
+            "Test ID": " CEE-006 "
+        }, 
+        {
+            "Test Description": " Check glance image services", 
+            "Severity": "Major", 
+            "IPAddress": " 192.168.0.30", 
+            "Hostname": "cic-2 ", 
+            "Command-Executed": " glance image-list ", 
+            "Verdict": "Passed", 
+            "Remarks": " glance image-list successful!!", 
+            "Test ID": " CEE-006 "
+        }, 
+        {
+            "Test Description": " Check glance image services", 
+            "Severity": "Major", 
+            "IPAddress": " 192.168.0.29", 
+            "Hostname": "cic-1 ", 
+            "Command-Executed": " glance image-list ", 
+            "Verdict": "Passed", 
+            "Remarks": " glance image-list successful!!", 
+            "Test ID": " CEE-006 "
+        }, 
+        {
+            "Test Description": " check cinder services", 
+            "Severity": "Major", 
+            "IPAddress": " 192.168.0.28", 
+            "Hostname": "cic-3 ", 
+            "Command-Executed": " cinder service-list ", 
+            "Verdict": "Failed", 
+            "Remarks": " Host- cic-1.domain.tld Binary - cinder-scheduler Status - enabled State -down", 
+            "Test ID": " CEE-003 "
+        }, 
+        {
+            "Test Description": " check cinder services", 
+            "Severity": "Major", 
+            "IPAddress": " 192.168.0.29", 
+            "Hostname": "cic-1 ", 
+            "Command-Executed": " cinder service-list ", 
+            "Verdict": "Failed", 
+            "Remarks": " Host- cic-1.domain.tld Binary - cinder-scheduler Status - enabled State -down", 
+            "Test ID": " CEE-003 "
+        }, 
+        {
+            "Test Description": " check cinder services", 
+            "Severity": "Major", 
+            "IPAddress": " 192.168.0.30", 
+            "Hostname": "cic-2 ", 
+            "Command-Executed": " cinder service-list ", 
+            "Verdict": "Failed", 
+            "Remarks": " Host- cic-1.domain.tld Binary - cinder-scheduler Status - enabled State -down", 
+            "Test ID": " CEE-003 "
+        }, 
+        {
+            "Test Description": " check cinder services", 
+            "Severity": "Major", 
+            "IPAddress": " 192.168.0.28", 
+            "Hostname": "cic-3 ", 
+            "Command-Executed": " cinder service-list ", 
+            "Verdict": "Failed", 
+            "Remarks": " Host- cic-2.domain.tld Binary - cinder-scheduler Status - enabled State -down", 
+            "Test ID": " CEE-003 "
+        }, 
+        {
+            "Test Description": " check cinder services", 
+            "Severity": "Major", 
+            "IPAddress": " 192.168.0.29", 
+            "Hostname": "cic-1 ", 
+            "Command-Executed": " cinder service-list ", 
+            "Verdict": "Failed", 
+            "Remarks": " Host- cic-2.domain.tld Binary - cinder-scheduler Status - enabled State -down", 
+            "Test ID": " CEE-003 "
+        }, 
+        {
+            "Test Description": " check cinder services", 
+            "Severity": "Major", 
+            "IPAddress": " 192.168.0.30", 
+            "Hostname": "cic-2 ", 
+            "Command-Executed": " cinder service-list ", 
+            "Verdict": "Failed", 
+            "Remarks": " Host- cic-2.domain.tld Binary - cinder-scheduler Status - enabled State -down", 
+            "Test ID": " CEE-003 "
+        }, 
+        {
+            "Test Description": " check cinder services", 
+            "Severity": "Major", 
+            "IPAddress": " 192.168.0.28", 
+            "Hostname": "cic-3 ", 
+            "Command-Executed": " cinder service-list ", 
+            "Verdict": "Failed", 
+            "Remarks": " Host- cic-3.domain.tld Binary - cinder-scheduler Status - enabled State -down", 
+            "Test ID": " CEE-003 "
+        }, 
+        {
+            "Test Description": " check cinder services", 
+            "Severity": "Major", 
+            "IPAddress": " 192.168.0.30", 
+            "Hostname": "cic-2 ", 
+            "Command-Executed": " cinder service-list ", 
+            "Verdict": "Failed", 
+            "Remarks": " Host- cic-3.domain.tld Binary - cinder-scheduler Status - enabled State -down", 
+            "Test ID": " CEE-003 "
+        }, 
+        {
+            "Test Description": " check cinder services", 
+            "Severity": "Major", 
+            "IPAddress": " 192.168.0.29", 
+            "Hostname": "cic-1 ", 
+            "Command-Executed": " cinder service-list ", 
+            "Verdict": "Failed", 
+            "Remarks": " Host- cic-3.domain.tld Binary - cinder-scheduler Status - enabled State -down", 
+            "Test ID": " CEE-003 "
+        }, 
+        {
+            "Test Description": " Check ceilometer list", 
+            "Severity": "Major", 
+            "IPAddress": " 192.168.0.28", 
+            "Hostname": "cic-3 ", 
+            "Command-Executed": " ceilometer meter-list ", 
+            "Verdict": "Passed", 
+            "Remarks": " ceilometer command successful!!", 
+            "Test ID": " CEE-007 "
+        }, 
+        {
+            "Test Description": " Check ceilometer list", 
+            "Severity": "Major", 
+            "IPAddress": " 192.168.0.30", 
+            "Hostname": "cic-2 ", 
+            "Command-Executed": " ceilometer meter-list ", 
+            "Verdict": "Passed", 
+            "Remarks": " ceilometer command successful!!", 
+            "Test ID": " CEE-007 "
+        }, 
+        {
+            "Test Description": " Check openstack project", 
+            "Severity": "Major", 
+            "IPAddress": " 192.168.0.30", 
+            "Hostname": "cic-2 ", 
+            "Command-Executed": " openstack project list ", 
+            "Verdict": "Passed", 
+            "Remarks": " openstack project list successful!!", 
+            "Test ID": " CEE-008 "
+        }, 
+        {
+            "Test Description": " Check openstack project", 
+            "Severity": "Major", 
+            "IPAddress": " 192.168.0.28", 
+            "Hostname": "cic-3 ", 
+            "Command-Executed": " openstack project list ", 
+            "Verdict": "Passed", 
+            "Remarks": " openstack project list successful!!", 
+            "Test ID": " CEE-008 "
+        }, 
+        {
+            "Test Description": " Check openstack project", 
+            "Severity": "Major", 
+            "IPAddress": " 192.168.0.29", 
+            "Hostname": "cic-1 ", 
+            "Command-Executed": " openstack project list ", 
+            "Verdict": "Passed", 
+            "Remarks": " openstack project list successful!!", 
+            "Test ID": " CEE-008 "
+        }, 
+        {
+            "Test Description": " Check openstack services", 
+            "Severity": "Major", 
+            "IPAddress": " 192.168.0.30", 
+            "Hostname": "cic-2 ", 
+            "Command-Executed": " openstack service list ", 
+            "Verdict": "Passed", 
+            "Remarks": " openstack service list successful!!", 
+            "Test ID": " CEE-009 "
+        }, 
+        {
+            "Test Description": " Check openstack services", 
+            "Severity": "Major", 
+            "IPAddress": " 192.168.0.28", 
+            "Hostname": "cic-3 ", 
+            "Command-Executed": " openstack service list ", 
+            "Verdict": "Passed", 
+            "Remarks": " openstack service list successful!!", 
+            "Test ID": " CEE-009 "
+        }, 
+        {
+            "Test Description": " Check openstack services", 
+            "Severity": "Major", 
+            "IPAddress": " 192.168.0.29", 
+            "Hostname": "cic-1 ", 
+            "Command-Executed": " openstack service list ", 
+            "Verdict": "Passed", 
+            "Remarks": " openstack service list successful!!", 
+            "Test ID": " CEE-009 "
+        }, 
+        {
+            "Test Description": " Check neutron net-list", 
+            "Severity": "Major", 
+            "IPAddress": " 192.168.0.28", 
+            "Hostname": "cic-3 ", 
+            "Command-Executed": " neutron net-list ", 
+            "Verdict": "Passed", 
+            "Remarks": " neutron net-list is successful!!", 
+            "Test ID": " CEE-010 "
+        }, 
+        {
+            "Test Description": " Check neutron net-list", 
+            "Severity": "Major", 
+            "IPAddress": " 192.168.0.30", 
+            "Hostname": "cic-2 ", 
+            "Command-Executed": " neutron net-list ", 
+            "Verdict": "Passed", 
+            "Remarks": " neutron net-list is successful!!", 
+            "Test ID": " CEE-010 "
+        }, 
+        {
+            "Test Description": " Check neutron net-list", 
+            "Severity": "Major", 
+            "IPAddress": " 192.168.0.29", 
+            "Hostname": "cic-1 ", 
+            "Command-Executed": " neutron net-list ", 
+            "Verdict": "Passed", 
+            "Remarks": " neutron net-list is successful!!", 
+            "Test ID": " CEE-010 "
+        }, 
+        {
+            "Test Description": " Check neutron agent list", 
+            "Severity": "Major", 
+            "IPAddress": " 192.168.0.28", 
+            "Hostname": "cic-3 ", 
+            "Command-Executed": " neutron agent-list ", 
+            "Verdict": "Passed", 
+            "Remarks": " All neutron agents up and enabled!!", 
+            "Test ID": " CEE-004 "
+        }, 
+        {
+            "Test Description": " Check neutron agent list", 
+            "Severity": "Major", 
+            "IPAddress": " 192.168.0.30", 
+            "Hostname": "cic-2 ", 
+            "Command-Executed": " neutron agent-list ", 
+            "Verdict": "Passed", 
+            "Remarks": " All neutron agents up and enabled!!", 
+            "Test ID": " CEE-004 "
+        }, 
+        {
+            "Test Description": " Check neutron agent list", 
+            "Severity": "Major", 
+            "IPAddress": " 192.168.0.29", 
+            "Hostname": "cic-1 ", 
+            "Command-Executed": " neutron agent-list ", 
+            "Verdict": "Passed", 
+            "Remarks": " All neutron agents up and enabled!!", 
+            "Test ID": " CEE-004 "
+        }, 
+        {
+            "Test Description": " Check if nova tenants are enabled and up", 
+            "Severity": "Major", 
+            "IPAddress": " 192.168.0.28", 
+            "Hostname": "cic-3 ", 
+            "Command-Executed": " nova service-list ", 
+            "Verdict": "Passed", 
+            "Remarks": " All Nova service are enabled and up!!", 
+            "Test ID": " CEE-005 "
+        }, 
+        {
+            "Test Description": " Check if nova tenants are enabled and up", 
+            "Severity": "Major", 
+            "IPAddress": " 192.168.0.30", 
+            "Hostname": "cic-2 ", 
+            "Command-Executed": " nova service-list ", 
+            "Verdict": "Passed", 
+            "Remarks": " All Nova service are enabled and up!!", 
+            "Test ID": " CEE-005 "
+        }, 
+        {
+            "Test Description": " Check if nova tenants are enabled and up", 
+            "Severity": "Major", 
+            "IPAddress": " 192.168.0.29", 
+            "Hostname": "cic-1 ", 
+            "Command-Executed": " nova service-list ", 
+            "Verdict": "Passed", 
+            "Remarks": " All Nova service are enabled and up!!", 
+            "Test ID": " CEE-005 "
+        }, 
+        {
+            "Test Description": " Check if there are any watchmen active alarms", 
+            "Severity": "Major", 
+            "IPAddress": " 192.168.0.29", 
+            "Hostname": "cic-1 ", 
+            "Command-Executed": " watchmen-client active-alarm-list", 
+            "Verdict": " Failed", 
+            "Remarks": " Severity - MAJOR Source - Region=UKBAS-02-01-01 -- CeeFunction=1 -- CtrlDomain=1 -- License=1 Probable cause - connectionEstablishmentError", 
+            "Test ID": " CEE-011 "
+        }, 
+        {
+            "Test Description": " Check if there are any watchmen active alarms", 
+            "Severity": "Major", 
+            "IPAddress": " 192.168.0.28", 
+            "Hostname": "cic-3 ", 
+            "Command-Executed": " watchmen-client active-alarm-list", 
+            "Verdict": " Failed", 
+            "Remarks": " Severity - MAJOR Source - Region=UKBAS-02-01-01 -- CeeFunction=1 -- CtrlDomain=1 -- License=1 Probable cause - connectionEstablishmentError", 
+            "Test ID": " CEE-011 "
+        }, 
+        {
+            "Test Description": " Check if there are any watchmen active alarms", 
+            "Severity": "Major", 
+            "IPAddress": " 192.168.0.30", 
+            "Hostname": "cic-2 ", 
+            "Command-Executed": " watchmen-client active-alarm-list", 
+            "Verdict": " Failed", 
+            "Remarks": " Severity - MAJOR Source - Region=UKBAS-02-01-01 -- CeeFunction=1 -- CtrlDomain=1 -- License=1 Probable cause - connectionEstablishmentError", 
+            "Test ID": " CEE-011 "
+        }, 
+        {
+            "Test Description": " Check if there are any watchmen active alarms", 
+            "Severity": "Major", 
+            "IPAddress": " 192.168.0.29", 
+            "Hostname": "cic-1 ", 
+            "Command-Executed": " watchmen-client active-alarm-list", 
+            "Verdict": " Failed", 
+            "Remarks": " Severity - MINOR Source - Region=UKBAS-02-01-01 -- CeeFunction=1 -- Node=compute-0-9 -- CoreDump=1583752912.qemu-system-x86.186854 Probable cause - m3100Indeterminate", 
+            "Test ID": " CEE-011 "
+        }, 
+        {
+            "Test Description": " Check if there are any watchmen active alarms", 
+            "Severity": "Major", 
+            "IPAddress": " 192.168.0.28", 
+            "Hostname": "cic-3 ", 
+            "Command-Executed": " watchmen-client active-alarm-list", 
+            "Verdict": " Failed", 
+            "Remarks": " Severity - MINOR Source - Region=UKBAS-02-01-01 -- CeeFunction=1 -- Node=compute-0-9 -- CoreDump=1583752912.qemu-system-x86.186854 Probable cause - m3100Indeterminate", 
+            "Test ID": " CEE-011 "
+        }, 
+        {
+            "Test Description": " Check if there are any watchmen active alarms", 
+            "Severity": "Major", 
+            "IPAddress": " 192.168.0.30", 
+            "Hostname": "cic-2 ", 
+            "Command-Executed": " watchmen-client active-alarm-list", 
+            "Verdict": " Failed", 
+            "Remarks": " Severity - MINOR Source - Region=UKBAS-02-01-01 -- CeeFunction=1 -- Node=compute-0-9 -- CoreDump=1583752912.qemu-system-x86.186854 Probable cause - m3100Indeterminate", 
+            "Test ID": " CEE-011 "
+        }, 
+        {
+            "Test Description": " Check if there are any watchmen active alarms", 
+            "Severity": "Major", 
+            "IPAddress": " 192.168.0.29", 
+            "Hostname": "cic-1 ", 
+            "Command-Executed": " watchmen-client active-alarm-list", 
+            "Verdict": " Failed", 
+            "Remarks": " Severity - MINOR Source - Region=UKBAS-02-01-01 -- CeeFunction=1 -- Node=compute-0-13 -- CoreDump=1584101680.qemu-system-x86.9843 Probable cause - m3100Indeterminate", 
+            "Test ID": " CEE-011 "
+        }, 
+        {
+            "Test Description": " Check if there are any watchmen active alarms", 
+            "Severity": "Major", 
+            "IPAddress": " 192.168.0.30", 
+            "Hostname": "cic-2 ", 
+            "Command-Executed": " watchmen-client active-alarm-list", 
+            "Verdict": " Failed", 
+            "Remarks": " Severity - MINOR Source - Region=UKBAS-02-01-01 -- CeeFunction=1 -- Node=compute-0-13 -- CoreDump=1584101680.qemu-system-x86.9843 Probable cause - m3100Indeterminate", 
+            "Test ID": " CEE-011 "
+        }, 
+        {
+            "Test Description": " Check if there are any watchmen active alarms", 
+            "Severity": "Major", 
+            "IPAddress": " 192.168.0.28", 
+            "Hostname": "cic-3 ", 
+            "Command-Executed": " watchmen-client active-alarm-list", 
+            "Verdict": " Failed", 
+            "Remarks": " Severity - MINOR Source - Region=UKBAS-02-01-01 -- CeeFunction=1 -- Node=compute-0-13 -- CoreDump=1584101680.qemu-system-x86.9843 Probable cause - m3100Indeterminate", 
+            "Test ID": " CEE-011 "
+        }, 
+        {
+            "Test Description": " Check if there are any watchmen alarm history", 
+            "Severity": "Major", 
+            "IPAddress": " 192.168.0.28", 
+            "Hostname": "cic-3 ", 
+            "Command-Executed": " watchmen-client alarm-history", 
+            "Verdict": " Passed", 
+            "Remarks": " No alarms  found", 
+            "Test ID": " CEE-012 "
+        }, 
+        {
+            "Test Description": " Check if there are any watchmen alarm history", 
+            "Severity": "Major", 
+            "IPAddress": " 192.168.0.30", 
+            "Hostname": "cic-2 ", 
+            "Command-Executed": " watchmen-client alarm-history", 
+            "Verdict": " Passed", 
+            "Remarks": " No alarms  found", 
+            "Test ID": " CEE-012 "
+        }, 
+        {
+            "Test Description": " Check if there are any watchmen alarm history", 
+            "Severity": "Major", 
+            "IPAddress": " 192.168.0.29", 
+            "Hostname": "cic-1 ", 
+            "Command-Executed": " watchmen-client alarm-history", 
+            "Verdict": " Passed", 
+            "Remarks": " No alarms  found", 
+            "Test ID": " CEE-012 "
+        }, 
+        {
+            "Test Description": " Check if there is an dpns entry for each compute host", 
+            "Severity": "Major", 
+            "IPAddress": " 192.168.0.28", 
+            "Hostname": "cic-3 ", 
+            "Command-Executed": " comcli display all-dpns ", 
+            "Verdict": " Passed", 
+            "Remarks": " DPNS entry exists for all compute hosts!!", 
+            "Test ID": " SDNC-001 "
+        }, 
+        {
+            "Test Description": " Check if there is an dpns entry for each compute host", 
+            "Severity": "Major", 
+            "IPAddress": " 192.168.0.29", 
+            "Hostname": "cic-1 ", 
+            "Command-Executed": " comcli display all-dpns ", 
+            "Verdict": " Passed", 
+            "Remarks": " DPNS entry exists for all compute hosts!!", 
+            "Test ID": " SDNC-001 "
+        }, 
+        {
+            "Test Description": " Check if there is an dpns entry for each compute host", 
+            "Severity": "Major", 
+            "IPAddress": " 192.168.0.30", 
+            "Hostname": "cic-2 ", 
+            "Command-Executed": " comcli display all-dpns ", 
+            "Verdict": " Passed", 
+            "Remarks": " DPNS entry exists for all compute hosts!!", 
+            "Test ID": " SDNC-001 "
+        }, 
+        {
+            "Test Description": " Check if there is an TEP entry for each compute host", 
+            "Severity": "Major", 
+            "IPAddress": " 192.168.0.29", 
+            "Hostname": "cic-1 ", 
+            "Command-Executed": " comcli tep-show-config ", 
+            "Verdict": " Passed", 
+            "Remarks": " TEP entries exists for all compute hosts!!", 
+            "Test ID": " SDNC-002 "
+        }, 
+        {
+            "Test Description": " Check if there is an TEP entry for each compute host", 
+            "Severity": "Major", 
+            "IPAddress": " 192.168.0.28", 
+            "Hostname": "cic-3 ", 
+            "Command-Executed": " comcli tep-show-config ", 
+            "Verdict": " Passed", 
+            "Remarks": " TEP entries exists for all compute hosts!!", 
+            "Test ID": " SDNC-002 "
+        }, 
+        {
+            "Test Description": " Check if there is an TEP entry for each compute host", 
+            "Severity": "Major", 
+            "IPAddress": " 192.168.0.30", 
+            "Hostname": "cic-2 ", 
+            "Command-Executed": " comcli tep-show-config ", 
+            "Verdict": " Passed", 
+            "Remarks": " TEP entries exists for all compute hosts!!", 
+            "Test ID": " SDNC-002 "
+        }, 
+        {
+            "Test Description": " Check if all tunnels are UP", 
+            "Severity": "Major", 
+            "IPAddress": " 192.168.0.28", 
+            "Hostname": "cic-3 ", 
+            "Command-Executed": " comcli tep-show-state ", 
+            "Verdict": " Passed", 
+            "Remarks": " All tunnels are UP", 
+            "Test ID": " SDNC-003 "
+        }, 
+        {
+            "Test Description": " Check if all tunnels are UP", 
+            "Severity": "Major", 
+            "IPAddress": " 192.168.0.30", 
+            "Hostname": "cic-2 ", 
+            "Command-Executed": " comcli tep-show-state ", 
+            "Verdict": " Passed", 
+            "Remarks": " All tunnels are UP", 
+            "Test ID": " SDNC-003 "
+        }, 
+        {
+            "Test Description": " Check if all tunnels are UP", 
+            "Severity": "Major", 
+            "IPAddress": " 192.168.0.29", 
+            "Hostname": "cic-1 ", 
+            "Command-Executed": " comcli tep-show-state ", 
+            "Verdict": " Passed", 
+            "Remarks": " All tunnels are UP", 
+            "Test ID": " SDNC-003 "
+        }, 
+        {
+            "Test Description": " Check no of tunnels ", 
+            "Severity": "Major", 
+            "IPAddress": " 192.168.0.28", 
+            "Hostname": "cic-3 ", 
+            "Command-Executed": " comcli tep-show-state ", 
+            "Verdict": " Failed", 
+            "Remarks": " No of tunnels 0 should have been 0 ", 
+            "Test ID": " SDNC-004 "
+        }, 
+        {
+            "Test Description": " Check no of tunnels ", 
+            "Severity": "Major", 
+            "IPAddress": " 192.168.0.29", 
+            "Hostname": "cic-1 ", 
+            "Command-Executed": " comcli tep-show-state ", 
+            "Verdict": " Failed", 
+            "Remarks": " No of tunnels 0 should have been 0 ", 
+            "Test ID": " SDNC-004 "
+        }, 
+        {
+            "Test Description": " Check no of tunnels ", 
+            "Severity": "Major", 
+            "IPAddress": " 192.168.0.30", 
+            "Hostname": "cic-2 ", 
+            "Command-Executed": " comcli tep-show-state ", 
+            "Verdict": " Failed", 
+            "Remarks": " No of tunnels 0 should have been 0 ", 
+            "Test ID": " SDNC-004 "
+        }, 
+        {
+            "Test Description": " Check if the operational satus is ok", 
+            "Severity": " Major", 
+            "IPAddress": " 192.168.0.28", 
+            "Hostname": "cic-3 ", 
+            "Command-Executed": " comcli display app-status", 
+            "Verdict": " Passed", 
+            "Remarks": " Operational count = 0", 
+            "Test ID": " SDNC-005"
+        }, 
+        {
+            "Test Description": " Check if the operational satus is ok", 
+            "Severity": " Major", 
+            "IPAddress": " 192.168.0.30", 
+            "Hostname": "cic-2 ", 
+            "Command-Executed": " comcli display app-status", 
+            "Verdict": " Passed", 
+            "Remarks": " Operational count = 0", 
+            "Test ID": " SDNC-005"
+        }, 
+        {
+            "Test Description": " Check if the operational satus is ok", 
+            "Severity": " Major", 
+            "IPAddress": " 192.168.0.29", 
+            "Hostname": "cic-1 ", 
+            "Command-Executed": " comcli display app-status", 
+            "Verdict": " Passed", 
+            "Remarks": " Operational count = 0", 
+            "Test ID": " SDNC-005"
+        }, 
+        {
+            "Test Description": " Check if the node is leader in inventory-config", 
+            "Severity": " Info", 
+            "IPAddress": " 192.168.0.29", 
+            "Hostname": "cic-1 ", 
+            "Command-Executed": " curl", 
+            "Verdict": " Passed", 
+            "Remarks": " cic-1 is a Leader in inventory-config", 
+            "Test ID": " SDNC-006"
+        }, 
+        {
+            "Test Description": " Check if the node is leader in default-config", 
+            "Severity": " Info", 
+            "IPAddress": " 192.168.0.29", 
+            "Hostname": "cic-1 ", 
+            "Command-Executed": " curl", 
+            "Verdict": " Passed", 
+            "Remarks": " cic-1 is a Leader in default-config", 
+            "Test ID": " SDNC-007"
+        }, 
+        {
+            "Test Description": " Check if the node is leader in topology-config", 
+            "Severity": " Info", 
+            "IPAddress": " 192.168.0.29", 
+            "Hostname": "cic-1 ", 
+            "Command-Executed": " curl", 
+            "Verdict": " Passed", 
+            "Remarks": " cic-1 is a Leader in topology-config", 
+            "Test ID": " SDNC-008"
+        }, 
+        {
+            "Test Description": " Check if the node is leader in inventory-operational", 
+            "Severity": " Info", 
+            "IPAddress": " 192.168.0.30", 
+            "Hostname": "cic-2 ", 
+            "Command-Executed": " curl", 
+            "Verdict": " Passed", 
+            "Remarks": " cic-2 is a Leader in inventory-operational", 
+            "Test ID": " SDNC-009"
+        }, 
+        {
+            "Test Description": " Check if the node is leader in default-operational", 
+            "Severity": " Info", 
+            "IPAddress": " 192.168.0.30", 
+            "Hostname": "cic-2 ", 
+            "Command-Executed": " curl", 
+            "Verdict": " Passed", 
+            "Remarks": " cic-2 is a Leader in default-operational", 
+            "Test ID": " SDNC-010"
+        }, 
+        {
+            "Test Description": " check if the node is leader in topology-operational", 
+            "Severity": " info", 
+            "IPAddress": " 192.168.0.28", 
+            "Hostname": "cic-3 ", 
+            "Command-Executed": " curl", 
+            "Verdict": " passed", 
+            "Remarks": " cic-3 is a leader in topology-operational", 
+            "Test ID": " sdnc-011"
+        }, 
+        {
+            "Test Description": " check if the node is listening on Rest services (8181)", 
+            "Severity": " Major", 
+            "IPAddress": " 192.168.0.28", 
+            "Hostname": "cic-3 ", 
+            "Command-Executed": " netstat", 
+            "Verdict": " passed", 
+            "Remarks": " cic-3 listening on Rest services", 
+            "Test ID": " sdnc-012"
+        }, 
+        {
+            "Test Description": " check if the node is listening on Rest services (8181)", 
+            "Severity": " Major", 
+            "IPAddress": " 192.168.0.30", 
+            "Hostname": "cic-2 ", 
+            "Command-Executed": " netstat", 
+            "Verdict": " passed", 
+            "Remarks": " cic-2 listening on Rest services", 
+            "Test ID": " sdnc-012"
+        }, 
+        {
+            "Test Description": " check if the node is listening on Rest services (8181)", 
+            "Severity": " Major", 
+            "IPAddress": " 192.168.0.29", 
+            "Hostname": "cic-1 ", 
+            "Command-Executed": " netstat", 
+            "Verdict": " passed", 
+            "Remarks": " cic-1 listening on Rest services", 
+            "Test ID": " sdnc-012"
+        }, 
+        {
+            "Test Description": " check if the node is listening on REST Services port 6633", 
+            "Severity": " Major", 
+            "IPAddress": " 192.168.0.30", 
+            "Hostname": "cic-2 ", 
+            "Command-Executed": " netstat", 
+            "Verdict": " Passed", 
+            "Remarks": " cic-2 listening on openflow servies (6633)", 
+            "Test ID": " sdnc-013"
+        }, 
+        {
+            "Test Description": " check if the node is listening on REST Services port 6633", 
+            "Severity": " Major", 
+            "IPAddress": " 192.168.0.29", 
+            "Hostname": "cic-1 ", 
+            "Command-Executed": " netstat", 
+            "Verdict": " Passed", 
+            "Remarks": " cic-1 listening on openflow servies (6633)", 
+            "Test ID": " sdnc-013"
+        }, 
+        {
+            "Test Description": " check if the node is listening on REST Services port 6633", 
+            "Severity": " Major", 
+            "IPAddress": " 192.168.0.28", 
+            "Hostname": "cic-3 ", 
+            "Command-Executed": " netstat", 
+            "Verdict": " Passed", 
+            "Remarks": " cic-3 listening on openflow servies (6633)", 
+            "Test ID": " sdnc-013"
+        }, 
+        {
+            "Test Description": " check if the node is listening on OVSDB port 6640", 
+            "Severity": " Major", 
+            "IPAddress": " 192.168.0.28", 
+            "Hostname": "cic-3 ", 
+            "Command-Executed": " netstat", 
+            "Verdict": " Passed", 
+            "Remarks": " cic-3 listening on OVSDB (6640)", 
+            "Test ID": " sdnc-014"
+        }, 
+        {
+            "Test Description": " check if the node is listening on OVSDB port 6640", 
+            "Severity": " Major", 
+            "IPAddress": " 192.168.0.30", 
+            "Hostname": "cic-2 ", 
+            "Command-Executed": " netstat", 
+            "Verdict": " Passed", 
+            "Remarks": " cic-2 listening on OVSDB (6640)", 
+            "Test ID": " sdnc-014"
+        }, 
+        {
+            "Test Description": " check if the node is listening on OVSDB port 6640", 
+            "Severity": " Major", 
+            "IPAddress": " 192.168.0.29", 
+            "Hostname": "cic-1 ", 
+            "Command-Executed": " netstat", 
+            "Verdict": " Passed", 
+            "Remarks": " cic-1 listening on OVSDB (6640)", 
+            "Test ID": " sdnc-014"
+        }, 
+        {
+            "Test Description": " check if the node is listening on BGP ODL Manager(6644)", 
+            "Severity": " Major", 
+            "IPAddress": " 192.168.0.28", 
+            "Hostname": "cic-3 ", 
+            "Command-Executed": " netstat", 
+            "Verdict": " Passed", 
+            "Remarks": " cic-3 listening on ODL BGP Manager(6644) Master", 
+            "Test ID": " sdnc-015"
+        }, 
+        {
+            "Test Description": " check if the node is listening on ODL BGP Manager(6644) port", 
+            "Severity": " Major", 
+            "null": [
+                " 192.168.0.30", 
+                " sdnc-015", 
+                " check if the node is listening on ODL BGP Manager(6644) port", 
+                " netstat", 
+                " Major", 
+                " Passed", 
+                " cic-2 ODL BGP Manager (6644) Standby"
+            ], 
+            "IPAddress": " 192.168.0.30", 
+            "Hostname": "cic-2 ", 
+            "Command-Executed": " netstat", 
+            "Verdict": " Passed", 
+            "Remarks": " cic-2 ", 
+            "Test ID": " sdnc-015"
+        }, 
+        {
+            "Test Description": " check if the node is listening on ODL BGP Manager(6644) port", 
+            "Severity": " Major", 
+            "null": [
+                " 192.168.0.29", 
+                " sdnc-015", 
+                " check if the node is listening on ODL BGP Manager(6644) port", 
+                " netstat", 
+                " Major", 
+                " Passed", 
+                " cic-1 ODL BGP Manager (6644) Standby"
+            ], 
+            "IPAddress": " 192.168.0.29", 
+            "Hostname": "cic-1 ", 
+            "Command-Executed": " netstat", 
+            "Verdict": " Passed", 
+            "Remarks": " cic-1 ", 
+            "Test ID": " sdnc-015"
+        }, 
+        {
+            "Test Description": " count no of DPN on port 6653", 
+            "Severity": " INFO", 
+            "IPAddress": " 192.168.0.28", 
+            "Hostname": "cic-3 ", 
+            "Command-Executed": " netstat", 
+            "Verdict": " Passed", 
+            "Remarks": " cic-3 No. of DPN: 5", 
+            "Test ID": " sdnc-016"
+        }, 
+        {
+            "Test Description": " count no of DPN on port 6653", 
+            "Severity": " INFO", 
+            "IPAddress": " 192.168.0.30", 
+            "Hostname": "cic-2 ", 
+            "Command-Executed": " netstat", 
+            "Verdict": " Passed", 
+            "Remarks": " cic-2 No. of DPN: 5", 
+            "Test ID": " sdnc-016"
+        }, 
+        {
+            "Test Description": " count no of DPN on port 6653", 
+            "Severity": " INFO", 
+            "IPAddress": " 192.168.0.29", 
+            "Hostname": "cic-1 ", 
+            "Command-Executed": " netstat", 
+            "Verdict": " Passed", 
+            "Remarks": " cic-1 No. of DPN: 6", 
+            "Test ID": " sdnc-016"
+        }, 
+        {
+            "Test Description": " Check if crm_mon command has any negetive logs", 
+            "Severity": "Catestrophic", 
+            "IPAddress": " 192.168.0.28", 
+            "Hostname": "cic-3 ", 
+            "Command-Executed": " crm_mon -l -rf", 
+            "Verdict": " Passed ", 
+            "Remarks": " No issues in crm_mon logs!!", 
+            "Test ID": " CEE-012 "
+        }, 
+        {
+            "Test Description": " Check if crm_mon command has any negetive logs", 
+            "Severity": "Catestrophic", 
+            "IPAddress": " 192.168.0.30", 
+            "Hostname": "cic-2 ", 
+            "Command-Executed": " crm_mon -l -rf", 
+            "Verdict": " Passed ", 
+            "Remarks": " No issues in crm_mon logs!!", 
+            "Test ID": " CEE-012 "
+        }, 
+        {
+            "Test Description": " Check if crm_mon command has any negetive logs", 
+            "Severity": "Catestrophic", 
+            "IPAddress": " 192.168.0.29", 
+            "Hostname": "cic-1 ", 
+            "Command-Executed": " crm_mon -l -rf", 
+            "Verdict": " Passed ", 
+            "Remarks": " No issues in crm_mon logs!!", 
+            "Test ID": " CEE-012 "
+        }, 
+        {
+            "Test Description": " Check if rabbitmq culster running on all cic", 
+            "Severity": "Major", 
+            "IPAddress": " 192.168.0.28", 
+            "Hostname": "cic-3 ", 
+            "Command-Executed": " rabbitmqctl cluster_status", 
+            "Verdict": " Passed", 
+            "Remarks": " Rabbitmq running on only all 3 CIC nodes", 
+            "Test ID": " CEE-013"
+        }, 
+        {
+            "Test Description": " Check if rabbitmq culster running on all cic", 
+            "Severity": "Major", 
+            "IPAddress": " 192.168.0.30", 
+            "Hostname": "cic-2 ", 
+            "Command-Executed": " rabbitmqctl cluster_status", 
+            "Verdict": " Passed", 
+            "Remarks": " Rabbitmq running on only all 3 CIC nodes", 
+            "Test ID": " CEE-013"
+        }, 
+        {
+            "Test Description": " Check if there are any message lying in queue", 
+            "Severity": "Major", 
+            "IPAddress": " 192.168.0.29 ", 
+            "Hostname": "cic-1  ", 
+            "Command-Executed": " rabbitmqctl list_queues", 
+            "Verdict": " Passed", 
+            "Remarks": " All queues ok!!", 
+            "Test ID": " CEE-014"
+        }, 
+        {
+            "Test Description": " Check if there are any message lying in queue", 
+            "Severity": "Major", 
+            "IPAddress": " 192.168.0.28 ", 
+            "Hostname": "cic-3  ", 
+            "Command-Executed": " rabbitmqctl list_queues", 
+            "Verdict": " Passed", 
+            "Remarks": " All queues ok!!", 
+            "Test ID": " CEE-014"
+        }, 
+        {
+            "Test Description": " Check if there are any message lying in queue", 
+            "Severity": "Major", 
+            "IPAddress": " 192.168.0.30 ", 
+            "Hostname": "cic-2  ", 
+            "Command-Executed": " rabbitmqctl list_queues", 
+            "Verdict": " Passed", 
+            "Remarks": " All queues ok!!", 
+            "Test ID": " CEE-014"
+        }, 
+        {
+            "Test Description": " Check if galera cluster are in sync with each other", 
+            "Severity": "Major", 
+            "IPAddress": " 192.168.0.28 ", 
+            "Hostname": "cic-3  ", 
+            "Command-Executed": " galera mysql command", 
+            "Verdict": " Passed", 
+            "Remarks": "All cluster synced", 
+            "Test ID": " CEE-015"
+        }, 
+        {
+            "Test Description": " Check if galera cluster are in sync with each other", 
+            "Severity": "Major", 
+            "IPAddress": " 192.168.0.30 ", 
+            "Hostname": "cic-2  ", 
+            "Command-Executed": " galera mysql command", 
+            "Verdict": " Passed", 
+            "Remarks": "All cluster synced", 
+            "Test ID": " CEE-015"
+        }, 
+        {
+            "Test Description": " Check if galera cluster are in sync with each other", 
+            "Severity": "Major", 
+            "IPAddress": " 192.168.0.29 ", 
+            "Hostname": "cic-1  ", 
+            "Command-Executed": " galera mysql command", 
+            "Verdict": " Passed", 
+            "Remarks": "All cluster synced", 
+            "Test ID": " CEE-015"
+        }, 
+        {
+            "Test Description": " Check if haproxy service is running", 
+            "Severity": "Major", 
+            "IPAddress": " 192.168.0.28 ", 
+            "Hostname": "cic-3  ", 
+            "Command-Executed": " service haproxy status", 
+            "Verdict": " Failed ", 
+            "Remarks": " haproxy not running.", 
+            "Test ID": " CEE-021"
+        }, 
+        {
+            "Test Description": " Check if haproxy service is running", 
+            "Severity": "Major", 
+            "IPAddress": " 192.168.0.29 ", 
+            "Hostname": "cic-1  ", 
+            "Command-Executed": " service haproxy status", 
+            "Verdict": " Failed ", 
+            "Remarks": " haproxy not running.", 
+            "Test ID": " CEE-021"
+        }, 
+        {
+            "Test Description": " Check if haproxy service is running", 
+            "Severity": "Major", 
+            "IPAddress": " 192.168.0.30 ", 
+            "Hostname": "cic-2  ", 
+            "Command-Executed": " service haproxy status", 
+            "Verdict": " Failed ", 
+            "Remarks": " haproxy not running.", 
+            "Test ID": " CEE-021"
+        }, 
+        {
+            "Test Description": " Check if apache2 service is running", 
+            "Severity": "Minor", 
+            "IPAddress": " 192.168.0.28 ", 
+            "Hostname": "cic-3  ", 
+            "Command-Executed": " service apache2 status", 
+            "Verdict": " Passed ", 
+            "Remarks": "  * apache2 is running", 
+            "Test ID": " CEE-020"
+        }, 
+        {
+            "Test Description": " Check if apache2 service is running", 
+            "Severity": "Minor", 
+            "IPAddress": " 192.168.0.30 ", 
+            "Hostname": "cic-2  ", 
+            "Command-Executed": " service apache2 status", 
+            "Verdict": " Passed ", 
+            "Remarks": "  * apache2 is running", 
+            "Test ID": " CEE-020"
+        }, 
+        {
+            "Test Description": " Check if apache2 service is running", 
+            "Severity": "Minor", 
+            "IPAddress": " 192.168.0.29 ", 
+            "Hostname": "cic-1  ", 
+            "Command-Executed": " service apache2 status", 
+            "Verdict": " Passed ", 
+            "Remarks": "  * apache2 is running", 
+            "Test ID": " CEE-020"
+        }, 
+        {
+            "Test Description": " Check if mongodb service is running", 
+            "Severity": "Minor", 
+            "null": [
+                " process 7988"
+            ], 
+            "IPAddress": " 192.168.0.28 ", 
+            "Hostname": "cic-3  ", 
+            "Command-Executed": " service mongodb status", 
+            "Verdict": " Passed ", 
+            "Remarks": " mongodb start/running", 
+            "Test ID": " CEE-016"
+        }, 
+        {
+            "Test Description": " Check if mongodb service is running", 
+            "Severity": "Minor", 
+            "null": [
+                " process 8872"
+            ], 
+            "IPAddress": " 192.168.0.29 ", 
+            "Hostname": "cic-1  ", 
+            "Command-Executed": " service mongodb status", 
+            "Verdict": " Passed ", 
+            "Remarks": " mongodb start/running", 
+            "Test ID": " CEE-016"
+        }, 
+        {
+            "Test Description": " Check if mongodb service is running", 
+            "Severity": "Minor", 
+            "null": [
+                " process 8116"
+            ], 
+            "IPAddress": " 192.168.0.30 ", 
+            "Hostname": "cic-2  ", 
+            "Command-Executed": " service mongodb status", 
+            "Verdict": " Passed ", 
+            "Remarks": " mongodb start/running", 
+            "Test ID": " CEE-016"
+        }, 
+        {
+            "Test Description": " Check if mongodb replication status is ok", 
+            "Severity": "Minor", 
+            "IPAddress": " 192.168.0.30 ", 
+            "Hostname": "cic-2  ", 
+            "Command-Executed": " mongodb printjson command", 
+            "Verdict": " Passed ", 
+            "Remarks": " PRIMARY Count = 1 secondary count = 2", 
+            "Test ID": " CEE-017"
+        }, 
+        {
+            "Test Description": " Check if mongodb replication status is ok", 
+            "Severity": "Minor", 
+            "IPAddress": " 192.168.0.28 ", 
+            "Hostname": "cic-3  ", 
+            "Command-Executed": " mongodb printjson command", 
+            "Verdict": " Passed ", 
+            "Remarks": " PRIMARY Count = 1 secondary count = 2", 
+            "Test ID": " CEE-017"
+        }, 
+        {
+            "Test Description": " Check if mongodb replication status is ok", 
+            "Severity": "Minor", 
+            "IPAddress": " 192.168.0.29 ", 
+            "Hostname": "cic-1  ", 
+            "Command-Executed": " mongodb printjson command", 
+            "Verdict": " Passed ", 
+            "Remarks": " PRIMARY Count = 1 secondary count = 2", 
+            "Test ID": " CEE-017"
+        }, 
+        {
+            "Test Description": " Check for any rabbitmq core files", 
+            "Severity": "Major", 
+            "IPAddress": " 192.168.0.28 ", 
+            "Hostname": "cic-3  ", 
+            "Command-Executed": " ls -l /var/lib/rabbitmq/MnesiaCore.rabbit@messaging-cic*", 
+            "Verdict": " Passed ", 
+            "Remarks": " No core file present", 
+            "Test ID": " CEE-018"
+        }, 
+        {
+            "Test Description": " Check for any rabbitmq core files", 
+            "Severity": "Major", 
+            "IPAddress": " 192.168.0.29 ", 
+            "Hostname": "cic-1  ", 
+            "Command-Executed": " ls -l /var/lib/rabbitmq/MnesiaCore.rabbit@messaging-cic*", 
+            "Verdict": " Passed ", 
+            "Remarks": " No core file present", 
+            "Test ID": " CEE-018"
+        }, 
+        {
+            "Test Description": " Check for any rabbitmq core files", 
+            "Severity": "Major", 
+            "IPAddress": " 192.168.0.30 ", 
+            "Hostname": "cic-2  ", 
+            "Command-Executed": " ls -l /var/lib/rabbitmq/MnesiaCore.rabbit@messaging-cic*", 
+            "Verdict": " Passed ", 
+            "Remarks": " No core file present", 
+            "Test ID": " CEE-018"
+        }, 
+        {
+            "Test Description": " Check if memory consumption is more than 80%", 
+            "Severity": "Warning", 
+            "IPAddress": " 192.168.0.43", 
+            "Hostname": "compute-0-10 ", 
+            "Command-Executed": " cat /proc/meminfo", 
+            "Verdict": " Failed", 
+            "Remarks": " memory consumtption is 93%", 
+            "Test ID": " ALL-NODES-001 "
+        }, 
+        {
+            "Test Description": " Check if memory consumption is more than 80%", 
+            "Severity": "Warning", 
+            "IPAddress": " 192.168.0.30", 
+            "Hostname": "cic-2 ", 
+            "Command-Executed": " cat /proc/meminfo", 
+            "Verdict": " Failed", 
+            "Remarks": " memory consumtption is 95%", 
+            "Test ID": " ALL-NODES-001 "
+        }, 
+        {
+            "Test Description": " Check if memory consumption is more than 80%", 
+            "Severity": "Warning", 
+            "IPAddress": " 192.168.0.22", 
+            "Hostname": "compute-0-2 ", 
+            "Command-Executed": " cat /proc/meminfo", 
+            "Verdict": " Failed", 
+            "Remarks": " memory consumtption is 99%", 
+            "Test ID": " ALL-NODES-001 "
+        }, 
+        {
+            "Test Description": " Check if memory consumption is more than 80%", 
+            "Severity": "Warning", 
+            "IPAddress": " 192.168.0.28", 
+            "Hostname": "cic-3 ", 
+            "Command-Executed": " cat /proc/meminfo", 
+            "Verdict": " Failed", 
+            "Remarks": " memory consumtption is 95%", 
+            "Test ID": " ALL-NODES-001 "
+        }, 
+        {
+            "Test Description": " Check if memory consumption is more than 80%", 
+            "Severity": "Warning", 
+            "IPAddress": " 192.168.0.29", 
+            "Hostname": "cic-1 ", 
+            "Command-Executed": " cat /proc/meminfo", 
+            "Verdict": " Failed", 
+            "Remarks": " memory consumtption is 91%", 
+            "Test ID": " ALL-NODES-001 "
+        }, 
+        {
+            "Test Description": " Check if memory consumption is more than 80%", 
+            "Severity": "Warning", 
+            "IPAddress": " 192.168.0.21", 
+            "Hostname": "compute-0-1 ", 
+            "Command-Executed": " cat /proc/meminfo", 
+            "Verdict": " Failed", 
+            "Remarks": " memory consumtption is 98%", 
+            "Test ID": " ALL-NODES-001 "
+        }, 
+        {
+            "Test Description": " Check if memory consumption is more than 80%", 
+            "Severity": "Warning", 
+            "IPAddress": " 192.168.0.23", 
+            "Hostname": "compute-0-3 ", 
+            "Command-Executed": " cat /proc/meminfo", 
+            "Verdict": " Failed", 
+            "Remarks": " memory consumtption is 95%", 
+            "Test ID": " ALL-NODES-001 "
+        }, 
+        {
+            "Test Description": " Check if memory consumption is more than 80%", 
+            "Severity": "Warning", 
+            "IPAddress": " 192.168.0.44", 
+            "Hostname": "compute-0-12 ", 
+            "Command-Executed": " cat /proc/meminfo", 
+            "Verdict": " Failed", 
+            "Remarks": " memory consumtption is 93%", 
+            "Test ID": " ALL-NODES-001 "
+        }, 
+        {
+            "Test Description": " Check if memory consumption is more than 80%", 
+            "Severity": "Warning", 
+            "IPAddress": " 192.168.0.27", 
+            "Hostname": "compute-0-8 ", 
+            "Command-Executed": " cat /proc/meminfo", 
+            "Verdict": " Failed", 
+            "Remarks": " memory consumtption is 94%", 
+            "Test ID": " ALL-NODES-001 "
+        }, 
+        {
+            "Test Description": " Check if memory consumption is more than 80%", 
+            "Severity": "Warning", 
+            "IPAddress": " 192.168.0.42", 
+            "Hostname": "compute-0-16 ", 
+            "Command-Executed": " cat /proc/meminfo", 
+            "Verdict": " Failed", 
+            "Remarks": " memory consumtption is 93%", 
+            "Test ID": " ALL-NODES-001 "
+        }, 
+        {
+            "Test Description": " Check if memory consumption is more than 80%", 
+            "Severity": "Warning", 
+            "IPAddress": " 192.168.0.32", 
+            "Hostname": "compute-0-14 ", 
+            "Command-Executed": " cat /proc/meminfo", 
+            "Verdict": " Failed", 
+            "Remarks": " memory consumtption is 93%", 
+            "Test ID": " ALL-NODES-001 "
+        }, 
+        {
+            "Test Description": " Check if memory consumption is more than 80%", 
+            "Severity": "Warning", 
+            "IPAddress": " 192.168.0.24", 
+            "Hostname": "compute-0-6 ", 
+            "Command-Executed": " cat /proc/meminfo", 
+            "Verdict": " Failed", 
+            "Remarks": " memory consumtption is 94%", 
+            "Test ID": " ALL-NODES-001 "
+        }, 
+        {
+            "Test Description": " Check if memory consumption is more than 80%", 
+            "Severity": "Warning", 
+            "IPAddress": " 192.168.0.41", 
+            "Hostname": "compute-0-15 ", 
+            "Command-Executed": " cat /proc/meminfo", 
+            "Verdict": " Failed", 
+            "Remarks": " memory consumtption is 93%", 
+            "Test ID": " ALL-NODES-001 "
+        }, 
+        {
+            "Test Description": " Check if memory consumption is more than 80%", 
+            "Severity": "Warning", 
+            "IPAddress": " 192.168.0.39", 
+            "Hostname": "compute-0-13 ", 
+            "Command-Executed": " cat /proc/meminfo", 
+            "Verdict": " Failed", 
+            "Remarks": " memory consumtption is 93%", 
+            "Test ID": " ALL-NODES-001 "
+        }, 
+        {
+            "Test Description": " Check if memory consumption is more than 80%", 
+            "Severity": "Warning", 
+            "IPAddress": " 192.168.0.20", 
+            "Hostname": "compute-0-4 ", 
+            "Command-Executed": " cat /proc/meminfo", 
+            "Verdict": " Failed", 
+            "Remarks": " memory consumtption is 97%", 
+            "Test ID": " ALL-NODES-001 "
+        }, 
+        {
+            "Test Description": " Check if memory consumption is more than 80%", 
+            "Severity": "Warning", 
+            "IPAddress": " 192.168.0.25", 
+            "Hostname": "compute-0-5 ", 
+            "Command-Executed": " cat /proc/meminfo", 
+            "Verdict": " Failed", 
+            "Remarks": " memory consumtption is 94%", 
+            "Test ID": " ALL-NODES-001 "
+        }, 
+        {
+            "Test Description": " Check if memory consumption is more than 80%", 
+            "Severity": "Warning", 
+            "IPAddress": " 192.168.0.26", 
+            "Hostname": "compute-0-7 ", 
+            "Command-Executed": " cat /proc/meminfo", 
+            "Verdict": " Failed", 
+            "Remarks": " memory consumtption is 94%", 
+            "Test ID": " ALL-NODES-001 "
+        }, 
+        {
+            "Test Description": " Check if disk conumption is more than 80%", 
+            "Severity": "Minor", 
+            "IPAddress": " 192.168.0.22", 
+            "Hostname": "compute-0-2 ", 
+            "Command-Executed": " df -h", 
+            "Verdict": " Failed", 
+            "Remarks": "  83% /var/lib/nova", 
+            "Test ID": " ALL-NODES-002 "
+        }, 
+        {
+            "Test Description": " Check if disk conumption is more than 80%", 
+            "Severity": "Minor", 
+            "IPAddress": " 192.168.0.21", 
+            "Hostname": "compute-0-1 ", 
+            "Command-Executed": " df -h", 
+            "Verdict": " Failed", 
+            "Remarks": "  81% /var/lib/nova", 
+            "Test ID": " ALL-NODES-002 "
+        }, 
+        {
+            "Test Description": " Check if the interface are up", 
+            "Severity": "Warning", 
+            "IPAddress": " 192.168.0.43 ", 
+            "Hostname": "compute-0-10  ", 
+            "Command-Executed": " ip addr ", 
+            "Verdict": " Failed ", 
+            "Remarks": " 6: eth4: <BROADCAST MULTICAST> mtu 1500 qdisc noop state DOWN group default qlen 1000", 
+            "Test ID": " ALL-NODES-006"
+        }, 
+        {
+            "Test Description": " Check if the interface are up", 
+            "Severity": "Warning", 
+            "IPAddress": " 192.168.0.21 ", 
+            "Hostname": "compute-0-1  ", 
+            "Command-Executed": " ip addr ", 
+            "Verdict": " Failed ", 
+            "Remarks": " 4: eth2: <BROADCAST MULTICAST> mtu 1500 qdisc noop state DOWN group default qlen 1000", 
+            "Test ID": " ALL-NODES-006"
+        }, 
+        {
+            "Test Description": " Check if the interface are up", 
+            "Severity": "Warning", 
+            "IPAddress": " 192.168.0.23 ", 
+            "Hostname": "compute-0-3  ", 
+            "Command-Executed": " ip addr ", 
+            "Verdict": " Failed ", 
+            "Remarks": " 5: eth4: <BROADCAST MULTICAST> mtu 1500 qdisc noop state DOWN group default qlen 1000", 
+            "Test ID": " ALL-NODES-006"
+        }, 
+        {
+            "Test Description": " Check if the interface are up", 
+            "Severity": "Warning", 
+            "IPAddress": " 192.168.0.44 ", 
+            "Hostname": "compute-0-12  ", 
+            "Command-Executed": " ip addr ", 
+            "Verdict": " Failed ", 
+            "Remarks": " 6: eth4: <BROADCAST MULTICAST> mtu 1500 qdisc noop state DOWN group default qlen 1000", 
+            "Test ID": " ALL-NODES-006"
+        }, 
+        {
+            "Test Description": " Check if the interface are up", 
+            "Severity": "Warning", 
+            "IPAddress": " 192.168.0.43 ", 
+            "Hostname": "compute-0-10  ", 
+            "Command-Executed": " ip addr ", 
+            "Verdict": " Failed ", 
+            "Remarks": " 7: eth5: <BROADCAST MULTICAST> mtu 1500 qdisc noop state DOWN group default qlen 1000", 
+            "Test ID": " ALL-NODES-006"
+        }, 
+        {
+            "Test Description": " Check if the interface are up", 
+            "Severity": "Warning", 
+            "IPAddress": " 192.168.0.21 ", 
+            "Hostname": "compute-0-1  ", 
+            "Command-Executed": " ip addr ", 
+            "Verdict": " Failed ", 
+            "Remarks": " 5: eth3: <BROADCAST MULTICAST> mtu 1500 qdisc noop state DOWN group default qlen 1000", 
+            "Test ID": " ALL-NODES-006"
+        }, 
+        {
+            "Test Description": " Check if the interface are up", 
+            "Severity": "Warning", 
+            "IPAddress": " 192.168.0.22 ", 
+            "Hostname": "compute-0-2  ", 
+            "Command-Executed": " ip addr ", 
+            "Verdict": " Failed ", 
+            "Remarks": " 6: eth4: <BROADCAST MULTICAST> mtu 1500 qdisc noop state DOWN group default qlen 1000", 
+            "Test ID": " ALL-NODES-006"
+        }, 
+        {
+            "Test Description": " Check if the interface are up", 
+            "Severity": "Warning", 
+            "IPAddress": " 192.168.0.23 ", 
+            "Hostname": "compute-0-3  ", 
+            "Command-Executed": " ip addr ", 
+            "Verdict": " Failed ", 
+            "Remarks": " 7: eth5: <BROADCAST MULTICAST> mtu 1500 qdisc noop state DOWN group default qlen 1000", 
+            "Test ID": " ALL-NODES-006"
+        }, 
+        {
+            "Test Description": " Check if the interface are up", 
+            "Severity": "Warning", 
+            "IPAddress": " 192.168.0.44 ", 
+            "Hostname": "compute-0-12  ", 
+            "Command-Executed": " ip addr ", 
+            "Verdict": " Failed ", 
+            "Remarks": " 7: eth5: <BROADCAST MULTICAST> mtu 1500 qdisc noop state DOWN group default qlen 1000", 
+            "Test ID": " ALL-NODES-006"
+        }, 
+        {
+            "Test Description": " Check if the interface are up", 
+            "Severity": "Warning", 
+            "IPAddress": " 192.168.0.43 ", 
+            "Hostname": "compute-0-10  ", 
+            "Command-Executed": " ip addr ", 
+            "Verdict": " Failed ", 
+            "Remarks": " 10: eth8: <BROADCAST MULTICAST> mtu 1500 qdisc noop state DOWN group default qlen 1000", 
+            "Test ID": " ALL-NODES-006"
+        }, 
+        {
+            "Test Description": " Check if the interface are up", 
+            "Severity": "Warning", 
+            "IPAddress": " 192.168.0.32 ", 
+            "Hostname": "compute-0-14  ", 
+            "Command-Executed": " ip addr ", 
+            "Verdict": " Failed ", 
+            "Remarks": " 6: eth4: <BROADCAST MULTICAST> mtu 1500 qdisc noop state DOWN group default qlen 1000", 
+            "Test ID": " ALL-NODES-006"
+        }, 
+        {
+            "Test Description": " Check if the interface are up", 
+            "Severity": "Warning", 
+            "IPAddress": " 192.168.0.37 ", 
+            "Hostname": "compute-0-11  ", 
+            "Command-Executed": " ip addr ", 
+            "Verdict": " Failed ", 
+            "Remarks": " 6: eth4: <BROADCAST MULTICAST> mtu 1500 qdisc noop state DOWN group default qlen 1000", 
+            "Test ID": " ALL-NODES-006"
+        }, 
+        {
+            "Test Description": " Check if the interface are up", 
+            "Severity": "Warning", 
+            "IPAddress": " 192.168.0.44 ", 
+            "Hostname": "compute-0-12  ", 
+            "Command-Executed": " ip addr ", 
+            "Verdict": " Failed ", 
+            "Remarks": " 10: eth8: <BROADCAST MULTICAST> mtu 1500 qdisc noop state DOWN group default qlen 1000", 
+            "Test ID": " ALL-NODES-006"
+        }, 
+        {
+            "Test Description": " Check if the interface are up", 
+            "Severity": "Warning", 
+            "IPAddress": " 192.168.0.43 ", 
+            "Hostname": "compute-0-10  ", 
+            "Command-Executed": " ip addr ", 
+            "Verdict": " Failed ", 
+            "Remarks": " 11: eth9: <BROADCAST MULTICAST> mtu 1500 qdisc noop state DOWN group default qlen 1000", 
+            "Test ID": " ALL-NODES-006"
+        }, 
+        {
+            "Test Description": " Check if the interface are up", 
+            "Severity": "Warning", 
+            "IPAddress": " 192.168.0.42 ", 
+            "Hostname": "compute-0-16  ", 
+            "Command-Executed": " ip addr ", 
+            "Verdict": " Failed ", 
+            "Remarks": " 6: eth4: <BROADCAST MULTICAST> mtu 1500 qdisc noop state DOWN group default qlen 1000", 
+            "Test ID": " ALL-NODES-006"
+        }, 
+        {
+            "Test Description": " Check if the interface are up", 
+            "Severity": "Warning", 
+            "IPAddress": " 192.168.0.32 ", 
+            "Hostname": "compute-0-14  ", 
+            "Command-Executed": " ip addr ", 
+            "Verdict": " Failed ", 
+            "Remarks": " 7: eth5: <BROADCAST MULTICAST> mtu 1500 qdisc noop state DOWN group default qlen 1000", 
+            "Test ID": " ALL-NODES-006"
+        }, 
+        {
+            "Test Description": " Check if the interface are up", 
+            "Severity": "Warning", 
+            "IPAddress": " 192.168.0.37 ", 
+            "Hostname": "compute-0-11  ", 
+            "Command-Executed": " ip addr ", 
+            "Verdict": " Failed ", 
+            "Remarks": " 7: eth5: <BROADCAST MULTICAST> mtu 1500 qdisc noop state DOWN group default qlen 1000", 
+            "Test ID": " ALL-NODES-006"
+        }, 
+        {
+            "Test Description": " Check if the interface are up", 
+            "Severity": "Warning", 
+            "IPAddress": " 192.168.0.44 ", 
+            "Hostname": "compute-0-12  ", 
+            "Command-Executed": " ip addr ", 
+            "Verdict": " Failed ", 
+            "Remarks": " 11: eth9: <BROADCAST MULTICAST> mtu 1500 qdisc noop state DOWN group default qlen 1000", 
+            "Test ID": " ALL-NODES-006"
+        }, 
+        {
+            "Test Description": " Check if the interface are up", 
+            "Severity": "Warning", 
+            "IPAddress": " 192.168.0.42 ", 
+            "Hostname": "compute-0-16  ", 
+            "Command-Executed": " ip addr ", 
+            "Verdict": " Failed ", 
+            "Remarks": " 7: eth5: <BROADCAST MULTICAST> mtu 1500 qdisc noop state DOWN group default qlen 1000", 
+            "Test ID": " ALL-NODES-006"
+        }, 
+        {
+            "Test Description": " Check if the interface are up", 
+            "Severity": "Warning", 
+            "IPAddress": " 192.168.0.41 ", 
+            "Hostname": "compute-0-15  ", 
+            "Command-Executed": " ip addr ", 
+            "Verdict": " Failed ", 
+            "Remarks": " 6: eth4: <BROADCAST MULTICAST> mtu 1500 qdisc noop state DOWN group default qlen 1000", 
+            "Test ID": " ALL-NODES-006"
+        }, 
+        {
+            "Test Description": " Check if the interface are up", 
+            "Severity": "Warning", 
+            "IPAddress": " 192.168.0.37 ", 
+            "Hostname": "compute-0-11  ", 
+            "Command-Executed": " ip addr ", 
+            "Verdict": " Failed ", 
+            "Remarks": " 10: eth8: <BROADCAST MULTICAST> mtu 1500 qdisc noop state DOWN group default qlen 1000", 
+            "Test ID": " ALL-NODES-006"
+        }, 
+        {
+            "Test Description": " Check if the interface are up", 
+            "Severity": "Warning", 
+            "IPAddress": " 192.168.0.32 ", 
+            "Hostname": "compute-0-14  ", 
+            "Command-Executed": " ip addr ", 
+            "Verdict": " Failed ", 
+            "Remarks": " 10: eth8: <BROADCAST MULTICAST> mtu 1500 qdisc noop state DOWN group default qlen 1000", 
+            "Test ID": " ALL-NODES-006"
+        }, 
+        {
+            "Test Description": " Check if the interface are up", 
+            "Severity": "Warning", 
+            "IPAddress": " 192.168.0.42 ", 
+            "Hostname": "compute-0-16  ", 
+            "Command-Executed": " ip addr ", 
+            "Verdict": " Failed ", 
+            "Remarks": " 10: eth8: <BROADCAST MULTICAST> mtu 1500 qdisc noop state DOWN group default qlen 1000", 
+            "Test ID": " ALL-NODES-006"
+        }, 
+        {
+            "Test Description": " Check if the interface are up", 
+            "Severity": "Warning", 
+            "IPAddress": " 192.168.0.41 ", 
+            "Hostname": "compute-0-15  ", 
+            "Command-Executed": " ip addr ", 
+            "Verdict": " Failed ", 
+            "Remarks": " 7: eth5: <BROADCAST MULTICAST> mtu 1500 qdisc noop state DOWN group default qlen 1000", 
+            "Test ID": " ALL-NODES-006"
+        }, 
+        {
+            "Test Description": " Check if the interface are up", 
+            "Severity": "Warning", 
+            "IPAddress": " 192.168.0.20 ", 
+            "Hostname": "compute-0-4  ", 
+            "Command-Executed": " ip addr ", 
+            "Verdict": " Failed ", 
+            "Remarks": " 6: eth4: <BROADCAST MULTICAST> mtu 1500 qdisc noop state DOWN group default qlen 1000", 
+            "Test ID": " ALL-NODES-006"
+        }, 
+        {
+            "Test Description": " Check if the interface are up", 
+            "Severity": "Warning", 
+            "IPAddress": " 192.168.0.32 ", 
+            "Hostname": "compute-0-14  ", 
+            "Command-Executed": " ip addr ", 
+            "Verdict": " Failed ", 
+            "Remarks": " 11: eth9: <BROADCAST MULTICAST> mtu 1500 qdisc noop state DOWN group default qlen 1000", 
+            "Test ID": " ALL-NODES-006"
+        }, 
+        {
+            "Test Description": " Check if the interface are up", 
+            "Severity": "Warning", 
+            "IPAddress": " 192.168.0.37 ", 
+            "Hostname": "compute-0-11  ", 
+            "Command-Executed": " ip addr ", 
+            "Verdict": " Failed ", 
+            "Remarks": " 11: eth9: <BROADCAST MULTICAST> mtu 1500 qdisc noop state DOWN group default qlen 1000", 
+            "Test ID": " ALL-NODES-006"
+        }, 
+        {
+            "Test Description": " Check if the interface are up", 
+            "Severity": "Warning", 
+            "IPAddress": " 192.168.0.42 ", 
+            "Hostname": "compute-0-16  ", 
+            "Command-Executed": " ip addr ", 
+            "Verdict": " Failed ", 
+            "Remarks": " 11: eth9: <BROADCAST MULTICAST> mtu 1500 qdisc noop state DOWN group default qlen 1000", 
+            "Test ID": " ALL-NODES-006"
+        }, 
+        {
+            "Test Description": " Check if the interface are up", 
+            "Severity": "Warning", 
+            "IPAddress": " 192.168.0.41 ", 
+            "Hostname": "compute-0-15  ", 
+            "Command-Executed": " ip addr ", 
+            "Verdict": " Failed ", 
+            "Remarks": " 10: eth8: <BROADCAST MULTICAST> mtu 1500 qdisc noop state DOWN group default qlen 1000", 
+            "Test ID": " ALL-NODES-006"
+        }, 
+        {
+            "Test Description": " Check if the interface are up", 
+            "Severity": "Warning", 
+            "IPAddress": " 192.168.0.41 ", 
+            "Hostname": "compute-0-15  ", 
+            "Command-Executed": " ip addr ", 
+            "Verdict": " Failed ", 
+            "Remarks": " 11: eth9: <BROADCAST MULTICAST> mtu 1500 qdisc noop state DOWN group default qlen 1000", 
+            "Test ID": " ALL-NODES-006"
+        }, 
+        {
+            "Test Description": " Check the drop and error percentage is not greater than 1%", 
+            "Severity": "Major", 
+            "IPAddress": " 192.168.0.43 ", 
+            "Hostname": "compute-0-10  ", 
+            "Command-Executed": " ovs-dpctl show -s ", 
+            "Verdict": " Passed ", 
+            "Remarks": " All ports appear ok!!", 
+            "Test ID": " ALL-NODES-007"
+        }, 
+        {
+            "Test Description": " Check the drop and error percentage is not greater than 1%", 
+            "Severity": "Major", 
+            "IPAddress": " 192.168.0.28 ", 
+            "Hostname": "cic-3  ", 
+            "Command-Executed": " ovs-dpctl show -s ", 
+            "Verdict": " Passed ", 
+            "Remarks": " All ports appear ok!!", 
+            "Test ID": " ALL-NODES-007"
+        }, 
+        {
+            "Test Description": " Check the drop and error percentage is not greater than 1%", 
+            "Severity": "Major", 
+            "IPAddress": " 192.168.0.30 ", 
+            "Hostname": "cic-2  ", 
+            "Command-Executed": " ovs-dpctl show -s ", 
+            "Verdict": " Passed ", 
+            "Remarks": " All ports appear ok!!", 
+            "Test ID": " ALL-NODES-007"
+        }, 
+        {
+            "Test Description": " Check the drop and error percentage is not greater than 1%", 
+            "Severity": "Major", 
+            "IPAddress": " 192.168.0.22 ", 
+            "Hostname": "compute-0-2  ", 
+            "Command-Executed": " ovs-dpctl show -s ", 
+            "Verdict": " Passed ", 
+            "Remarks": " All ports appear ok!!", 
+            "Test ID": " ALL-NODES-007"
+        }, 
+        {
+            "Test Description": " Check the drop and error percentage is not greater than 1%", 
+            "Severity": "Major", 
+            "IPAddress": " 192.168.0.29 ", 
+            "Hostname": "cic-1  ", 
+            "Command-Executed": " ovs-dpctl show -s ", 
+            "Verdict": " Passed ", 
+            "Remarks": " All ports appear ok!!", 
+            "Test ID": " ALL-NODES-007"
+        }, 
+        {
+            "Test Description": " Check the drop and error percentage is not greater than 1%", 
+            "Severity": "Major", 
+            "IPAddress": " 192.168.0.21 ", 
+            "Hostname": "compute-0-1  ", 
+            "Command-Executed": " ovs-dpctl show -s ", 
+            "Verdict": " Passed ", 
+            "Remarks": " All ports appear ok!!", 
+            "Test ID": " ALL-NODES-007"
+        }, 
+        {
+            "Test Description": " Check the drop and error percentage is not greater than 1%", 
+            "Severity": "Major", 
+            "IPAddress": " 192.168.0.23 ", 
+            "Hostname": "compute-0-3  ", 
+            "Command-Executed": " ovs-dpctl show -s ", 
+            "Verdict": " Passed ", 
+            "Remarks": " All ports appear ok!!", 
+            "Test ID": " ALL-NODES-007"
+        }, 
+        {
+            "Test Description": " Check the drop and error percentage is not greater than 1%", 
+            "Severity": "Major", 
+            "IPAddress": " 192.168.0.27 ", 
+            "Hostname": "compute-0-8  ", 
+            "Command-Executed": " ovs-dpctl show -s ", 
+            "Verdict": " Passed ", 
+            "Remarks": " All ports appear ok!!", 
+            "Test ID": " ALL-NODES-007"
+        }, 
+        {
+            "Test Description": " Check the drop and error percentage is not greater than 1%", 
+            "Severity": "Major", 
+            "IPAddress": " 192.168.0.24 ", 
+            "Hostname": "compute-0-6  ", 
+            "Command-Executed": " ovs-dpctl show -s ", 
+            "Verdict": " Passed ", 
+            "Remarks": " All ports appear ok!!", 
+            "Test ID": " ALL-NODES-007"
+        }, 
+        {
+            "Test Description": " Check the drop and error percentage is not greater than 1%", 
+            "Severity": "Major", 
+            "IPAddress": " 192.168.0.41 ", 
+            "Hostname": "compute-0-15  ", 
+            "Command-Executed": " ovs-dpctl show -s ", 
+            "Verdict": " Passed ", 
+            "Remarks": " All ports appear ok!!", 
+            "Test ID": " ALL-NODES-007"
+        }, 
+        {
+            "Test Description": " Check the drop and error percentage is not greater than 1%", 
+            "Severity": "Major", 
+            "IPAddress": " 192.168.0.20 ", 
+            "Hostname": "compute-0-4  ", 
+            "Command-Executed": " ovs-dpctl show -s ", 
+            "Verdict": " Passed ", 
+            "Remarks": " All ports appear ok!!", 
+            "Test ID": " ALL-NODES-007"
+        }
+    ]
+}

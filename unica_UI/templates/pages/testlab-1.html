@@ -3,7 +3,12 @@
 
 {% load static %}
 {% block content %}
-
+<style>
+#datepicker{width:180px; margin: 0 20px 20px 20px;}
+#datepicker > span:hover{cursor: pointer;}
+</style>
+<!--link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css"-->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.3.0/css/datepicker.css">
 
   <!-- Content Wrapper. Contains page content -->
   <div class="content-wrapper">
@@ -24,6 +29,17 @@
                   {% endfor %}
                {% endif %}
             </select>
+
+
+              <!-- Date -->
+              <div class="form-group">
+<label>Select Date: </label>
+<div id="datepicker" class="input-group date" data-date-format="mm-dd-yyyy">
+    <input class="form-control" type="text" readonly />
+    <span class="input-group-addon"><i class="fa fa-calendar"></i></span>
+</div>
+                </div>
+                <!-- /.input group -->
               
             </ol>
           </div><!-- /.col -->
@@ -424,12 +440,22 @@
 <!--script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script-->
 <script src="{% static 'plugins/datatables/jquery.dataTables.js' %}"></script>
 <script src="https://cdn.datatables.net/1.10.13/js/jquery.dataTables.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.3.0/js/bootstrap-datepicker.js"></script>
 
 <script>
+
  var result = []
  var salesChart
  //$('#datelog').change(function(){
- $(function(){
+
+
+
+$(function () {
+
+  $("#datepicker").datepicker({ 
+        autoclose: true, 
+  })
+
     loadlog()
     loadhistorychart()
  });
